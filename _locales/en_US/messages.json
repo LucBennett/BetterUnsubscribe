@@ -1,0 +1,50 @@
+{
+    "extensionName": {
+        "message": "BetterUnsubscribe",
+        "description": "The name of the Thunderbird MailExtension"
+    },
+    "extensionDescription": {
+        "message": "This extension makes it easier to unsubscribe from mailing lists.",
+        "description": "The description of the Thunderbird MailExtension"
+    },
+    "unsubscribeTitle": {
+        "message": "Unsubscribe",
+        "description": "Title of the unsubscribe page"
+    },
+    "unsubscribeHeader": {
+        "message": "Unsubscribe",
+        "description": "Header of the unsubscribe page"
+    },
+    "emailText": {
+        "message": "Would you like to unsubscribe from this mailing list?",
+        "description": "Text asking the user if they want to unsubscribe"
+    },
+    "unsubscribeButton": {
+        "message": "Unsubscribe",
+        "description": "Label for the unsubscribe button"
+    },
+    "cancelButton": {
+        "message": "Cancel",
+        "description": "Label for the cancel button"
+    },
+    "deleteButton": {
+        "message": "Delete Email",
+        "description": "Label for the delete email button"
+    },
+    "statusTextEmpty": {
+        "message": "",
+        "description": "Empty status text"
+    },
+    "statusTextWorking": {
+        "message": "Working...",
+        "description": "Status text for working state"
+    },
+    "statusTextDone": {
+        "message": "Done",
+        "description": "Status text for done state"
+    },
+    "statusTextError": {
+        "message": "Error",
+        "description": "Status text for error state"
+    }
+}

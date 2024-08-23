@@ -1,0 +1,50 @@
+{
+    "extensionName": {
+        "message": "BetterUnsubscribe",
+        "description": "El nombre de la extensión de Thunderbird"
+    },
+    "extensionDescription": {
+        "message": "Esta extensión facilita la cancelación de suscripciones de listas de correo.",
+        "description": "La descripción de la extensión de Thunderbird"
+    },
+    "unsubscribeTitle": {
+        "message": "Cancelar suscripción",
+        "description": "Título de la página de cancelación de suscripción"
+    },
+    "unsubscribeHeader": {
+        "message": "Cancelar suscripción",
+        "description": "Encabezado de la página de cancelación de suscripción"
+    },
+    "emailText": {
+        "message": "¿Te gustaría cancelar la suscripción de esta lista de correo?",
+        "description": "Texto preguntando al usuario si quiere cancelar la suscripción"
+    },
+    "unsubscribeButton": {
+        "message": "Cancelar suscripción",
+        "description": "Etiqueta para el botón de cancelar suscripción"
+    },
+    "cancelButton": {
+        "message": "Cancelar",
+        "description": "Etiqueta para el botón de cancelar"
+    },
+    "deleteButton": {
+        "message": "Eliminar correo",
+        "description": "Etiqueta para el botón de eliminar correo"
+    },
+    "statusTextEmpty": {
+        "message": "",
+        "description": "Texto de estado vacío"
+    },
+    "statusTextWorking": {
+        "message": "Trabajando...",
+        "description": "Texto de estado para el estado de trabajo"
+    },
+    "statusTextDone": {
+        "message": "¡Hecho",
+        "description": "Texto de estado para el estado hecho"
+    },
+    "statusTextError": {
+        "message": "¡Error",
+        "description": "Texto de estado para el estado de error"
+    }
+}

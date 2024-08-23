@@ -1,0 +1,50 @@
+{
+    "extensionName": {
+        "message": "BetterUnsubscribe",
+        "description": "Le nom de l'extension Thunderbird"
+    },
+    "extensionDescription": {
+        "message": "Cette extension facilite la désinscription des listes de diffusion.",
+        "description": "La description de l'extension Thunderbird"
+    },
+    "unsubscribeTitle": {
+        "message": "Se désabonner",
+        "description": "Titre de la page de désabonnement"
+    },
+    "unsubscribeHeader": {
+        "message": "Se désabonner",
+        "description": "En-tête de la page de désabonnement"
+    },
+    "emailText": {
+        "message": "Voulez-vous vous désabonner de cette liste de diffusion?",
+        "description": "Texte demandant à l'utilisateur s'il veut se désabonner"
+    },
+    "unsubscribeButton": {
+        "message": "Se désabonner",
+        "description": "Libellé pour le bouton de désabonnement"
+    },
+    "cancelButton": {
+        "message": "Annuler",
+        "description": "Libellé pour le bouton d'annulation"
+    },
+    "deleteButton": {
+        "message": "Supprimer le courriel",
+        "description": "Libellé pour le bouton de suppression du courriel"
+    },
+    "statusTextEmpty": {
+        "message": "",
+        "description": "Texte de statut vide"
+    },
+    "statusTextWorking": {
+        "message": "Travail en cours...",
+        "description": "Texte de statut pour l'état de travail en cours"
+    },
+    "statusTextDone": {
+        "message": "Terminé",
+        "description": "Texte de statut pour l'état terminé"
+    },
+    "statusTextError": {
+        "message": "Erreur",
+        "description": "Texte de statut pour l'état d'erreur"
+    }
+}
