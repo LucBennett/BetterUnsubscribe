@@ -23,13 +23,13 @@ function console_error() {
  */
 messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
   console_log('Clicked');
-  messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
+  await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
   if (tab.type === "messageDisplay" || tab.type === "mail") {
     let messageHeader = await browser.messageDisplay.getDisplayedMessage(tab.id);
     if (funcMap.has(messageHeader.id)) {
       await createPopup(messageHeader);
     } else {
-      if (await searchForUnsub(messageHeader)) {
+      if (searchForUnsub(messageHeader)) {
         await createPopup(messageHeader);
       }
     }
@@ -48,9 +48,9 @@ browser.tabs.onActivated.addListener(async (activeInfo) => {
     console_log(tab.type);
     if (tab.type === "messageDisplay" || tab.type === "mail") {
       let messageHeader = await browser.messageDisplay.getDisplayedMessage(tab.id);
-      messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-      if (await searchForUnsub(messageHeader)) {
-        messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
+      await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
+      if (searchForUnsub(messageHeader)) {
+        await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
       }
     }
   }
@@ -66,9 +66,9 @@ browser.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) 
   console_log("Selected Message Changed");
   if (messageList.messages.length !== 0) {
     const messageHeader = messageList.messages[0];
-    messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-    if (await searchForUnsub(messageHeader)) {
-      messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
+    await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
+    if (searchForUnsub(messageHeader)) {
+      await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
     }
   }
 });
@@ -76,7 +76,7 @@ browser.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) 
 /**
  * Searches for unsubscribe information in the selected message.
  * If found, it stores the information in the funcMap.
- * @param {MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @param {browser.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
  * @returns {boolean} - True if unsubscribe information is found, otherwise false.
  */
 async function searchForUnsub(selectedMessage) {
@@ -114,8 +114,8 @@ function decodeURL(url) {
 
 /**
  * Searches for unsubscribe links and information in the message headers and body.
- * @param {MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
- * @returns {Function|boolean} - Unsubscribe function if found, otherwise false.
+ * @param {browser.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @returns {UnsubMethod|boolean} - Unsubscribe Method if found, otherwise false.
  */
 async function searchUnsub(selectedMessage) {
   try {
@@ -155,10 +155,10 @@ async function searchUnsub(selectedMessage) {
           subject = params['subject'];
         }
 
-        let identity = getIdentityReceiver(messageHeader);
+        let identity = await getIdentityReceiver(messageHeader);
 
         if (identity === null) {
-          identity = getIdentityForMessage(messageHeader);
+          identity = await getIdentityForMessage(messageHeader);
           if (identity === null) {
             let identities = await messenger.identities.list();
             if (identities.length !== 0) {
@@ -205,7 +205,7 @@ async function searchUnsub(selectedMessage) {
 
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing.
- * @param {MessagePart} messagePart - The message part to search for embedded links.
+ * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
  * @returns {string|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkHTML(messagePart) {
@@ -239,7 +239,7 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
 
 /**
  * Finds embedded unsubscribe links within the message body using regular expressions.
- * @param {MessagePart} messagePart - The message part to search for embedded links.
+ * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
  * @returns {string|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkRegex(messagePart) {
@@ -314,7 +314,7 @@ async function getIdentityReceiver(messageHeader) {
 /**
  * Retrieves the MailIdentity associated with the given message's folder.
  * @param {MessageHeader} messageHeader - The MessageHeader associated with the message.
- * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
+ * @returns {Promise<browser.identities.MailIdentity>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
   let folder = messageHeader.folder;
@@ -378,7 +378,8 @@ class UnsubPostRequest extends UnsubMethod {
 
       const response = await fetch(this.weblink, fetchOptions);
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        console_error('Error during unsubscribe request:', response.status);
+        return false;
       }
 
       console_log(response);
@@ -452,10 +453,6 @@ class UnsubWeb extends UnsubMethod {
    */
   async call() {
     try {
-      if (!this.link) {
-        throw new Error('No web link provided');
-      }
-
       await messenger.windows.create({
         url: this.link,
         type: "popup"
@@ -491,7 +488,7 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
       return { response: "Canceled" };
     } else if (message.delete) {
       console_log("User wants to delete the email");
-      messenger.messages.delete([messageId], false);
+      await messenger.messages.delete([messageId], false);
       return { response: 'Deleted' };
     } else if (message.requestMethod) {
       console_log('Method Requested');

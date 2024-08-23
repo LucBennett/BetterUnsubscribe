@@ -1,0 +1,15 @@
+# Ignore build directory
+build/
+
+# Ignore other common directories and files
+node_modules/
+dist/
+*.log
+*.tmp
+*.lock
+.DS_Store
+.env
+.idea/
+.vscode/
+*.swp
+coverage/
