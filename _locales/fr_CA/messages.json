@@ -1,10 +1,10 @@
 {
     "extensionName": {
-        "message": "BetterUnsubscribe",
+        "message": "MeilleurDésabonnement",
         "description": "Le nom de l'extension Thunderbird"
     },
     "extensionDescription": {
-        "message": "Cette extension facilite la désinscription des listes de diffusion.",
+        "message": "Cette extension facilite le désabonnement des listes de diffusion.",
         "description": "La description de l'extension Thunderbird"
     },
     "unsubscribeTitle": {
@@ -17,7 +17,7 @@
     },
     "emailText": {
         "message": "Voulez-vous vous désabonner de cette liste de diffusion?",
-        "description": "Texte demandant à l'utilisateur s'il veut se désabonner"
+        "description": "Texte demandant à l'utilisateur s'il souhaite se désabonner"
     },
     "unsubscribeButton": {
         "message": "Se désabonner",
@@ -31,13 +31,29 @@
         "message": "Supprimer le courriel",
         "description": "Libellé pour le bouton de suppression du courriel"
     },
+    "detailsSummary": {
+        "message": "Plus de détails",
+        "description": "Menu déroulant pour plus de détails"
+    },
+    "detailsTextPOST": {
+        "message": "Lorsque vous cliquez sur \"Se désabonner\", une requête POST sera envoyée à l'URL suivante :",
+        "description": "Détails pour une requête POST"
+    },
+    "detailsTextEmail": {
+        "message": "Lorsque vous cliquez sur \"Se désabonner\", un courriel sera rédigé à l'adresse suivante :",
+        "description": "Détails pour un courriel"
+    },
+    "detailsTextWeb": {
+        "message": "Lorsque vous cliquez sur \"Se désabonner\", une fenêtre du navigateur s'ouvrira et visitera l'URL suivante :",
+        "description": "Détails pour un lien web"
+    },
     "statusTextEmpty": {
         "message": "",
         "description": "Texte de statut vide"
     },
     "statusTextWorking": {
-        "message": "Travail en cours...",
-        "description": "Texte de statut pour l'état de travail en cours"
+        "message": "En cours...",
+        "description": "Texte de statut pour l'état en cours"
     },
     "statusTextDone": {
         "message": "Terminé",

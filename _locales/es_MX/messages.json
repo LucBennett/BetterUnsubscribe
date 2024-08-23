@@ -1,35 +1,51 @@
 {
     "extensionName": {
-        "message": "BetterUnsubscribe",
-        "description": "El nombre de la extensión de Thunderbird"
+        "message": "MejorDarse de baja",
+        "description": "El nombre de la Extensión de Thunderbird"
     },
     "extensionDescription": {
-        "message": "Esta extensión facilita la cancelación de suscripciones de listas de correo.",
-        "description": "La descripción de la extensión de Thunderbird"
+        "message": "Esta extensión facilita la desuscripción de listas de correo.",
+        "description": "La descripción de la Extensión de Thunderbird"
     },
     "unsubscribeTitle": {
-        "message": "Cancelar suscripción",
-        "description": "Título de la página de cancelación de suscripción"
+        "message": "Darse de baja",
+        "description": "Título de la página de desuscripción"
     },
     "unsubscribeHeader": {
-        "message": "Cancelar suscripción",
-        "description": "Encabezado de la página de cancelación de suscripción"
+        "message": "Darse de baja",
+        "description": "Encabezado de la página de desuscripción"
     },
     "emailText": {
-        "message": "¿Te gustaría cancelar la suscripción de esta lista de correo?",
-        "description": "Texto preguntando al usuario si quiere cancelar la suscripción"
+        "message": "¿Te gustaría desuscribirte de esta lista de correo?",
+        "description": "Texto preguntando al usuario si quiere darse de baja"
     },
     "unsubscribeButton": {
-        "message": "Cancelar suscripción",
-        "description": "Etiqueta para el botón de cancelar suscripción"
+        "message": "Darse de baja",
+        "description": "Etiqueta para el botón de darse de baja"
     },
     "cancelButton": {
         "message": "Cancelar",
         "description": "Etiqueta para el botón de cancelar"
     },
     "deleteButton": {
-        "message": "Eliminar correo",
+        "message": "Eliminar Correo",
         "description": "Etiqueta para el botón de eliminar correo"
+    },
+    "detailsSummary": {
+        "message": "Más detalles",
+        "description": "Desplegable de más detalles"
+    },
+    "detailsTextPost": {
+        "message": "Cuando haces clic en \"Darse de baja\", se enviará una solicitud post a la siguiente URL:",
+        "description": "Detalles para una solicitud Post"
+    },
+    "detailsTextEmail": {
+        "message": "Cuando haces clic en \"Darse de baja\", se redactará un correo electrónico a la siguiente dirección:",
+        "description": "Detalles para un correo electrónico"
+    },
+    "detailsTextWeb": {
+        "message": "Cuando haces clic en \"Darse de baja\", se abrirá una ventana del navegador y visitará la siguiente URL:",
+        "description": "Detalles para un enlace web"
     },
     "statusTextEmpty": {
         "message": "",
@@ -41,7 +57,7 @@
     },
     "statusTextDone": {
         "message": "¡Hecho",
-        "description": "Texto de estado para el estado hecho"
+        "description": "Texto de estado para el estado de hecho"
     },
     "statusTextError": {
         "message": "¡Error",

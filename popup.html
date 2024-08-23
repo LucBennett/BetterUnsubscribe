@@ -8,21 +8,72 @@
       font-family: Arial, sans-serif;
       padding: 20px;
       text-align: center;
+      background-color: #f4f4f4;
     }
     .button {
       padding: 10px 20px;
       margin: 10px;
       cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      color: white;
+    }
+    .button:hover {
+      opacity: 0.8;
+    }
+    #unsubscribeButton {
+      background-color: #d9534f;
+    }
+    #cancelButton {
+      background-color: #5bc0de;
+    }
+    #deleteButton {
+      background-color: #5cb85c;
+    }
+    h3 {
+      color: #333;
+    }
+    details {
+      margin-top: 20px;
+      text-align: left;
+      max-width: 100%;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .details-content {
+      background-color: #e9ecef;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ced4da;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      max-width: 100%;
+    }
+    code {
+      display: block;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+      max-width: 100%;
     }
   </style>
 </head>
 <body>
   <h2 data-i18n="unsubscribeHeader">Unsubscribe</h2>
   <p id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</p>
-  <button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton">Unsubscribe</button>
-  <button id="cancelButton" class="button" data-i18n="cancelButton">Cancel</button>
-  <button id="deleteButton" class="button" hidden="true" data-i18n="deleteButton">Delete Email</button>
-  <p id="statusText"></p>
+  <button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe</button>
+  <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
+  <button id="deleteButton" class="button" hidden="true" data-i18n="deleteButton" aria-label="Delete Email">Delete Email</button>
+  <h3 id="statusText" role="status"></h3>
+  <details id="detailsDropDown" hidden="true">
+    <summary data-i18n="detailsSummary">More details</summary>
+    <div class="details-content">
+      <p id="detailsText" data-i18n="detailsText"></p>
+      </div>
+  </details>
   <script src="i18n.js"></script>
   <script src="popup.js"></script>
 </body>
