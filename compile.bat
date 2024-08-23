@@ -8,6 +8,6 @@ set VERSION=2.2.1
 for %%I in ("%CD%") do set "DIRNAME=%%~nI"
 
 :: Create the zip file excluding certain files
-7z a -tzip -mx=9 ..\%DIRNAME%-%VERSION%.xpi .
+7z a -tzip -mx=9 -xr!.git ..\%DIRNAME%-%VERSION%.xpi .
 
 endlocal
