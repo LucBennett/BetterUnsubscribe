@@ -45,17 +45,17 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     switch (r.method) {
       case "Post":
-        detailsText.textContent = browser.i18n.getMessage("detailsTextPost") + ' ';
+        detailsText.textContent = messenger.i18n.getMessage("detailsTextPost") + ' ';
         detailsText.appendChild(codeElement);
         details.hidden = false;
         break;
       case "Email":
-        detailsText.textContent = browser.i18n.getMessage("detailsTextEmail") + ' ';
+        detailsText.textContent = messenger.i18n.getMessage("detailsTextEmail") + ' ';
         detailsText.appendChild(codeElement);
         details.hidden = false;
         break;
-      case "Browser":
-        detailsText.textContent = browser.i18n.getMessage("detailsTextWeb") + ' ';
+      case "messenger":
+        detailsText.textContent = messenger.i18n.getMessage("detailsTextWeb") + ' ';
         detailsText.appendChild(codeElement);
         details.hidden = false;
         break;
@@ -69,15 +69,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Event listener for the unsubscribe button.
   unsubscribeButton.addEventListener('click', async () => {
     unsubscribeButton.disabled = true; // Disable the button to prevent multiple clicks
-    statusText.textContent = browser.i18n.getMessage("statusTextWorking"); // Update status text to show the process is ongoing
+    statusText.textContent = messenger.i18n.getMessage("statusTextWorking"); // Update status text to show the process is ongoing
     messenger.runtime.sendMessage({ messageId: messageId, unsubscribe: true }).then((r) => {
       console_log("Response from background:", r);
       if (r.response) {
-        statusText.textContent = browser.i18n.getMessage("statusTextDone"); // Update status text to show completion
+        statusText.textContent = messenger.i18n.getMessage("statusTextDone"); // Update status text to show completion
         deleteButton.hidden = false; // Show the delete button if unsubscribe was successful
       } else {
         unsubscribeButton.disabled = false; // Re-enable the unsubscribe button if there was an error
-        statusText.textContent = browser.i18n.getMessage("statusTextError"); // Update status text to show an error occurred
+        statusText.textContent = messenger.i18n.getMessage("statusTextError"); // Update status text to show an error occurred
       }
     }).catch((error) => {
       console_error("Error sending unsubscribe message:", error);

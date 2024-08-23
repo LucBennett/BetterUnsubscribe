@@ -1,5 +1,5 @@
 // Map to store functions for different unsubscribe actions associated with message IDs
-const funcMap = new Map();
+const funcMap = new Map(); //MessageId:UnsubMethod
 
 /**
  * Logs messages to the console with a specific prefix.
@@ -25,7 +25,7 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
   console_log('Clicked');
   await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
   if (tab.type === "messageDisplay" || tab.type === "mail") {
-    let messageHeader = await browser.messageDisplay.getDisplayedMessage(tab.id);
+    let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
     if (funcMap.has(messageHeader.id)) {
       await createPopup(messageHeader);
     } else {
@@ -41,13 +41,13 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
  * and enables or disables the messageDisplayAction accordingly.
  * @param {object} activeInfo - The information about the activated tab.
  */
-browser.tabs.onActivated.addListener(async (activeInfo) => {
+messenger.tabs.onActivated.addListener(async (activeInfo) => {
   console_log("Tab Activated");
-  let tab = await browser.tabs.get(activeInfo.tabId);
+  let tab = await messenger.tabs.get(activeInfo.tabId);
   if (tab) {
     console_log(tab.type);
     if (tab.type === "messageDisplay" || tab.type === "mail") {
-      let messageHeader = await browser.messageDisplay.getDisplayedMessage(tab.id);
+      let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
       await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
       if (searchForUnsub(messageHeader)) {
         await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
@@ -62,7 +62,7 @@ browser.tabs.onActivated.addListener(async (activeInfo) => {
  * @param {MailTab} tab - The currently active mail tab.
  * @param {MessageList} messageList - The list of selected messages in the tab.
  */
-browser.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) => {
+messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) => {
   console_log("Selected Message Changed");
   if (messageList.messages.length !== 0) {
     const messageHeader = messageList.messages[0];
@@ -76,7 +76,7 @@ browser.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) 
 /**
  * Searches for unsubscribe information in the selected message.
  * If found, it stores the information in the funcMap.
- * @param {browser.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
  * @returns {boolean} - True if unsubscribe information is found, otherwise false.
  */
 async function searchForUnsub(selectedMessage) {
@@ -114,7 +114,7 @@ function decodeURL(url) {
 
 /**
  * Searches for unsubscribe links and information in the message headers and body.
- * @param {browser.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
  * @returns {UnsubMethod|boolean} - Unsubscribe Method if found, otherwise false.
  */
 async function searchUnsub(selectedMessage) {
@@ -314,11 +314,11 @@ async function getIdentityReceiver(messageHeader) {
 /**
  * Retrieves the MailIdentity associated with the given message's folder.
  * @param {MessageHeader} messageHeader - The MessageHeader associated with the message.
- * @returns {Promise<browser.identities.MailIdentity>} - The MailIdentity if found, otherwise null.
+ * @returns {Promise<messenger.identities.MailIdentity>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
   let folder = messageHeader.folder;
-  let accounts = await browser.accounts.list();
+  let accounts = await messenger.accounts.list();
 
   for (let account of accounts) {
     for (let identity of account.identities) {
@@ -499,7 +499,7 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
       } else if (func instanceof UnsubMail) {
         return { method: "Email", address: func.emailAddress };
       } else if (func instanceof UnsubWeb) {
-        return { method: "Browser", address: func.link };
+        return { method: "messenger", address: func.link };
       } else {
         return { method: "IDK" };
       }
