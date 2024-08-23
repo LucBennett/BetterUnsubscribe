@@ -2,7 +2,9 @@
 setlocal
 
 :: Set version
-set VERSION=2.2.3
+for /f "tokens=*" %%i in ('powershell -Command "(Get-Content manifest.json | ConvertFrom-Json).version"') do (
+    set VERSION=%%i
+)
 
 :: Get the current directory name
 for %%I in ("%CD%") do set "DIRNAME=%%~nI"

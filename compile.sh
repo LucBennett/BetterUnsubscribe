@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # set version
-VERSION="2.2.3"
+VERSION=$(jq -r '.version' manifest.json)
 
 #create build directory
 mkdir build
