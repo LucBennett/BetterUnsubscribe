@@ -31,6 +31,22 @@
         "message": "Delete Email",
         "description": "Label for the delete email button"
     },
+    "detailsSummary": {
+        "message": "More details",
+        "description": "More Details Drop-Down"
+    },
+    "detailsTextPost": {
+        "message": "When you click \"Unsubscribe\", a post request will be sent to the following URL:",
+        "description": "Details for a Post request"
+    },
+    "detailsTextEmail": {
+        "message": "When you click \"Unsubscribe\", an email will be drafted to the following address:",
+        "description": "Details for a Email"
+    },
+    "detailsTextWeb": {
+        "message": "When you click \"Unsubscribe\", a browser window will open and will visit the following URL:",
+        "description": "Details for a Web Link"
+    },
     "statusTextEmpty": {
         "message": "",
         "description": "Empty status text"

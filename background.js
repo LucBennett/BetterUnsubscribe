@@ -2,12 +2,12 @@ this.funcMap = new Map(); // Map to store functions for different unsubscribe ac
 this.popupMap = new Map(); // Map to store popup windows and associated messages
 this.selectedMessage = undefined; // Variable to store the currently selected message
 
-function console_log(){
-  console.log("[BetterUnsubscribe]",...arguments);
+function console_log() {
+  console.log("[BetterUnsubscribe][background.js]", ...arguments);
 }
 
-function console_error(){
-  console.error("[BetterUnsubscribe]",...arguments);
+function console_error() {
+  console.error("[BetterUnsubscribe][background.js]", ...arguments);
 }
 /**
  * Opens dialog for user to confirm unsubscribe action
@@ -43,7 +43,7 @@ messenger.messageDisplay.onMessagesDisplayed.addListener(async (tab, messageList
 
   if (messageList.length > 1) {
     console_log("Multiple Messages Selected");
-  } else if(messageList.length == 1) {
+  } else if (messageList.length == 1) {
     this.selectedMessage = messageList[0];
     if (await searchForUnsub(this.selectedMessage)) {
       messenger.messageDisplayAction.enable();
@@ -99,9 +99,8 @@ async function searchUnsub(selectedMessage) {
       if (fullMessage.headers.hasOwnProperty('list-unsubscribe-post')) {
         console_log("OneClick Link Found");
         const postCommand = fullMessage.headers['list-unsubscribe-post'][0];
-        if (httpsLink) {
-          let postRequest = { weblink: httpsLink, command: postCommand };
-          return unsubPostRequest.bind(postRequest);
+        if (httpsLink && postCommand) {
+          return new UnsubPostRequest(httpsLink, postCommand);
         }
       }
 
@@ -123,14 +122,12 @@ async function searchUnsub(selectedMessage) {
           subject = params['subject'];
         }
 
-        let unsubMailData = { messageHeader: messageHeader, emailAddress: emailAddress, subject: subject };
-        return unsubMail.bind(unsubMailData);
+        return new UnsubMail(messageHeader, emailAddress, subject);
       }
 
       if (httpsLink) {
         console_log("Unsubscribe WebLink Found");
-        let unsublink = { link: httpsLink };
-        return unsubWeb.bind(unsublink);
+        return new UnsubWeb(httpsLink);
       }
     }
 
@@ -138,8 +135,7 @@ async function searchUnsub(selectedMessage) {
 
     if (embeddedLink) {
       console_log("Embedded Unsubscribe WebLink Found");
-      let unsublink = { link: embeddedLink };
-      return unsubWeb.bind(unsublink);
+      return new UnsubWeb(embeddedLink);
     }
 
     return false;
@@ -159,7 +155,7 @@ function findEmbeddedUnsubLink(messagePart) {
   if (messagePart.hasOwnProperty('body')) {
     if (messagePart.body.toLowerCase().includes("unsubscribe".toLowerCase())) {
       //console_log(messagePart.body)
-      let embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s\"\'\<\>]+unsubscribe[^\s\"\'\<\>]+)/i);
+      let embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s\"\'\<\>]+unsubscribe[^\s\"\'\<\>]*)/i);
       let embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
       if (embeddedLink) {
         return embeddedLink;
@@ -191,88 +187,138 @@ function findEmbeddedUnsubLink(messagePart) {
   return null;
 }
 
+
+class UnsubMethod {
+  call() {
+    throw new Error('Method call() must be implemented.');
+  }
+}
+
 /**
- * Unsubscribes via a POST request
- * This function needs an object attached with a weblink and post command in order to work
- */
-async function unsubPostRequest() {
-  try {
-    if (!this.weblink) {
-      throw new Error('No weblink provided');
-    }
+* Unsubscribes via a POST request
+* This Class needs an object attached with a weblink and post command in order to work
+*/
+class UnsubPostRequest extends UnsubMethod {
+  constructor(weblink, command) {
+    super();
+    this.weblink = weblink;
+    this.command = command;
+  }
 
-    console_log("Post to", this.weblink);
+  async call() {
+    try {
+      console_log("Post to", this.weblink);
 
-    const fetchOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'List-Unsubscribe-Post': this.command
+      const fetchOptions = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'List-Unsubscribe-Post': this.command
+        }
+      };
+
+      console_log(fetchOptions);
+
+      const response = await fetch(this.weblink, fetchOptions);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    };
 
-    console_log(fetchOptions);
-
-    const response = await fetch(this.weblink, fetchOptions);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      console_log(response);
+      return true;
+    } catch (error) {
+      console_error('Error during unsubscribe request:', error);
+      return false;
     }
-
-    console_log(response);
-    return true;
-  } catch (error) {
-    console_error('Error during unsubscribe request:', error);
-    return false;
   }
 }
 
 /**
- * Unsubscribes via an email
- * This function needs an object attached with a message, a recipient, and a subject in order to work
- */
-async function unsubMail() {
-  let identity = await getIdentityReceiver(this.messageHeader);
-  let details = { to: this.emailAddress, "subject": this.subject, 'body': "Please unsubscribe me from your mailing list. Thank you." };
-
-  if (identity) {
-    details['identityId'] = identity.id;
+* Unsubscribes via an email
+* This Class needs an object attached with a message, a recipient, and a subject in order to work
+*/
+class UnsubMail extends UnsubMethod {
+  constructor(messageHeader, emailAddress, subject) {
+    super();
+    this.messageHeader = messageHeader;
+    this.emailAddress = emailAddress;
+    this.subject = subject;
   }
 
-  await messenger.compose.beginNew(details);
+  async call() {
+    try {
+      if (!this.messageHeader || !this.emailAddress || !this.subject) {
+        throw new Error('Missing required parameters');
+      }
 
-  return true;
-}
+      let identity = await this.getIdentityReceiver(this.messageHeader);
+      let details = {
+        to: this.emailAddress,
+        subject: this.subject,
+        body: "Please unsubscribe me from your mailing list. Thank you."
+      };
 
-/**
- * Unsubscribes via a web link
- * This function needs an object attached with a web address in order to work
- */
-async function unsubWeb() {
-  await messenger.windows.create({
-    url: this.link,
-    type: "popup"
-  });
-  return true;
-}
+      if (identity) {
+        details.identityId = identity.id;
+      }
 
-/**
+      await messenger.compose.beginNew(details);
+
+      return true;
+    } catch (error) {
+      console_error('Error during unsubscribe email:', error);
+      return false;
+    }
+  }
+
+  /**
  * Retrieves the MailIdentity associated with the given email headers receiver
  * @param {MessageHeader} messageHeader - The MessageHeader associated with the message
  * @returns {MailIdentity|undefined} - The MailIdentity if found, otherwise undefined
  */
-async function getIdentityReceiver(messageHeader) {
-  let allReceivers = new Set([...messageHeader.bccList,
-  ...messageHeader.ccList, ...messageHeader.recipients]);
+  async getIdentityReceiver(messageHeader) {
+    let allReceivers = new Set([...messageHeader.bccList,
+    ...messageHeader.ccList, ...messageHeader.recipients]);
 
-  let identities = await messenger.identities.list();
+    let identities = await messenger.identities.list();
 
-  for (identity of identities) {
-    if (allReceivers.has(identity.email)) {
-      return identity;
+    for (identity of identities) {
+      if (allReceivers.has(identity.email)) {
+        return identity;
+      }
     }
+
+    return undefined;
+  }
+}
+
+/**
+* Unsubscribes via a web link
+* This function needs an object attached with a web address in order to work
+*/
+class UnsubWeb extends UnsubMethod {
+  constructor(link) {
+    super();
+    this.link = link;
   }
 
-  return undefined;
+  async call() {
+    try {
+      if (!this.link) {
+        throw new Error('No web link provided');
+      }
+
+      await messenger.windows.create({
+        url: this.link,
+        type: "popup"
+      });
+
+      return true;
+    } catch (error) {
+      console_error('Error during web unsubscribe:', error);
+      return false;
+    }
+  }
 }
 
 /**
@@ -281,12 +327,13 @@ async function getIdentityReceiver(messageHeader) {
  * @param {object} sender - The sender of the message
  * @param {function} sendResponse - The function to send a response
  */
+
 messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (this.popupMap.has(sender.tab.windowId)) {
     let selectedMessage = this.popupMap.get(sender.tab.windowId).message;
     if (message.unsubscribe) {
       console_log("User chose to unsubscribe from the mailing list");
-      let out = await this.funcMap.get(selectedMessage.id)();
+      let out = await this.funcMap.get(selectedMessage.id).call();
       if (out) {
         return { response: "Unsubscribed" };
       } else {
@@ -301,11 +348,26 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
       return { response: 'Deleted' };
     } else if (message.requestEmail) {
       return { email: selectedMessage['author'] };
+    } else if (message.requestMethod) {
+      console_log('Method Requested');
+      let func = this.funcMap.get(selectedMessage.id);
+      console_log(func);
+      if (func instanceof UnsubPostRequest) {
+        return { method: "Post", address: func.weblink };
+      } else if (func instanceof UnsubMail) {
+        return { method: "Email", address: func.emailAddress };
+      } else if (func instanceof UnsubWeb) {
+        return { method: "Browser", address: func.link };
+      } else {
+        return { method: "IDK" };
+      }
     }
   } else {
+    console_log("WEIRD MESSAGE",message);
     return false;
   }
 });
+
 
 /**
  * Creates a popup window for the user to confirm unsubscribe action
@@ -316,7 +378,7 @@ async function createPopup(message) {
     url: "popup.html",
     type: "popup",
     height: 400,
-    width: 500,
+    width: 600,
     allowScriptsToClose: true
   });
 
