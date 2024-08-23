@@ -1,17 +1,31 @@
-this.funcMap = new Map(); // Map to store functions for different unsubscribe actions
-this.popupMap = new Map(); // Map to store popup windows and associated messages
-this.selectedMessage = undefined; // Variable to store the currently selected message
+// Map to store functions for different unsubscribe actions
+this.funcMap = new Map(); 
 
+// Map to store popup windows and associated messages
+this.popupMap = new Map(); 
+
+// Variable to store the currently selected message
+this.selectedMessage = undefined; 
+
+/**
+ * Logs messages to the console with a specific prefix.
+ * @param {...*} arguments - The arguments to be logged.
+ */
 function console_log() {
   console.log("[BetterUnsubscribe][background.js]", ...arguments);
 }
 
+/**
+ * Logs errors to the console with a specific prefix.
+ * @param {...*} arguments - The arguments to be logged as errors.
+ */
 function console_error() {
   console.error("[BetterUnsubscribe][background.js]", ...arguments);
 }
+
 /**
- * Opens dialog for user to confirm unsubscribe action
- * @param {MailTab} tab - The currently active tab
+ * Opens a dialog for the user to confirm the unsubscribe action when the message display action is clicked.
+ * @param {MailTab} tab - The currently active tab.
  */
 messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
   if (this.selectedMessage) {
@@ -20,21 +34,9 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
 });
 
 /**
- * Triggers when selected mail tab is changed
- * @param {MailTab} tab - The currently active tab
- * @param {MessageList} messageList - The list of currently selected messages
- */
-/*
-messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) => {
-  console_log("Selection Changed");
-  //await searchForUnsub(tab, messageList.messages);
-});
-*/
-
-/**
- * Triggers when messages are displayed
- * @param {MailTab} tab - The currently active tab
- * @param {MessageList} messageList - The list of displayed messages
+ * Triggers when messages are displayed in the message tab.
+ * @param {MailTab} tab - The currently active tab.
+ * @param {MessageList} messageList - The list of displayed messages.
  */
 messenger.messageDisplay.onMessagesDisplayed.addListener(async (tab, messageList) => {
   console_log("Display Changed");
@@ -54,9 +56,9 @@ messenger.messageDisplay.onMessagesDisplayed.addListener(async (tab, messageList
 });
 
 /**
- * Searches for unsubscribe information in the selected message
- * @param {MessageHeader} selectedMessage - The selected message to search for unsubscribe information
- * @returns {boolean} - True if unsubscribe information is found, otherwise false
+ * Searches for unsubscribe information in the selected message.
+ * @param {MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @returns {boolean} - True if unsubscribe information is found, otherwise false.
  */
 async function searchForUnsub(selectedMessage) {
   if (!this.funcMap.has(selectedMessage.id)) {
@@ -80,9 +82,9 @@ async function searchForUnsub(selectedMessage) {
 }
 
 /**
- * Searches for unsubscribe links and information in the message headers and body
- * @param {MessageHeader} selectedMessage - The selected message to search for unsubscribe information
- * @returns {Function|boolean} - Unsubscribe function if found, otherwise false
+ * Searches for unsubscribe links and information in the message headers and body.
+ * @param {MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @returns {Function|boolean} - Unsubscribe function if found, otherwise false.
  */
 async function searchUnsub(selectedMessage) {
   try {
@@ -147,31 +149,40 @@ async function searchUnsub(selectedMessage) {
 }
 
 /**
- * Finds embedded unsubscribe links within the message body
- * @param {MessagePart} messagePart - The message part to search for embedded links
- * @returns {string|null} - The embedded link if found, otherwise null
+ * Finds embedded unsubscribe links within the message body.
+ * @param {MessagePart} messagePart - The message part to search for embedded links.
+ * @returns {string|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLink(messagePart) {
   if (messagePart.hasOwnProperty('body')) {
-    if (messagePart.body.toLowerCase().includes("unsubscribe".toLowerCase())) {
-      //console_log(messagePart.body)
-      let embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s\"\'\<\>]+unsubscribe[^\s\"\'\<\>]*)/i);
+    let lowerCaseBody = messagePart.body.toLowerCase();
+
+    // Check if the body contains the word "unsubscribe"
+    if (lowerCaseBody.includes("unsubscribe")) {
+
+      // First Regex: Capture URLs that contain the word "unsubscribe" directly in the URL
+      let embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s"'<>]+unsubscribe[^\s"'<>]*)/i);
       let embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
       if (embeddedLink) {
         return embeddedLink;
       }
 
-      embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s\"\'\<\>]+).{0,100}unsubscribe/i);
+      // Second Regex: Capture hrefs where "unsubscribe" appears within 300 characters after the href
+      embeddedLinkMatch = messagePart.body.match(/href=["'](https?:\/\/[^"']*)["'].{0,300}unsubscribe/i);
       embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
       if (embeddedLink) {
         return embeddedLink;
       }
 
-      embeddedLinkMatch = messagePart.body.match(/unsubscribe.{0,100}(https?:\/\/[^\s\"\'\<\>]+)/i);
+      // Third Regex: Capture cases where "unsubscribe" appears first, followed by a URL within 300 characters
+      embeddedLinkMatch = messagePart.body.match(/unsubscribe.{0,300}(https?:\/\/[^"']*)/i);
       embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
       if (embeddedLink) {
         return embeddedLink;
       }
+
+      // Error logging if no unsubscribe link is found
+      console_error("Couldn't find embedded unsub link");
     }
   }
 
@@ -187,24 +198,38 @@ function findEmbeddedUnsubLink(messagePart) {
   return null;
 }
 
-
+/**
+ * Base class for different unsubscribe methods.
+ */
 class UnsubMethod {
+  /**
+   * Method to be implemented by subclasses to execute the unsubscribe action.
+   * @throws {Error} - If the method is not implemented by a subclass.
+   */
   call() {
     throw new Error('Method call() must be implemented.');
   }
 }
 
 /**
-* Unsubscribes via a POST request
-* This Class needs an object attached with a weblink and post command in order to work
-*/
+ * Class for unsubscribing via a POST request.
+ */
 class UnsubPostRequest extends UnsubMethod {
+  /**
+   * Constructor for UnsubPostRequest.
+   * @param {string} weblink - The web link to send the POST request to.
+   * @param {string} command - The command to be sent in the POST request.
+   */
   constructor(weblink, command) {
     super();
     this.weblink = weblink;
     this.command = command;
   }
 
+  /**
+   * Executes the unsubscribe action via a POST request.
+   * @returns {Promise<boolean>} - True if the request is successful, otherwise false.
+   */
   async call() {
     try {
       console_log("Post to", this.weblink);
@@ -234,10 +259,15 @@ class UnsubPostRequest extends UnsubMethod {
 }
 
 /**
-* Unsubscribes via an email
-* This Class needs an object attached with a message, a recipient, and a subject in order to work
-*/
+ * Class for unsubscribing via an email.
+ */
 class UnsubMail extends UnsubMethod {
+  /**
+   * Constructor for UnsubMail.
+   * @param {MessageHeader} messageHeader - The message header associated with the email.
+   * @param {string} emailAddress - The email address to send the unsubscribe request to.
+   * @param {string} subject - The subject of the unsubscribe email.
+   */
   constructor(messageHeader, emailAddress, subject) {
     super();
     this.messageHeader = messageHeader;
@@ -245,6 +275,10 @@ class UnsubMail extends UnsubMethod {
     this.subject = subject;
   }
 
+  /**
+   * Executes the unsubscribe action via an email.
+   * @returns {Promise<boolean>} - True if the email is successfully composed, otherwise false.
+   */
   async call() {
     try {
       if (!this.messageHeader || !this.emailAddress || !this.subject) {
@@ -272,10 +306,10 @@ class UnsubMail extends UnsubMethod {
   }
 
   /**
- * Retrieves the MailIdentity associated with the given email headers receiver
- * @param {MessageHeader} messageHeader - The MessageHeader associated with the message
- * @returns {MailIdentity|undefined} - The MailIdentity if found, otherwise undefined
- */
+   * Retrieves the MailIdentity associated with the given email headers receiver.
+   * @param {MessageHeader} messageHeader - The MessageHeader associated with the message.
+   * @returns {Promise<MailIdentity|undefined>} - The MailIdentity if found, otherwise undefined.
+   */
   async getIdentityReceiver(messageHeader) {
     let allReceivers = new Set([...messageHeader.bccList,
     ...messageHeader.ccList, ...messageHeader.recipients]);
@@ -293,15 +327,22 @@ class UnsubMail extends UnsubMethod {
 }
 
 /**
-* Unsubscribes via a web link
-* This function needs an object attached with a web address in order to work
-*/
+ * Class for unsubscribing via a web link.
+ */
 class UnsubWeb extends UnsubMethod {
+  /**
+   * Constructor for UnsubWeb.
+   * @param {string} link - The web link to visit for unsubscribing.
+   */
   constructor(link) {
     super();
     this.link = link;
   }
 
+  /**
+   * Executes the unsubscribe action by opening the web link in a popup window.
+   * @returns {Promise<boolean>} - True if the window is successfully opened, otherwise false.
+   */
   async call() {
     try {
       if (!this.link) {
@@ -322,12 +363,11 @@ class UnsubWeb extends UnsubMethod {
 }
 
 /**
- * Handles runtime messages for the extension
- * @param {object} message - The message received
- * @param {object} sender - The sender of the message
- * @param {function} sendResponse - The function to send a response
+ * Handles runtime messages for the extension.
+ * @param {object} message - The message received.
+ * @param {object} sender - The sender of the message.
+ * @param {function} sendResponse - The function to send a response.
  */
-
 messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
   if (this.popupMap.has(sender.tab.windowId)) {
     let selectedMessage = this.popupMap.get(sender.tab.windowId).message;
@@ -369,8 +409,8 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
 });
 
 /**
- * Creates a popup window for the user to confirm unsubscribe action
- * @param {object} message - The message object containing details for the popup
+ * Creates a popup window for the user to confirm the unsubscribe action.
+ * @param {object} message - The message object containing details for the popup.
  */
 async function createPopup(message) {
   let popup = await messenger.windows.create({
@@ -384,9 +424,13 @@ async function createPopup(message) {
   this.popupMap.set(popup.id, { 'message': message, 'window': popup });
 }
 
+/**
+ * Listener for when a browser window is closed, used to clean up popupMap.
+ * @param {number} windowId - The ID of the window that was closed.
+ */
 browser.windows.onRemoved.addListener((windowId) => {
   console_log(`Window with ID ${windowId} has been closed.`);
-  if(this.popupMap.delete(windowId)){
+  if (this.popupMap.delete(windowId)) {
     console_log(`${windowId} removed from popupMap`);
   }
 });
