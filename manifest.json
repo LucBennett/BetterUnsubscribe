@@ -1,20 +1,19 @@
 {
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.1.1",
-  "default_locale": "en",
+  "version": "2.0.0",
+  "default_locale": "en_US",
+  "author": "Luc Bennett",
   "applications": {
     "gecko": {
-      "id": "unsubscribe@fra-uas.de",
-      "strict_min_version": "76.0a1"
+      "id": "{4753278b-acea-4b2b-a111-1fc9450d239d}"
     }
   },
-  "author": "Frankfurt University of Applied Sciences",
-  "homepage_url": "https://www.frankfurt-university.de",
   "permissions": [
     "messagesRead",
+    "messagesDelete",
     "accountsRead",
-    "accountsFolders"
+    "https://*/*"
   ],
   "icons":{
     "64": "icons/email.png"
@@ -25,7 +24,7 @@
     ]
   },
   "message_display_action": {
-    "default_title": "__MSG_unsubButton__",
+    "default_title": "__MSG_unsubscribeTitle__",
     "default_icon": "icons/email.png"
   },
   "manifest_version": 2
