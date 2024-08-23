@@ -79,5 +79,5 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (error) {
       console_error("Error sending delete message:", error);
     }
-  })
+  });
 });
