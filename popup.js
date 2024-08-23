@@ -1,19 +1,17 @@
-// popup.js
-
 /**
  * Logs messages to the console with a custom prefix.
- * @param {...any} arguments - The arguments to log.
+ * @param {...any} args - The arguments to log.
  */
-function console_log() {
-  console.log("[BetterUnsubscribe][popup.js]", ...arguments);
+function console_log(...args) {
+  console.log("[BetterUnsubscribe][popup.js]", ...args);
 }
 
 /**
  * Logs error messages to the console with a custom prefix.
- * @param {...any} arguments - The error arguments to log.
+ * @param {...any} args - The error arguments to log.
  */
-function console_error() {
-  console.error("[BetterUnsubscribe][popup.js]", ...arguments);
+function console_error(...args) {
+  console.error("[BetterUnsubscribe][popup.js]", ...args);
 }
 
 // Event listener that triggers when the DOM content is fully loaded.
@@ -42,17 +40,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Request the unsubscribe method from the background script and display relevant details.
   messenger.runtime.sendMessage({ messageId: messageId, requestMethod: true }).then((r) => {
+    let codeElement = document.createElement('code');
+    codeElement.textContent = r.address;
+
     switch (r.method) {
       case "Post":
-        detailsText.innerHTML = browser.i18n.getMessage("detailsTextPost") + `<code>${r.address}</code>`;
+        detailsText.textContent = browser.i18n.getMessage("detailsTextPost") + ' ';
+        detailsText.appendChild(codeElement);
         details.hidden = false;
         break;
       case "Email":
-        detailsText.innerHTML = browser.i18n.getMessage("detailsTextEmail") + `<code>${r.address}</code>`;
+        detailsText.textContent = browser.i18n.getMessage("detailsTextEmail") + ' ';
+        detailsText.appendChild(codeElement);
         details.hidden = false;
         break;
       case "Browser":
-        detailsText.innerHTML = browser.i18n.getMessage("detailsTextWeb") + `<code>${r.address}</code>`;
+        detailsText.textContent = browser.i18n.getMessage("detailsTextWeb") + ' ';
+        detailsText.appendChild(codeElement);
         details.hidden = false;
         break;
       default:
