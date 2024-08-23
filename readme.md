@@ -16,7 +16,7 @@ BetterUnsubscribe uses multiple methods to handle unsubscription, depending on t
 ### Build Instructions
 
 1. **cd to the directory**: Navigate to the project directory in your terminal.
-2. **Run compile.sh (or compile.bat)**: Execute the appropriate script for your operating system to compile the project. The script will place `BetterUnsubscribe.xpi` in the parent directory.
+2. **Run compile.sh (or compile.bat)**: Execute the appropriate script for your operating system to compile the project. The script will place `BetterUnsubscribe.xpi` in the build directory.
 3. **Open Thunderbird and Install the Addon**:
    - Go to Menu (hamburger icon) -> Addons and Themes.
    - Click on Tools for Addons (gear icon) -> Install Add-on From File.
@@ -27,7 +27,7 @@ BetterUnsubscribe uses multiple methods to handle unsubscription, depending on t
 
 Please be cautious when opening web links provided in emails. Phishing attempts are common, and opening malicious links can compromise your personal information and security. Always verify the legitimacy of the email sender before clicking on any links.
 
-Additionally [here](./Security%20Concerns.md) is a summary of some of the Security and Privacy concerns users should be aware of when using this (or any) unsubscribing tool.
+Additionally, [here](./Security%20Concerns.md) is a summary of some of the Security and Privacy concerns users should be aware of when using this (or any) unsubscribing tool.
 
 ### Icon Credits
 

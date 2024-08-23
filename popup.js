@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console_log("Response from background:", r);
       if (r.response) {
         statusText.textContent = browser.i18n.getMessage("statusTextDone"); // Update status text to show completion
-        deleteButton.hidden = false; // Show the delete button if the unsubscribe was successful
+        deleteButton.hidden = false; // Show the delete button if unsubscribe was successful
       } else {
         unsubscribeButton.disabled = false; // Re-enable the unsubscribe button if there was an error
         statusText.textContent = browser.i18n.getMessage("statusTextError"); // Update status text to show an error occurred
