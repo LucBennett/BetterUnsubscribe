@@ -259,7 +259,7 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
       }
 
       // Second Regex: Capture hrefs where "unsubscribe" appears within 300 characters after the href
-      embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s"'<>]*).{0,300}unsubscribe/i);
+      embeddedLinkMatch = messagePart.body.match(/(https?:\/\/[^\s"'<>]*)[^:]{0,300}unsubscribe/i);
       embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
       if (embeddedLink) {
         console_log("Matched Second Regex");
@@ -267,7 +267,7 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
       }
 
       // Third Regex: Capture cases where "unsubscribe" appears first, followed by a URL within 300 characters
-      embeddedLinkMatch = messagePart.body.match(/unsubscribe.{0,300}(https?:\/\/[^\s"'<>]*)/i);
+      embeddedLinkMatch = messagePart.body.match(/unsubscribe[^:]{0,300}(https?:\/\/[^\s"'<>]*)/i);
       embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
       if (embeddedLink) {
         console_log("Matched Third Regex");
