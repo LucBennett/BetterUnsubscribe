@@ -2,7 +2,7 @@
 setlocal
 
 :: Set version
-set VERSION=2.2.1
+set VERSION=2.2.2
 
 :: Get the current directory name
 for %%I in ("%CD%") do set "DIRNAME=%%~nI"
