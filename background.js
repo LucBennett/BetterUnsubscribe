@@ -98,7 +98,7 @@ async function searchForUnsub(selectedMessage) {
     }
   } else {
     console_log("Unsub Found previously For", selectedMessage['subject']);
-    return funcMap.get(selectedMessage.id);
+    return typeof funcMap.get(selectedMessage.id) === 'object';
   }
   return false;
 }
@@ -294,7 +294,7 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
 
 /**
  * Retrieves the MailIdentity associated with the given email headers receiver.
- * @param {MessageHeader} messageHeader - The MessageHeader associated with the message.
+ * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
  * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityReceiver(messageHeader) {
