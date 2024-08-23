@@ -4,7 +4,7 @@
         "description": "The name of the Thunderbird MailExtension"
     },
     "extensionDescription": {
-        "message": "This extension makes it easier to unsubscribe from mailing lists.",
+        "message": "Makes it easier to unsubscribe from mailing lists.",
         "description": "The description of the Thunderbird MailExtension"
     },
     "unsubscribeTitle": {

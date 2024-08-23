@@ -363,11 +363,10 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
       }
     }
   } else {
-    console_log("WEIRD MESSAGE",message);
+    console_log("WEIRD MESSAGE", message);
     return false;
   }
 });
-
 
 /**
  * Creates a popup window for the user to confirm unsubscribe action
@@ -384,3 +383,10 @@ async function createPopup(message) {
 
   this.popupMap.set(popup.id, { 'message': message, 'window': popup });
 }
+
+browser.windows.onRemoved.addListener((windowId) => {
+  console_log(`Window with ID ${windowId} has been closed.`);
+  if(this.popupMap.delete(windowId)){
+    console_log(`${windowId} removed from popupMap`);
+  }
+});
