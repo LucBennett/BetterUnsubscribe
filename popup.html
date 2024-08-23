@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Warning</title>
+    <script type="text/javascript" src="popup.js" defer="true"></script>
+    <style>
+      button {  width: 65px;
+                float: right;}
+      body {  width: 350px;
+              background-color: #f3f3f3;
+      }
+      p { font-size: small;}
+      .textDiv {
+        height: auto;
+        border-bottom: 2px solid lightgray;
+      }
+      .buttonDiv {
+        padding-top: 10px;
+      }
+      .buttonDiv button {
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="textDiv">
+      <p id="text">Default Text</p>
+    </div>
+    <div class="buttonDiv">
+      <button id="button_no" value="no">No</button>
+      <button id="button_yes" value="yes">Yes</button>
+      <button id="button_ok" value="ok">Ok</button>
+    </div>
+  </body>
+</html>
