@@ -18,6 +18,10 @@ function console_error() {
 
 // Event listener that triggers when the DOM content is fully loaded.
 document.addEventListener('DOMContentLoaded', async () => {
+  const params = new URLSearchParams(window.location.search);
+  const messageId = parseInt(params.get('messageId'));
+  console_log("MessageId:", messageId);
+
   const emailText = document.getElementById('emailText'); // Element to display the user's email
   const unsubscribeButton = document.getElementById('unsubscribeButton'); // Button to trigger unsubscribe action
   const cancelButton = document.getElementById('cancelButton'); // Button to cancel the action and close the popup
@@ -25,17 +29,20 @@ document.addEventListener('DOMContentLoaded', async () => {
   const statusText = document.getElementById('statusText'); // Element to display the current status of the operation
   const details = document.getElementById('detailsDropDown'); // Dropdown to show details of the unsubscribe method
   const detailsText = document.getElementById('detailsText'); // Text element to display details about the unsubscribe method
-  
-  // Request the user's email from the background script and display it.
-  messenger.runtime.sendMessage({requestEmail: true}).then((r) => {
-    emailText.textContent += "\n" + r.email;
-  }).catch((error) => {
-    console_error("Error receiving email from background:", error);
-  });
+
+  try {
+    let messageHeader = await messenger.messages.get(messageId);
+
+    // Extract the author information from the message header
+    let author = messageHeader.author;
+    emailText.textContent += author;
+  } catch (error) {
+    console_error(error);
+  }
 
   // Request the unsubscribe method from the background script and display relevant details.
-  messenger.runtime.sendMessage({ requestMethod: true }).then((r) => {
-    switch(r.method){
+  messenger.runtime.sendMessage({ messageId: messageId, requestMethod: true }).then((r) => {
+    switch (r.method) {
       case "Post":
         detailsText.innerHTML = browser.i18n.getMessage("detailsTextPost") + `<code>${r.address}</code>`;
         details.hidden = false;
@@ -49,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         details.hidden = false;
         break;
       default:
-        // If no method is provided, do nothing.
+      // If no method is provided, do nothing.
     }
   }).catch((error) => {
     console_error("Error receiving methodInfo from background:", error);
@@ -59,9 +66,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   unsubscribeButton.addEventListener('click', async () => {
     unsubscribeButton.disabled = true; // Disable the button to prevent multiple clicks
     statusText.textContent = browser.i18n.getMessage("statusTextWorking"); // Update status text to show the process is ongoing
-    messenger.runtime.sendMessage({unsubscribe: true}).then((r) => {
+    messenger.runtime.sendMessage({ messageId: messageId, unsubscribe: true }).then((r) => {
       console_log("Response from background:", r);
-      if(r.response) {
+      if (r.response) {
         statusText.textContent = browser.i18n.getMessage("statusTextDone"); // Update status text to show completion
         deleteButton.hidden = false; // Show the delete button if the unsubscribe was successful
       } else {
@@ -76,7 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Event listener for the cancel button.
   cancelButton.addEventListener('click', async () => {
     try {
-      const r = await messenger.runtime.sendMessage({cancel: true});
+      const r = await messenger.runtime.sendMessage({ messageId: messageId, cancel: true });
       console_log("Response from background:", r);
       window.close(); // Close the popup window after cancelling
     } catch (error) {
@@ -88,7 +95,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   deleteButton.addEventListener('click', async () => {
     try {
       deleteButton.disabled = true; // Disable the delete button to prevent multiple clicks
-      const r = await messenger.runtime.sendMessage({delete: true});
+      const r = await messenger.runtime.sendMessage({ messageId: messageId, delete: true });
       console_log("Response from background:", r);
     } catch (error) {
       console_error("Error sending delete message:", error);
