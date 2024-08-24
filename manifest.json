@@ -1,7 +1,7 @@
 {
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "2.2.3",
+  "version": "2.3.0",
   "default_locale": "en_US",
   "author": "Luc Bennett",
   "applications": {
@@ -13,7 +13,8 @@
     "messagesRead",
     "messagesDelete",
     "accountsRead",
-    "https://*/*"
+    "https://*/*",
+    "theme"
   ],
   "icons":{
     "64": "icons/email.png"

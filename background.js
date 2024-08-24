@@ -28,6 +28,7 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
     let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
     if (funcMap.has(messageHeader.id)) {
       await createPopup(messageHeader);
+      await messenger.messageDisplayAction.enable()
     } else {
       if (searchForUnsub(messageHeader)) {
         await createPopup(messageHeader);
@@ -313,7 +314,7 @@ async function getIdentityReceiver(messageHeader) {
 
 /**
  * Retrieves the MailIdentity associated with the given message's folder.
- * @param {MessageHeader} messageHeader - The MessageHeader associated with the message.
+ * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
  * @returns {Promise<messenger.identities.MailIdentity>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
