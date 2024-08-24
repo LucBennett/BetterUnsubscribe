@@ -27,10 +27,10 @@ mkdir -p build
 # Create the xpi file, excluding certain files
 if command -v zip >/dev/null 2>&1; then
     echo "zip is installed."
-    zip -r -9 -x '*.git*' -x 'build/*' "./build/$(basename "$PWD")-$VERSION.xpi" .
+    zip -r -9 -x '*.git*' -x 'build/*' -x '*.sh' -x '*.ps1' "./build/$(basename "$PWD")-$VERSION.xpi" .
 elif command -v 7z >/dev/null 2>&1; then
     echo "7z is installed."
-    7z a -tzip -mx=9 -xr'!.git' -xr'!build' "./build/$(basename "$PWD")-$VERSION.xpi" .
+    7z a -tzip -mx=9 -xr'!.git' -xr'!build' -xr'!*.sh' -xr'!*.ps1' "./build/$(basename "$PWD")-$VERSION.xpi" .
 else
     echo "No archiver found. Please install zip or 7z."
     exit 1
