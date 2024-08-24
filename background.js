@@ -1,8 +1,6 @@
 // Map to store functions for different unsubscribe actions associated with message IDs
 const funcMap = new Map(); //MessageId:UnsubMethod
 
-let isLocked = false;
-
 /**
  * Logs messages to the console with a specific prefix.
  * @param {...*} arguments - The arguments to be logged.
@@ -28,12 +26,11 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
     await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     if (tab.type === "messageDisplay" || tab.type === "mail") {
         let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-        if (funcMap.has(messageHeader.id)) {
-            await createPopup(messageHeader);
-            await messenger.messageDisplayAction.enable()
-        } else {
-            if (searchForUnsub(messageHeader)) {
+        if (messageHeader) {
+            const found = await searchForUnsub(messageHeader);
+            if (found === true) {
                 await createPopup(messageHeader);
+                await messenger.messageDisplayAction.enable()
             }
         }
     }
@@ -46,14 +43,17 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
  */
 messenger.tabs.onActivated.addListener(async (activeInfo) => {
     console_log("Tab Activated");
+    await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     let tab = await messenger.tabs.get(activeInfo.tabId);
     if (tab) {
         console_log(tab.type);
         if (tab.type === "messageDisplay" || tab.type === "mail") {
             let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-            await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-            if (searchForUnsub(messageHeader)) {
-                await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
+            if (messageHeader) {
+                const found = await searchForUnsub(messageHeader);
+                if (found === true) {
+                    await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
+                }
             }
         }
     }
@@ -67,10 +67,11 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
  */
 messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) => {
     console_log("Selected Message Changed");
+    await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     if (messageList.messages.length !== 0) {
         const messageHeader = messageList.messages[0];
-        await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-        if (searchForUnsub(messageHeader)) {
+        const found = await searchForUnsub(messageHeader);
+        if (found === true) {
             await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
         }
     }
@@ -80,33 +81,31 @@ messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList
  * Searches for unsubscribe information in the selected message.
  * If found, it stores the information in the funcMap.
  * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
- * @returns {boolean} - True if unsubscribe information is found, otherwise false.
+ * @returns {Promise<boolean>} - True if unsubscribe information is found, otherwise false.
  */
 async function searchForUnsub(selectedMessage) {
-    if (isLocked) return false; // If already running, ignore subsequent calls
-    isLocked = true;
-
-    try {
-        if (!funcMap.has(selectedMessage.id)) {
-            try {
-                let result = await searchUnsub(selectedMessage);
-                if (result) {
-                    console_log("Unsub Found For", selectedMessage['subject']);
-                    funcMap.set(selectedMessage.id, result); // Store the unsubscribe method if found
-                    return true;
-                } else {
-                    console_log("No Unsub Found For", selectedMessage['subject']);
-                    funcMap.set(selectedMessage.id, false); // Mark as no unsubscribe info found
-                }
-            } catch (error) {
-                console_error(error);
+    if (!funcMap.has(selectedMessage.id)) {
+        try {
+            let result = await searchUnsub(selectedMessage);
+            if (result) {
+                console_log("Unsub Found For", selectedMessage['subject']);
+                funcMap.set(selectedMessage.id, result); // Store the unsubscribe method if found
+                return true;
+            } else {
+                console_log("No Unsub Found For", selectedMessage['subject']);
+                funcMap.set(selectedMessage.id, false); // Mark as no unsubscribe info found
             }
-        } else {
-            console_log("Unsub Found previously For", selectedMessage['subject']);
-            return !!funcMap.get(selectedMessage.id);
+        } catch (error) {
+            console_error(error);
         }
-    } finally {
-        isLocked = false;
+    } else {
+        if (funcMap.get(selectedMessage.id)) {
+            console_log("Unsub found previously for", selectedMessage['subject']);
+            return true;
+        } else {
+            console_log("Previously found no unsub for", selectedMessage['subject']);
+            return false;
+        }
     }
 
     return false;
@@ -124,7 +123,7 @@ function decodeURL(url) {
 /**
  * Searches for unsubscribe links and information in the message headers and body.
  * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
- * @returns {UnsubMethod|boolean} - Unsubscribe Method if found, otherwise false.
+ * @returns {Promise<UnsubMethod|boolean>} - Unsubscribe Method if found, otherwise false.
  */
 async function searchUnsub(selectedMessage) {
     try {
@@ -484,7 +483,7 @@ class UnsubWeb extends UnsubMethod {
 messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     if (message.messageId) {
         let messageId = parseInt(message.messageId);
-        if (message.unsubscribe===true) {
+        if (message.unsubscribe === true) {
             console_log("User chose to unsubscribe from the mailing list");
             let out = await funcMap.get(messageId).call();
             if (out) {
@@ -492,14 +491,14 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
             } else {
                 return {response: "Error"};
             }
-        } else if (message.cancel===true) {
+        } else if (message.cancel === true) {
             console_log("User canceled the unsubscribe action.");
             return {response: "Canceled"};
-        } else if (message.delete===true) {
+        } else if (message.delete === true) {
             console_log("User wants to delete the email");
             await messenger.messages.delete([messageId], false);
             return {response: 'Deleted'};
-        } else if (message.getMethod===true) {
+        } else if (message.getMethod === true) {
             console_log('Method Requested');
             let func = funcMap.get(messageId);
             console_log(func);
@@ -509,6 +508,8 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
                 return {method: "Email", address: func.emailAddress};
             } else if (func instanceof UnsubWeb) {
                 return {method: "messenger", address: func.link};
+            } else if (func === false) {
+                return {method: "NONE"};
             } else {
                 return {method: "IDK"};
             }
