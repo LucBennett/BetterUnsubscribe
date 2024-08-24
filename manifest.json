@@ -4,19 +4,19 @@
   "version": "2.3.1",
   "default_locale": "en_US",
   "author": "Luc Bennett",
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "{4753278b-acea-4b2b-a111-1fc9450d239d}"
     }
   },
   "permissions": [
-    "messagesRead",
-    "messagesDelete",
     "accountsRead",
-    "https://*/*",
-    "theme"
+    "messagesRead",
+    "messagesMove",
+    "theme",
+    "https://*/*"
   ],
-  "icons":{
+  "icons": {
     "64": "icons/email.png"
   },
   "background": {
