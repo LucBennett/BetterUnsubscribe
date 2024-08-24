@@ -4,77 +4,139 @@
   <meta charset="UTF-8">
   <title data-i18n="unsubscribeTitle">Unsubscribe</title>
   <style>
+    /* Thunderbird theme colors and font */
+    :root {
+      --in-content-page-background-color: #f0f0f0;
+      --in-content-primary-text-color: #1a1a1a;
+      --in-content-secondary-text-color: #5f6368;
+      --in-content-button-background-color: #0078d7;
+      --in-content-button-hover-background-color: #005a9e;
+      --in-content-button-color: white;
+      --button-danger-background-color: #d9534f;
+      --button-secondary-background-color: #6c757d;
+      --button-success-background-color: #28a745;
+      --in-content-box-background-color: #ffffff;
+      --in-content-box-border-color: #dcdcdc;
+      --in-content-border-radius: 4px;
+      --in-content-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      --in-content-code-background-color: #f8f9fa; /* Light gray background for code blocks */
+      --in-content-code-color: #212529; /* Dark text color for code */
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Segoe UI", sans-serif;
+      font-size: 14px;
       padding: 20px;
       text-align: center;
-      background-color: #f4f4f4;
+      background-color: var(--in-content-page-background-color);
+      color: var(--in-content-primary-text-color);
     }
+
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--in-content-primary-text-color);
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--in-content-secondary-text-color);
+      margin-bottom: 20px;
+    }
+
     .button {
-      padding: 10px 20px;
+      padding: 8px 16px;
       margin: 10px;
       cursor: pointer;
       border: none;
-      border-radius: 5px;
-      color: white;
+      border-radius: var(--in-content-border-radius);
+      background-color: var(--in-content-button-background-color);
+      color: var(--in-content-button-color);
+      box-shadow: var(--in-content-shadow);
+      transition: background-color 0.2s ease, box-shadow 0.2s ease;
     }
+
     .button:hover {
-      opacity: 0.8;
+      background-color: var(--in-content-button-hover-background-color);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+
+    .button:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.5);
+    }
+
     #unsubscribeButton {
-      background-color: #d9534f;
+      background-color: var(--button-success-background-color);
     }
+
     #cancelButton {
-      background-color: #5bc0de;
+      background-color: var(--button-secondary-background-color);
     }
+
     #deleteButton {
-      background-color: #5cb85c;
+      background-color: var(--button-danger-background-color);
     }
+
     h3 {
-      color: #333;
+      font-size: 16px;
+      font-weight: 500;
+      margin-top: 20px;
+      color: var(--in-content-primary-text-color);
     }
+
     details {
       margin-top: 20px;
       text-align: left;
       max-width: 100%;
     }
+
     summary {
       cursor: pointer;
       font-weight: bold;
       margin-bottom: 10px;
+      color: var(--in-content-primary-text-color);
     }
+
     .details-content {
-      background-color: #e9ecef;
+      background-color: var(--in-content-box-background-color);
       padding: 10px;
-      border-radius: 5px;
-      border: 1px solid #ced4da;
+      border-radius: var(--in-content-border-radius);
+      border: 1px solid var(--in-content-box-border-color);
+      box-shadow: var(--in-content-shadow);
       word-wrap: break-word;
       overflow-wrap: break-word;
       max-width: 100%;
     }
+
     code {
       display: block;
       word-wrap: break-word;
       overflow-wrap: break-word;
       white-space: pre-wrap;
       max-width: 100%;
+      background-color: var(--in-content-code-background-color);
+      color: var(--in-content-code-color);
+      padding: 8px;
+      border-radius: var(--in-content-border-radius);
     }
   </style>
 </head>
 <body>
-  <h2 data-i18n="unsubscribeHeader">Unsubscribe</h2>
-  <p id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</p>
-  <button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe</button>
-  <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
-  <button id="deleteButton" class="button" hidden="hidden" data-i18n="deleteButton" aria-label="Delete Email">Delete Email</button>
-  <h3 id="statusText" role="tab"></h3>
-  <details id="detailsDropDown" hidden="hidden">
-    <summary data-i18n="detailsSummary">More details</summary>
-    <div class="details-content">
-      <p id="detailsText" data-i18n="detailsText"></p>
-      </div>
-  </details>
-  <script src="i18n.js"></script>
-  <script src="popup.js"></script>
+<h2 data-i18n="unsubscribeHeader">Unsubscribe</h2>
+<p id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</p>
+<button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe</button>
+<button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
+<button id="deleteButton" class="button" hidden data-i18n="deleteButton" aria-label="Delete Email">Delete Email</button>
+<h3 id="statusText" role="tab"></h3>
+<details id="detailsDropDown" hidden>
+  <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
+  <div class="details-content">
+    <p id="detailsText" data-i18n="detailsText"></p>
+  </div>
+</details>
+<script src="i18n.js"></script>
+<script src="popup.js"></script>
 </body>
 </html>
