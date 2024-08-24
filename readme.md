@@ -8,7 +8,7 @@ BetterUnsubscribe enhances your email experience by simplifying the unsubscribe 
 
 BetterUnsubscribe uses multiple methods to handle unsubscription, depending on the available options in the email:
 
-1. **One-Click Unsubscribe**: If `List-Unsubscribe=One-Click` is found in the email header, a POST request is automatically sent to unsubscribe.
+1. **One-Click Unsubscribe**: If `List-Unsubscribe=One-Click` is found in the email header, a POST request is sent to unsubscribe.
 2. **Unsubscribe via Email**: If a `List-Unsubscribe` email address (`mailto://`) is present in the header, an email draft is prepared for you to send.
 3. **Unsubscribe via Web**: If a `List-Unsubscribe` web address (`https://`) is in the header, the site is opened in your browser.
 4. **Unsubscribe Link in Content**: If an unsubscribe link (`https://`) is found within the email content, the site is opened in your browser.
@@ -16,7 +16,7 @@ BetterUnsubscribe uses multiple methods to handle unsubscription, depending on t
 ### Build Instructions
 
 1. **cd to the directory**: Navigate to the project directory in your terminal.
-2. **Run compile.sh (or compile.bat)**: Execute the appropriate script for your operating system to compile the project. The script will place `BetterUnsubscribe.xpi` in the build directory.
+2. **Run compile.sh (or compile.ps1)**: Execute the appropriate script for your operating system to compile the project. The script will place `BetterUnsubscribe.xpi` in the build directory.
 3. **Open Thunderbird and Install the Addon**:
    - Go to Menu (hamburger icon) -> Addons and Themes.
    - Click on Tools for Addons (gear icon) -> Install Add-on From File.
