@@ -28,7 +28,7 @@ messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
     await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     if (tab.type === "messageDisplay" || tab.type === "mail") {
         let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-        if (funcMap.has(messageHeader.id)) {
+        if (funcMap.has(messageHeader.id) && !!funcMap.get(messageHeader.id)) {
             await createPopup(messageHeader);
             await messenger.messageDisplayAction.enable()
         } else {
