@@ -322,7 +322,7 @@ async function getIdentityReceiver(messageHeader) {
 /**
  * Retrieves the MailIdentity associated with the given message's folder.
  * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
- * @returns {Promise<messenger.identities.MailIdentity>} - The MailIdentity if found, otherwise null.
+ * @returns {Promise<MailIdentity>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
     let folder = messageHeader.folder;
