@@ -1,17 +1,19 @@
 {
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "2.3.1",
+  "version": "2.3.2",
   "default_locale": "en_US",
   "author": "Luc Bennett",
   "browser_specific_settings": {
     "gecko": {
-      "id": "{4753278b-acea-4b2b-a111-1fc9450d239d}"
+      "id": "{4753278b-acea-4b2b-a111-1fc9450d239d}",
+      "strict_min_version": "115.0"
     }
   },
   "permissions": [
     "accountsRead",
     "messagesRead",
+    "messagesDelete",
     "messagesMove",
     "theme",
     "https://*/*"

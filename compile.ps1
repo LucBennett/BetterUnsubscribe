@@ -33,10 +33,10 @@ if (-not (Test-Path $buildDir)) {
 # Create the xpi file excluding certain files
 if (Get-Command zip -ErrorAction SilentlyContinue) {
     Write-Host "zip is installed."
-    & zip -r -9 -x '*.git*' -x 'build/*' -x '*.sh' -x '*.ps1' "./build/$((Get-Item .).BaseName)-$VERSION.xpi" .
+    & zip -r -9 -x '.*' -x 'build/*' -x '*.sh' -x '*.ps1' -x '*.md' "./build/$((Get-Item .).BaseName)-$VERSION.xpi" .
 } elseif (Get-Command 7z -ErrorAction SilentlyContinue) {
     Write-Host "7z is installed."
-    & 7z a -tzip -mx=9 "-xr!.git" "-xr!build" "-x!*.sh" "-x!*.ps1" "./build/$((Get-Item .).BaseName)-$VERSION.xpi" .
+    & 7z a -tzip -mx=9 "-xr!.*" "-xr!build" "-x!*.sh" "-x!*.ps1" "-x!*.md" "./build/$((Get-Item .).BaseName)-$VERSION.xpi" .
 } else {
     Write-Host "No archiver found. Please install zip or 7z."
     exit 1
