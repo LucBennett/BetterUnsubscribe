@@ -30,7 +30,7 @@ messenger.theme.onUpdated.addListener(({theme}) => {
  * The function is called when a theme is first applied or when there are
  * updates to the theme settings.
  *
- * @param {ThemeType} theme - The current theme object provided by Thunderbird.
+ * @param {messenger._manifest.ThemeType} theme - The current theme object provided by Thunderbird.
  */
 function applyTheme(theme) {
     console_log("Apply Theme");
