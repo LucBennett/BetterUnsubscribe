@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         statusText.textContent = messenger.i18n.getMessage("statusTextWorking"); // Update status text to show the process is ongoing
         messenger.runtime.sendMessage({messageId: messageId, unsubscribe: true}).then((r) => {
             console_log("Response from background:", r);
-            if (r.response) {
+            if (r.response === "Unsubscribed") {
                 statusText.textContent = messenger.i18n.getMessage("statusTextDone"); // Update status text to show completion
                 deleteButton.hidden = false; // Show the delete button if unsubscribe was successful
             } else {
