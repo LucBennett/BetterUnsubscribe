@@ -12,11 +12,16 @@ if (Get-Command jq -ErrorAction SilentlyContinue) {
         exit 1
     }
 } else {
-    Write-Host "jq is not installed."
+    Write-Host "jq is not installed, falling back to regex-based version extraction."
     # Set version using Select-String and regex to parse manifest.json
     if (Test-Path "manifest.json") {
         $VERSION = Select-String -Path "manifest.json" -Pattern '"version"' | ForEach-Object {
-            $_ -replace '.*"version"\s*:\s*"(.*)".*', '$1'
+            $_ -replace '.*"version"\s*:\s*"(.*?)".*', '$1'
+        }
+
+        if (-not $VERSION) {
+            Write-Host "Error: Unable to extract version from manifest.json."
+            exit 1
         }
     } else {
         Write-Host "Error: manifest.json not found."
@@ -28,16 +33,34 @@ if (Get-Command jq -ErrorAction SilentlyContinue) {
 $buildDir = "build"
 if (-not (Test-Path $buildDir)) {
     New-Item -ItemType Directory -Path $buildDir
+    Write-Host "Created build directory: $buildDir"
 }
 
-# Create the xpi file excluding certain files
-if (Get-Command zip -ErrorAction SilentlyContinue) {
-    Write-Host "zip is installed."
-    & zip -r -9 -x '.*' -x 'build/*' -x '*.sh' -x '*.ps1' -x '*.md' "./build/$((Get-Item .).BaseName)-$VERSION.xpi" .
-} elseif (Get-Command 7z -ErrorAction SilentlyContinue) {
-    Write-Host "7z is installed."
-    & 7z a -tzip -mx=9 "-xr!.*" "-xr!build" "-x!*.sh" "-x!*.ps1" "-x!*.md" "./build/$((Get-Item .).BaseName)-$VERSION.xpi" .
-} else {
-    Write-Host "No archiver found. Please install zip or 7z."
+# Define variables
+$baseName = (Get-Item .).BaseName
+$destination = "./$buildDir/$baseName-$VERSION.xpi"
+
+# Create an array of files to exclude
+$excludePatterns = @(".*", "$buildDir/*", "*.sh", "*.ps1", "*.md")
+
+# Get all the files and directories recursively, excluding the specified patterns
+$filesToCompress = Get-ChildItem -Recurse | Where-Object {
+    $exclude = $false
+    foreach ($pattern in $excludePatterns) {
+        if ($_ -like $pattern) {
+            $exclude = $true
+            break
+        }
+    }
+    return -not $exclude
+}
+
+# Handle case where no files are found to compress
+if ($filesToCompress.Count -eq 0) {
+    Write-Host "Error: No files found to compress after applying exclusion patterns."
     exit 1
 }
+
+# Create the archive
+Compress-Archive -Path $filesToCompress.FullName -DestinationPath $destination -Force
+Write-Host "Archive created: $destination"
