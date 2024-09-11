@@ -29,15 +29,15 @@ if (-not (Test-Path $buildDir)) {
 $baseName = (Get-Item .).BaseName
 $fileName = "$baseName-$VERSION"
 $xpiFileName = "$fileName.xpi"
-$xpiFilePath = Join-Path -Path "$buildDir" -ChildPath $xpiFileName
+$xpiFilePath = Join-Path -Path $buildDir -ChildPath $xpiFileName
 
 # Create the xpi file excluding certain files
 if (Get-Command zip -ErrorAction SilentlyContinue) {
     Write-Host "zip is installed."
-    & zip -r -9 -x '.*' -x "$buildDir/*" -x '*.sh' -x '*.ps1' -x '*.md' "$xpiFilePath" .
+    & zip -r -9 -x '.*' -x "build/*" -x '*.sh' -x '*.ps1' -x '*.md' "$xpiFilePath" .
 } elseif (Get-Command 7z -ErrorAction SilentlyContinue) {
     Write-Host "7z is installed."
-    & 7z a -tzip -mx=9 "-xr!.*" "-xr!$buildDir" "-xr!*.sh" "-xr!*.ps1" "-xr!*.md" "$xpiFilePath" .
+    & 7z a -tzip -mx=9 "-xr!.*" "-xr!build" "-xr!*.sh" "-xr!*.ps1" "-xr!*.md" "$xpiFilePath" .
 } else {
     Write-Host "No archiver found. Please install zip or 7z."
     exit 1
