@@ -1,0 +1,66 @@
+{
+  "extensionName": {
+    "message": "BetterUnsubscribe",
+    "description": "Der Name der Thunderbird MailExtension"
+  },
+  "extensionDescription": {
+    "message": "Erleichtert das Abbestellen von Mailinglisten.",
+    "description": "Die Beschreibung der Thunderbird MailExtension"
+  },
+  "unsubscribeTitle": {
+    "message": "Abbestellen",
+    "description": "Titel der Abbestellseite"
+  },
+  "unsubscribeHeader": {
+    "message": "Abbestellen",
+    "description": "Überschrift der Abbestellseite"
+  },
+  "emailText": {
+    "message": "Möchten Sie diese Mailingliste abbestellen?",
+    "description": "Text, der den Benutzer fragt, ob er die Liste abbestellen möchte"
+  },
+  "unsubscribeButton": {
+    "message": "Abbestellen",
+    "description": "Bezeichnung für den Abbestell-Button"
+  },
+  "cancelButton": {
+    "message": "Abbrechen",
+    "description": "Bezeichnung für den Abbrechen-Button"
+  },
+  "deleteButton": {
+    "message": "E-Mail löschen",
+    "description": "Bezeichnung für den Button zum Löschen der E-Mail"
+  },
+  "detailsSummary": {
+    "message": "Weitere Details",
+    "description": "Mehr Details im Drop-Down"
+  },
+  "detailsTextPost": {
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine POST-Anfrage an die folgende URL gesendet:",
+    "description": "Details für eine POST-Anfrage"
+  },
+  "detailsTextEmail": {
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine E-Mail an die folgende Adresse erstellt:",
+    "description": "Details für eine E-Mail"
+  },
+  "detailsTextWeb": {
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird ein Browserfenster geöffnet und die folgende URL besucht:",
+    "description": "Details für einen Web-Link"
+  },
+  "statusTextEmpty": {
+    "message": "",
+    "description": "Leerer Status-Text"
+  },
+  "statusTextWorking": {
+    "message": "Arbeitet...",
+    "description": "Status-Text für den Arbeitszustand"
+  },
+  "statusTextDone": {
+    "message": "Fertig",
+    "description": "Status-Text für den abgeschlossenen Zustand"
+  },
+  "statusTextError": {
+    "message": "Fehler",
+    "description": "Status-Text für den Fehlerzustand"
+  }
+}
