@@ -1,8 +1,8 @@
 {
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "2.3.3",
-  "default_locale": "en-US",
+  "version": "2.3.4",
+  "default_locale": "en",
   "author": "Luc Bennett",
   "browser_specific_settings": {
     "gecko": {
