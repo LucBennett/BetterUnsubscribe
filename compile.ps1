@@ -1,6 +1,8 @@
 # Set to stop on any error
 $ErrorActionPreference = "Stop"
 
+$currentDir = Get-Location
+
 if (Test-Path "manifest.json") {
     if (Get-Command jq -ErrorAction SilentlyContinue) {
         Write-Host "jq is installed."
@@ -17,7 +19,7 @@ if (Test-Path "manifest.json") {
 }
 
 # Create build directory if it doesn't exist
-$buildDir = "./build"
+$buildDir = Join-Path -Path $currentDir -ChildPath "build"
 if (-not (Test-Path $buildDir)) {
     New-Item -ItemType Directory -Path $buildDir
     Write-Host "Created build directory: $buildDir"
@@ -28,32 +30,53 @@ $baseName = (Get-Item .).BaseName
 $fileName = "$baseName-$VERSION"
 $zipFileName = "$fileName.zip"
 $xpiFileName = "$fileName.xpi"
-$zipFilePath = "$buildDir/$zipFileName"
-$xpiFilePath = "$buildDir/$xpiFileName"
+$zipFilePath = Join-Path -Path "$buildDir" -ChildPath $zipFileName
+$xpiFilePath = Join-Path -Path "$buildDir" -ChildPath $xpiFileName
 
-# Create an array of files to exclude
-$excludePatterns = @(".*", "$buildDir/*", "*.sh", "*.ps1", "*.md")
+Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$zip = [System.IO.Compression.ZipFile]::Open($zipFilePath, [System.IO.Compression.ZipArchiveMode]::Create)
 
-# Get all the files and directories recursively, excluding the specified patterns
-$filesToCompress = Get-ChildItem -Recurse | Where-Object {
-    $exclude = $false
-    foreach ($pattern in $excludePatterns) {
-        if ($_ -like $pattern) {
-            $exclude = $true
-            break
-        }
+$files = Get-ChildItem -Recurse -Exclude *.md, .*, *.sh, *.ps1, build |
+        Where-Object { $_.FullName -notlike "$buildDir\*" } |
+        Where-Object { $_.FullName -notlike "$currentDir\.*\*" }
+
+# Iterate through each file and add it to the ZIP
+foreach ($file in $files) {
+
+    # Calculate the relative path inside the ZIP archive
+    $relativePath = (Resolve-Path -Path $file.FullName -Relative) -replace '^\.\\', ''
+    $relativePath = $relativePath -replace '\\', '/'
+    Write-Host "$relativePath"
+
+    if ($file.PSIsContainer) {
+        # Write-Host "$($file.FullName) is a directory."
+        # Create an entry in the ZIP archive
+        $entry = $zip.CreateEntry("$relativePath/")
+    } else {
+        # Write-Host "$($file.FullName) is a file."
+        # Create an entry in the ZIP archive
+        $entry = $zip.CreateEntry($relativePath)
+
+        $entry.LastWriteTime = $file.LastWriteTimeUtc
+        $entry.ExternalAttributes = $file.Attributes
+
+        # Open a stream to write the file's contents to the ZIP entry
+        $fileStream = [System.IO.File]::OpenRead($file)
+        $entryStream = $entry.Open()
+        $fileStream.CopyTo($entryStream)
+
+        # Close the streams
+        $fileStream.Close()
+        $entryStream.Close()
     }
-    return -not $exclude
 }
 
-# Create the archive as a .zip file
-if ($filesToCompress.Count -eq 0) {
-    Write-Host "Error: No files found to compress after applying exclusion patterns."
-    exit 1
-}
+# release zip file
+$zip.Dispose()
 
-Compress-Archive -Path $filesToCompress.FullName -DestinationPath $zipFilePath -Force
-Write-Host "Archive created as .zip: $zipFilePath"
+# Output the location of the zip file
+Write-Host "Directory compressed into: $zipFilePath"
 
 # Check if the .xpi file already exists
 if (Test-Path $xpiFilePath) {

@@ -338,6 +338,8 @@ async function getIdentityForMessage(messageHeader) {
     return null; // No matching identity found
 }
 
+// See RFC 2369 (Mailing list Header) and RFC 8058 (Post request)
+
 /**
  * Base class for different unsubscribe methods.
  */
@@ -379,7 +381,8 @@ class UnsubPostRequest extends UnsubMethod {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'List-Unsubscribe-Post': this.command
-                }
+                },
+                body: 'List-Unsubscribe=One-Click'
             };
 
             console_log(fetchOptions);
