@@ -37,6 +37,10 @@ Please be cautious when opening web links provided in emails. Phishing attempts 
 
 Additionally, [here](./Security%20Concerns.md) is a summary of some of the Security and Privacy concerns users should be aware of when using this (or any) unsubscribing tool.
 
+### Translations
+
+Brazilian Portuguese created by [dataserver](https://github.com/dataserver).
+
 ### Icon Credits
 
 The icon is made by [freepik](https://www.freepik.com) and can be found on [FlatIcon](https://www.flaticon.com/free-icon/email_121931).

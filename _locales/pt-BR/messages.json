@@ -1,0 +1,66 @@
+{
+    "extensionName": {
+        "message": "BetterUnsubscribe",
+        "description": "O nome da extensão do Thunderbird"
+    },
+    "extensionDescription": {
+        "message": "Facilita o cancelamento de inscrições em listas de e-mails.",
+        "description": "A descrição da extensão do Thunderbird"
+    },
+    "unsubscribeTitle": {
+        "message": "Cancelar Inscrição",
+        "description": "Título da página de cancelamento de inscrição"
+    },
+    "unsubscribeHeader": {
+        "message": "Cancelar Inscrição",
+        "description": "Cabeçalho da página de cancelamento de inscrição"
+    },
+    "emailText": {
+        "message": "Você gostaria de cancelar a inscrição nesta lista de e-mails?",
+        "description": "Texto perguntando ao usuário se deseja cancelar a inscrição"
+    },
+    "unsubscribeButton": {
+        "message": "Cancelar Inscrição",
+        "description": "Rótulo do botão de cancelamento de inscrição"
+    },
+    "cancelButton": {
+        "message": "Cancelar",
+        "description": "Rótulo do botão de cancelar"
+    },
+    "deleteButton": {
+        "message": "Excluir E-mail",
+        "description": "Rótulo do botão de exclusão de e-mail"
+    },
+    "detailsSummary": {
+        "message": "Mais detalhes",
+        "description": "Menu suspenso de Mais Detalhes"
+    },
+    "detailsTextPost": {
+        "message": "Quando você clicar em \"Cancelar Inscrição\", uma solicitação POST será enviada para o seguinte URL:",
+        "description": "Detalhes para uma solicitação POST"
+    },
+    "detailsTextEmail": {
+        "message": "Quando você clicar em \"Cancelar Inscrição\", um e-mail será redigido para o seguinte endereço:",
+        "description": "Detalhes para um e-mail"
+    },
+    "detailsTextWeb": {
+        "message": "Quando você clicar em \"Cancelar Inscrição\", uma janela do navegador será aberta e visitará o seguinte URL:",
+        "description": "Detalhes para um link da Web"
+    },
+    "statusTextEmpty": {
+        "message": "",
+        "description": "Texto de status vazio"
+    },
+    "statusTextWorking": {
+        "message": "Trabalhando...",
+        "description": "Texto de status para estado de trabalho"
+    },
+    "statusTextDone": {
+        "message": "Concluído",
+        "description": "Texto de status para estado concluído"
+    },
+    "statusTextError": {
+        "message": "Erro",
+        "description": "Texto de status para estado de erro"
+    }
+}
