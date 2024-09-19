@@ -1,5 +1,6 @@
 /**
  * Logs messages to the console with a custom prefix.
+ * This helps identify logs specific to BetterUnsubscribe's popup.js.
  * @param {...any} args - The arguments to log.
  */
 function console_log(...args) {
@@ -8,181 +9,90 @@ function console_log(...args) {
 
 /**
  * Logs error messages to the console with a custom prefix.
+ * This helps in debugging by clearly identifying error messages specific to BetterUnsubscribe.
  * @param {...any} args - The error arguments to log.
  */
 function console_error(...args) {
     console.error("[BetterUnsubscribe][popup.js]", ...args);
 }
 
-// Listen for theme changes
-messenger.theme.onUpdated.addListener(({theme}) => {
-    applyTheme(theme);
-});
-
 /**
  * Applies the current Thunderbird theme to the extension's UI.
  *
- * This function updates various CSS variables to match the color scheme
- * of the active Thunderbird theme. It dynamically adjusts the UI elements
- * based on the theme's color properties to ensure visual consistency and
- * accessibility.
+ * This function updates various CSS variables to match the active Thunderbird theme's
+ * color scheme, ensuring that the UI remains consistent with the user's selected theme.
  *
- * The function is called when a theme is first applied or when there are
- * updates to the theme settings.
- *
- * @param {messenger._manifest.ThemeType} theme - The current theme object provided by Thunderbird.
+ * @param {ThemeType} theme - The current theme object, which contains color properties for various UI elements.
  */
-function applyTheme(theme) {
+async function applyTheme(theme) {
     console_log("Apply Theme");
 
-    // Update background color for the entire page
+    // Set background color based on the theme's popup color or default to light gray.
     if (theme && theme.colors && theme.colors.popup) {
-        console_log("using theme for background color");
+        console_log("Using theme for background color");
         document.documentElement.style.setProperty('--in-content-page-background-color', theme.colors.popup);
     } else {
-        //--in-content-page-background-color: #f0f0f0;
         document.documentElement.style.setProperty('--in-content-page-background-color', '#f0f0f0');
     }
 
-    // Update primary text color
+    // Set primary text color based on the theme's popup text color or default to dark gray.
     if (theme && theme.colors && theme.colors.popup_text) {
-        console_log("using theme for primary text color");
+        console_log("Using theme for primary text color");
         document.documentElement.style.setProperty('--in-content-primary-text-color', theme.colors.popup_text);
     } else {
-        //--in-content-primary-text-color: #1a1a1a;
         document.documentElement.style.setProperty('--in-content-primary-text-color', '#1a1a1a');
     }
-    //--in-content-button-color: white;
+
+    // Set button colors and other UI elements based on the theme, or use default values.
     document.documentElement.style.setProperty('--in-content-button-color', 'white');
-
-    if(theme && theme.colors && theme.colors.toolbar_field_text) {
-        console_log("using theme for secondary text color");
-        document.documentElement.style.setProperty('--in-content-secondary-text-color', theme.colors.toolbar_field_text);
-    }else{
-        //--in-content-secondary-text-color: #5f6368;
-        document.documentElement.style.setProperty('--in-content-secondary-text-color', '#5f6368');
-    }
-
-    // Update button colors
-    if (theme && theme.colors && theme.colors.button_background_active) {
-        console_log("using theme for button background color");
-        document.documentElement.style.setProperty('--in-content-button-background-color', theme.colors.button_background_active);
-    } else {
-        //--in-content-button-background-color: #0078d7;
-        document.documentElement.style.setProperty('--in-content-button-background-color', '#0078d7');
-    }
-
-    // Update code block background and text color
-    if (theme && theme.colors && theme.colors.toolbar_field) {
-        console_log("using theme for code background color");
-        document.documentElement.style.setProperty('--in-content-code-background-color', theme.colors.toolbar_field);
-    } else {
-        document.documentElement.style.setProperty('--in-content-code-background-color', '#f8f9fa');
-    }
-
-    if (theme && theme.colors && theme.colors.sidebar_text) {
-        console_log("using theme for code text color");
-        document.documentElement.style.setProperty('--in-content-code-color', theme.colors.sidebar_text);
-    } else {
-        document.documentElement.style.setProperty('--in-content-code-color', '#212529');
-    }
-
-    // Update box background and border colors
-    if (theme && theme.colors && theme.colors.toolbar) {
-        console_log("using theme for details background color");
-        document.documentElement.style.setProperty('--in-content-box-background-color', theme.colors.toolbar);
-    } else {
-        //--in-content-box-background-color: #ffffff;
-        document.documentElement.style.setProperty('--in-content-box-background-color', '#ffffff');
-    }
-
-    if (theme && theme.colors && theme.colors.sidebar_border) {
-        console_log("using theme for details border color");
-        document.documentElement.style.setProperty('--in-content-box-border-color', theme.colors.sidebar_border);
-    } else {
-        //--in-content-box-border-color: #dcdcdc;
-        document.documentElement.style.setProperty('--in-content-box-border-color', '#dcdcdc');
-    }
-
-    //--button-danger-background-color: #d9534f;
+    document.documentElement.style.setProperty('--in-content-secondary-text-color', theme?.colors?.toolbar_field_text || '#5f6368');
+    document.documentElement.style.setProperty('--in-content-button-background-color', theme?.colors?.button_background_active || '#0078d7');
+    document.documentElement.style.setProperty('--in-content-code-background-color', theme?.colors?.toolbar_field || '#f8f9fa');
+    document.documentElement.style.setProperty('--in-content-code-color', theme?.colors?.sidebar_text || '#212529');
+    document.documentElement.style.setProperty('--in-content-box-background-color', theme?.colors?.toolbar || '#ffffff');
+    document.documentElement.style.setProperty('--in-content-box-border-color', theme?.colors?.sidebar_border || '#dcdcdc');
     document.documentElement.style.setProperty('--button-danger-background-color', '#d9534f');
-    // Update additional button styles for different button types
-    /*
-    if (theme.colors && idk) {
-        //document.documentElement.style.setProperty('--button-danger-background-color', )
-    } else {
-        document.documentElement.style.setProperty('--button-danger-background-color', '#d9534f');
-    }*/
-
-    //--button-secondary-background-color: #6c757d;
     document.documentElement.style.setProperty('--button-secondary-background-color', '#6c757d');
-    /*
-    if (theme.colors && idk) {
-        //document.documentElement.style.setProperty('--button-secondary-background-color', );
-
-    } else {
-        document.documentElement.style.setProperty('--button-secondary-background-color', '#5bc0de');
-    }*/
-
-    //--button-success-background-color: #28a745;
     document.documentElement.style.setProperty('--button-success-background-color', '#28a745');
-    /*
-    if (theme.colors && idk) {
-        //document.documentElement.style.setProperty('--button-success-background-color', );
 
-    } else {
-        document.documentElement.style.setProperty('--button-success-background-color', '#5cb85c');
-    }*/
+    // Determine if the theme is dark or light based on the toolbar text color.
+    const isDarkTheme = theme?.colors?.toolbar_text === 'white' || theme?.colors?.toolbar_text === '#ffffff';
 
-
-
-    //--in-content-button-hover-background-color: #005a9e;
-    //--in-content-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-
-    // Determine if the current theme is dark or light
-
-    const isDarkTheme = theme && theme.colors &&
-        (theme.colors.toolbar_text === 'white' || theme.colors.toolbar_text === '#ffffff');
-
-    // Toggle class based on theme type
-    if (isDarkTheme) {
-        document.body.classList.add('dark-theme');
-        document.body.classList.remove('light-theme');
-    } else {
-        document.body.classList.add('light-theme');
-        document.body.classList.remove('dark-theme');
-    }
+    // Toggle class based on whether the theme is dark or light.
+    document.body.classList.toggle('dark-theme', isDarkTheme);
+    document.body.classList.toggle('light-theme', !isDarkTheme);
 }
 
-
-// Event listener that triggers when the DOM content is fully loaded.
+/**
+ * Event listener that triggers when the DOM content is fully loaded.
+ * Retrieves message details, sets up button event listeners, and handles unsubscribe logic.
+ */
 document.addEventListener('DOMContentLoaded', async () => {
-    applyTheme(await messenger.theme.getCurrent());
+    await applyTheme(await messenger.theme.getCurrent());
 
     const params = new URLSearchParams(window.location.search);
     const messageId = parseInt(params.get('messageId'));
     console_log("MessageId:", messageId);
 
-    const emailText = document.getElementById('emailText'); // Element to display the user's email
-    const unsubscribeButton = document.getElementById('unsubscribeButton'); // Button to trigger unsubscribe action
-    const cancelButton = document.getElementById('cancelButton'); // Button to cancel the action and close the popup
-    const deleteButton = document.getElementById('deleteButton'); // Button to delete the email or subscription
-    const statusText = document.getElementById('statusText'); // Element to display the current status of the operation
-    const details = document.getElementById('detailsDropDown'); // Dropdown to show details of the unsubscribe method
-    const detailsText = document.getElementById('detailsText'); // Text element to display details about the unsubscribe method
+    // Retrieve DOM elements for later use.
+    const emailText = document.getElementById('emailText');
+    const unsubscribeButton = document.getElementById('unsubscribeButton');
+    const cancelButton = document.getElementById('cancelButton');
+    const deleteButton = document.getElementById('deleteButton');
+    const statusText = document.getElementById('statusText');
+    const details = document.getElementById('detailsDropDown');
+    const detailsText = document.getElementById('detailsText');
 
+    // Retrieve the message header to display the author.
     try {
         let messageHeader = await messenger.messages.get(messageId);
-
-        // Extract the author information from the message header
         let author = messageHeader.author;
         emailText.textContent += "\t" + author;
     } catch (error) {
         console_error(error);
     }
 
-    // Request the unsubscribe method from the background script and display relevant details.
+    // Request the unsubscribe method from the background script.
     messenger.runtime.sendMessage({messageId: messageId, getMethod: true}).then((r) => {
         let codeElement = document.createElement('code');
         codeElement.textContent = r.address;
@@ -204,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 details.hidden = false;
                 break;
             default:
-            // If no method is provided, do nothing.
+            // No action if no method is provided.
         }
     }).catch((error) => {
         console_error("Error receiving methodInfo from background:", error);
@@ -212,19 +122,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Event listener for the unsubscribe button.
     unsubscribeButton.addEventListener('click', async () => {
-        unsubscribeButton.disabled = true; // Disable the button to prevent multiple clicks
-        statusText.textContent = messenger.i18n.getMessage("statusTextWorking"); // Update status text to show the process is ongoing
+        unsubscribeButton.disabled = true;
+        statusText.textContent = messenger.i18n.getMessage("statusTextWorking");
+
+        // Send unsubscribe request to the background script.
         messenger.runtime.sendMessage({messageId: messageId, unsubscribe: true}).then((r) => {
             console_log("Response from background:", r);
             if (r.response === "Unsubscribed") {
-                statusText.textContent = messenger.i18n.getMessage("statusTextDone"); // Update status text to show completion
-                deleteButton.hidden = false; // Show the delete button if unsubscribe was successful
+                statusText.textContent = messenger.i18n.getMessage("statusTextDone");
+                deleteButton.hidden = false;
             } else {
-                unsubscribeButton.disabled = false; // Re-enable the unsubscribe button if there was an error
-                statusText.textContent = messenger.i18n.getMessage("statusTextError"); // Update status text to show an error occurred
+                unsubscribeButton.disabled = false;
+                statusText.textContent = messenger.i18n.getMessage("statusTextError");
             }
         }).catch((error) => {
             console_error("Error sending unsubscribe message:", error);
+            statusText.textContent = messenger.i18n.getMessage("statusTextError");
         });
     });
 
@@ -233,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const r = await messenger.runtime.sendMessage({messageId: messageId, cancel: true});
             console_log("Response from background:", r);
-            window.close(); // Close the popup window after cancelling
+            window.close();
         } catch (error) {
             console_error("Error sending cancel message:", error);
         }
@@ -242,7 +155,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Event listener for the delete button.
     deleteButton.addEventListener('click', async () => {
         try {
-            deleteButton.disabled = true; // Disable the delete button to prevent multiple clicks
+            deleteButton.disabled = true;
             const r = await messenger.runtime.sendMessage({messageId: messageId, delete: true});
             console_log("Response from background:", r);
         } catch (error) {
