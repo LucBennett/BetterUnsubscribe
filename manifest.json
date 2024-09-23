@@ -29,7 +29,19 @@
   },
   "message_display_action": {
     "default_title": "__MSG_unsubscribeTitle__",
-    "default_icon": "icons/email.png"
+    "default_icon": "icons/email.png",
+    "theme_icons": [
+      {
+        "light": "icons/email_48x48.png",
+        "dark": "icons/email_48x48_inverted.png",
+        "size": 48
+      },
+      {
+        "light": "icons/email.png",
+        "dark": "icons/email_inverted.png",
+        "size": 64
+      }
+    ]
   },
   "manifest_version": 2
 }
