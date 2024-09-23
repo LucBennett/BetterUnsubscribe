@@ -39,7 +39,7 @@ Additionally, [here](./Security%20Concerns.md) is a summary of some of the Secur
 
 ### Translations
 
-Brazilian Portuguese created by [dataserver](https://github.com/dataserver).
+Brazilian Portuguese translation created by [dataserver](https://github.com/dataserver).
 
 ### Icon Credits
 
