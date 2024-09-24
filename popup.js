@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const r = await messenger.runtime.sendMessage({messageId: messageId, deleteAllFromSender: true});
             console_log("Deleted this email response:", r);
             if (r.response === "Deleted") {
-                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
+                statusText.textContent = r.count + " " + messenger.i18n.getMessage("statusTextDeleteSuccess");
             } else {
                 deleteOneBtn.disabled = false;
                 statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");

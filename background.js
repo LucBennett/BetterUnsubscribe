@@ -515,7 +515,7 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
             let messageIds = messages.messages.map(message => message.id);
 
             await messenger.messages.delete(messageIds, false);
-            return {response: 'Deleted'};
+            return {response: 'Deleted', count:messageIds.length};
         } else if (message.getMethod === true) {
             console_log('Method Requested');
             let func = funcMap.get(messageId);
