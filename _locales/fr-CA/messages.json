@@ -28,24 +28,16 @@
         "description": "Libellé pour le bouton d'annulation"
     },
     "deleteButton": {
-        "message": "Supprimer le courriel",
-        "description": "Libellé pour le bouton de suppression du courriel"
+        "message": "Supprimer ▼",
+        "description": "Libellé pour le bouton de suppression avec un indicateur déroulant"
     },
-    "detailsSummary": {
-        "message": "Plus de détails",
-        "description": "Menu déroulant pour plus de détails"
+    "deleteOneButton": {
+        "message": "Seulement ceci",
+        "description": "Libellé pour le bouton de suppression du courriel actuel"
     },
-    "detailsTextPOST": {
-        "message": "Lorsque vous cliquez sur \"Se désabonner\", une requête POST sera envoyée à l'URL suivante :",
-        "description": "Détails pour une requête POST"
-    },
-    "detailsTextEmail": {
-        "message": "Lorsque vous cliquez sur \"Se désabonner\", un courriel sera rédigé à l'adresse suivante :",
-        "description": "Détails pour un courriel"
-    },
-    "detailsTextWeb": {
-        "message": "Lorsque vous cliquez sur \"Se désabonner\", une fenêtre du navigateur s'ouvrira et visitera l'URL suivante :",
-        "description": "Détails pour un lien web"
+    "deleteAllButton": {
+        "message": "Tous de",
+        "description": "Libellé pour le bouton de suppression de tous les courriels d'un expéditeur spécifique, où $1 est l'adresse courriel de l'expéditeur"
     },
     "statusTextEmpty": {
         "message": "",
@@ -62,5 +54,33 @@
     "statusTextError": {
         "message": "Erreur",
         "description": "Texte de statut pour l'état d'erreur"
+    },
+    "statusTextDeleting": {
+        "message": "Suppression des courriels en cours...",
+        "description": "Texte de statut pendant la suppression des courriels"
+    },
+    "statusTextDeleteSuccess": {
+        "message": "Courriel(s) supprimé(s) avec succès.",
+        "description": "Texte de statut pour une suppression réussie des courriels"
+    },
+    "statusTextDeleteError": {
+        "message": "Échec de la suppression du/des courriel(s).",
+        "description": "Texte de statut en cas d'échec de suppression des courriels"
+    },
+    "detailsSummary": {
+        "message": "Plus de détails",
+        "description": "Menu déroulant pour plus de détails"
+    },
+    "detailsTextPost": {
+        "message": "Lorsque vous cliquez sur \"Se désabonner\", une requête POST sera envoyée à l'URL suivante :",
+        "description": "Détails pour une requête POST"
+    },
+    "detailsTextEmail": {
+        "message": "Lorsque vous cliquez sur \"Se désabonner\", un courriel sera rédigé à l'adresse suivante :",
+        "description": "Détails pour un courriel"
+    },
+    "detailsTextWeb": {
+        "message": "Lorsque vous cliquez sur \"Se désabonner\", une fenêtre du navigateur s'ouvrira et visitera l'URL suivante :",
+        "description": "Détails pour un lien web"
     }
 }

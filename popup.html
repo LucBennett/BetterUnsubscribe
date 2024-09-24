@@ -1,141 +1,250 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title data-i18n="unsubscribeTitle">Unsubscribe</title>
-  <style>
-    /* Thunderbird theme colors and font */
-    :root {
-      --in-content-page-background-color: #f0f0f0;
-      --in-content-primary-text-color: #1a1a1a;
-      --in-content-secondary-text-color: #5f6368;
-      --in-content-button-background-color: #0078d7;
-      --in-content-button-hover-background-color: #005a9e;
-      --in-content-button-color: white;
-      --button-danger-background-color: #d9534f;
-      --button-secondary-background-color: #6c757d;
-      --button-success-background-color: #28a745;
-      --in-content-box-background-color: #ffffff;
-      --in-content-box-border-color: #dcdcdc;
-      --in-content-border-radius: 4px;
-      --in-content-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      --in-content-code-background-color: #f8f9fa; /* Light gray background for code blocks */
-      --in-content-code-color: #212529; /* Dark text color for code */
-    }
+    <meta charset="UTF-8">
+    <title data-i18n="unsubscribeTitle">Unsubscribe</title>
+    <style>
+        /* General Thunderbird Theme Colors */
+        :root {
+            --in-content-page-background-color: #f0f0f0;
+            --in-content-primary-text-color: #1a1a1a;
+            --in-content-secondary-text-color: #5f6368;
+            --in-content-button-background-color: #0078d7;
+            --in-content-button-hover-background-color: #005a9e;
+            --in-content-button-color: white;
+            --button-danger-background-color: #d9534f;
+            --button-danger-hover-background-color: #c9302c;
+            --button-secondary-background-color: #6c757d;
+            --button-success-background-color: #28a745;
+            --in-content-box-background-color: #ffffff;
+            --in-content-box-border-color: #dcdcdc;
+            --in-content-border-radius: 4px;
+            --in-content-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --in-content-code-background-color: #f8f9fa; /* Light gray background for code blocks */
+            --in-content-code-color: #212529; /* Dark text color for code */
+            --dark-theme-background-color: #333333;
+            --dark-theme-text-color: #ffffff;
+            --dark-theme-button-hover-background-color: #444444;
+            --dark-theme-box-background-color: #2c2c2c;
+            --dark-theme-box-border-color: #444444;
+            --dark-theme-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+        }
 
-    body {
-      font-family: "Segoe UI", sans-serif;
-      font-size: 14px;
-      padding: 20px;
-      text-align: center;
-      background-color: var(--in-content-page-background-color);
-      color: var(--in-content-primary-text-color);
-    }
+        body {
+            font-family: "Segoe UI", sans-serif;
+            font-size: 14px;
+            padding: 20px;
+            background-color: var(--in-content-page-background-color);
+            color: var(--in-content-primary-text-color);
+            text-align: center;
+        }
 
-    h2 {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--in-content-primary-text-color);
-      margin-bottom: 15px;
-    }
+        /* Dark theme adjustments */
+        body.dark-theme {
+            background-color: var(--dark-theme-background-color);
+            color: var(--dark-theme-text-color);
+        }
 
-    p {
-      font-size: 14px;
-      color: var(--in-content-secondary-text-color);
-      margin-bottom: 20px;
-    }
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--in-content-primary-text-color);
+        }
 
-    .button {
-      padding: 8px 16px;
-      margin: 10px;
-      cursor: pointer;
-      border: none;
-      border-radius: var(--in-content-border-radius);
-      background-color: var(--in-content-button-background-color);
-      color: var(--in-content-button-color);
-      box-shadow: var(--in-content-shadow);
-      transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    }
+        body.dark-theme h2 {
+            color: var(--dark-theme-text-color);
+        }
 
-    .button:hover {
-      background-color: var(--in-content-button-hover-background-color);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
+        p {
+            font-size: 14px;
+            color: var(--in-content-secondary-text-color);
+            margin-bottom: 20px;
+        }
 
-    .button:focus {
-      outline: none;
-      box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.5);
-    }
+        body.dark-theme p {
+            color: var(--dark-theme-text-color);
+        }
 
-    #unsubscribeButton {
-      background-color: var(--button-success-background-color);
-    }
+        .button {
+            padding: 8px 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: var(--in-content-border-radius);
+            background-color: var(--in-content-button-background-color);
+            color: var(--in-content-button-color);
+            box-shadow: var(--in-content-shadow);
+            transition: background-color 0.2s ease, box-shadow 0.2s ease;
+            display: inline-block;
+            vertical-align: middle;
+        }
 
-    #cancelButton {
-      background-color: var(--button-secondary-background-color);
-    }
+        .button:hover {
+            background-color: var(--in-content-button-hover-background-color);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
 
-    #deleteButton {
-      background-color: var(--button-danger-background-color);
-    }
+        body.dark-theme .button:hover {
+            background-color: var(--dark-theme-button-hover-background-color);
+        }
 
-    h3 {
-      font-size: 16px;
-      font-weight: 500;
-      margin-top: 20px;
-      color: var(--in-content-primary-text-color);
-    }
+        /* Button variants */
+        #unsubscribeButton {
+            background-color: var(--button-success-background-color);
+        }
 
-    details {
-      margin-top: 20px;
-      text-align: left;
-      max-width: 100%;
-    }
+        #cancelButton {
+            background-color: var(--button-secondary-background-color);
+        }
 
-    summary {
-      cursor: pointer;
-      font-weight: bold;
-      margin-bottom: 10px;
-      color: var(--in-content-primary-text-color);
-    }
+        #deleteButton {
+            background-color: var(--button-danger-background-color);
+        }
 
-    .details-content {
-      background-color: var(--in-content-box-background-color);
-      padding: 10px;
-      border-radius: var(--in-content-border-radius);
-      border: 1px solid var(--in-content-box-border-color);
-      box-shadow: var(--in-content-shadow);
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      max-width: 100%;
-    }
+        #deleteButton:hover {
+            background-color: var(--button-danger-hover-background-color);
+        }
 
-    code {
-      display: block;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      white-space: pre-wrap;
-      max-width: 100%;
-      background-color: var(--in-content-code-background-color);
-      color: var(--in-content-code-color);
-      padding: 8px;
-      border-radius: var(--in-content-border-radius);
-    }
-  </style>
+        /* Dropdown improvements */
+        .button-dropdown {
+            position: relative;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .button-dropdown div {
+            display: none; /* Initially hidden */
+        }
+
+        .button-dropdown ul {
+            list-style: none;
+            padding: 0;
+            position: absolute;
+            left: 0;
+            top: 100%; /* Position it directly below the label */
+            margin-top: -8px; /* Bring the list closer to the label */
+            z-index: 100;
+            background-color: var(--in-content-box-background-color);
+            border: 1px solid var(--in-content-box-border-color);
+            border-radius: var(--in-content-border-radius); /* Make the dropdown rounded like buttons */
+            box-shadow: var(--in-content-shadow); /* Add shadow to match the buttons */
+            white-space: normal; /* Allow text to wrap */
+            max-width: 250px; /* Set a maximum width for the dropdown list */
+            word-wrap: break-word; /* Break long words */
+            transition: max-height 0.5s, padding 0.5s ease-in-out;
+        }
+
+        body.dark-theme .button-dropdown ul {
+            background-color: var(--dark-theme-box-background-color);
+            border-color: var(--dark-theme-box-border-color);
+            box-shadow: var(--dark-theme-shadow);
+        }
+
+        .button-dropdown ul li {
+            font-size: 14px;
+            padding: 5px 15px;
+            border-top: 1px solid var(--in-content-box-border-color); /* Add border between list items */
+        }
+
+        .button-dropdown ul li:first-child {
+            border-radius: var(--in-content-border-radius) var(--in-content-border-radius) 0 0; /* Round top corners */
+            border-top: none; /* Remove border from the first item */
+        }
+
+        .button-dropdown ul li:last-child {
+            border-radius: 0 0 var(--in-content-border-radius) var(--in-content-border-radius); /* Round bottom corners */
+        }
+
+        body.dark-theme .button-dropdown ul li {
+            color: var(--dark-theme-text-color);
+        }
+
+        .button-dropdown:hover div {
+            display: block; /* Show the hidden div when hovering */
+        }
+
+        .button-dropdown li:hover {
+            background-color: var(--button-danger-hover-background-color);
+        }
+
+        body.dark-theme .button-dropdown li:hover {
+            background-color: var(--dark-theme-button-hover-background-color);
+        }
+
+        details {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 100%;
+        }
+
+        summary {
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--in-content-primary-text-color);
+        }
+
+        body.dark-theme summary {
+            color: var(--dark-theme-text-color);
+        }
+
+        .details-content {
+            background-color: var(--in-content-box-background-color);
+            padding: 10px;
+            border-radius: var(--in-content-border-radius);
+            border: 1px solid var(--in-content-box-border-color);
+            box-shadow: var(--in-content-shadow);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        body.dark-theme .details-content {
+            background-color: var(--dark-theme-box-background-color);
+            border-color: var(--dark-theme-box-border-color);
+            box-shadow: var(--dark-theme-shadow);
+        }
+
+        code {
+            display: block;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+            max-width: 100%;
+            background-color: var(--in-content-code-background-color);
+            color: var(--in-content-code-color);
+            padding: 8px;
+            border-radius: var(--in-content-border-radius);
+        }
+
+    </style>
 </head>
 <body>
 <h2 data-i18n="unsubscribeHeader">Unsubscribe</h2>
 <p id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</p>
 <button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe</button>
 <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
-<button id="deleteButton" class="button" hidden data-i18n="deleteButton" aria-label="Delete Email">Delete Email</button>
-<h3 id="statusText" role="tab"></h3>
-<details id="detailsDropDown" hidden>
-  <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
-  <div class="details-content">
-    <p id="detailsText" data-i18n="detailsText"></p>
-  </div>
+
+<!-- Split Button for Delete -->
+<div class='button-delete button-dropdown' data-dropdownstate="closed">
+    <label id="deleteButton" hidden="hidden" class="button" data-i18n="deleteButton" aria-label="Delete">Delete ▼</label>
+    <div>
+        <ul>
+            <li id="delete-one-btn" data-i18n="deleteOneButton">Just this email</li>
+            <li id="delete-all-btn" data-i18n="deleteAllButton">All from sender@example.com</li>
+        </ul>
+    </div>
+</div>
+
+<h3 id="statusText" role="tab" data-i18n="statusText"></h3>
+<details id="detailsDropDown">
+    <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
+    <div class="details-content">
+        <p id="detailsText" data-i18n="detailsText"></p>
+    </div>
 </details>
+
 <script src="i18n.js"></script>
 <script src="popup.js"></script>
 </body>

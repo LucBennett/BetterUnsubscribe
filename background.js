@@ -501,6 +501,21 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
             console_log("User wants to delete the email");
             await messenger.messages.delete([messageId], false);
             return {response: 'Deleted'};
+        } else if (message.deleteAllFromSender === true) {
+            let messageHeader = await messenger.messages.get(messageId);
+            let author = messageHeader.author;
+            console_log("User wants to delete alls email from", author);
+
+            let messages = await messenger.messages.query({
+                author: author
+            });
+
+            console_log("Deleting", messages);
+
+            let messageIds = messages.messages.map(message => message.id);
+
+            await messenger.messages.delete(messageIds, false);
+            return {response: 'Deleted'};
         } else if (message.getMethod === true) {
             console_log('Method Requested');
             let func = funcMap.get(messageId);
@@ -510,7 +525,7 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
             } else if (func instanceof UnsubMail) {
                 return {method: "Email", address: func.emailAddress};
             } else if (func instanceof UnsubWeb) {
-                return {method: "messenger", address: func.link};
+                return {method: "Browser", address: func.link};
             } else if (func === false) {
                 return {method: "NONE"};
             } else {
@@ -534,7 +549,7 @@ async function createPopup(message) {
         url: url,
         type: "popup",
         height: 400,
-        width: 600,
+        width: 700,
         allowScriptsToClose: true
     });
 }

@@ -28,24 +28,16 @@
     "description": "Bezeichnung für den Abbrechen-Button"
   },
   "deleteButton": {
-    "message": "E-Mail löschen",
-    "description": "Bezeichnung für den Button zum Löschen der E-Mail"
+    "message": "Löschen ▼",
+    "description": "Bezeichnung für den Löschen-Button mit Dropdown-Indikator"
   },
-  "detailsSummary": {
-    "message": "Weitere Details",
-    "description": "Mehr Details im Drop-Down"
+  "deleteOneButton": {
+    "message": "Nur diese",
+    "description": "Bezeichnung für den Button zum Löschen nur der aktuellen E-Mail"
   },
-  "detailsTextPost": {
-    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine POST-Anfrage an die folgende URL gesendet:",
-    "description": "Details für eine POST-Anfrage"
-  },
-  "detailsTextEmail": {
-    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine E-Mail an die folgende Adresse erstellt:",
-    "description": "Details für eine E-Mail"
-  },
-  "detailsTextWeb": {
-    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird ein Browserfenster geöffnet und die folgende URL besucht:",
-    "description": "Details für einen Web-Link"
+  "deleteAllButton": {
+    "message": "Alle von",
+    "description": "Bezeichnung für den Button zum Löschen aller E-Mails von einem bestimmten Absender, wobei $1 die E-Mail-Adresse des Absenders ist"
   },
   "statusTextEmpty": {
     "message": "",
@@ -62,5 +54,33 @@
   "statusTextError": {
     "message": "Fehler",
     "description": "Status-Text für den Fehlerzustand"
+  },
+  "statusTextDeleting": {
+    "message": "E-Mails werden gelöscht...",
+    "description": "Status-Text während E-Mails gelöscht werden"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "E-Mail(s) erfolgreich gelöscht.",
+    "description": "Status-Text für erfolgreiches Löschen von E-Mails"
+  },
+  "statusTextDeleteError": {
+    "message": "Löschen der E-Mail(s) fehlgeschlagen.",
+    "description": "Status-Text, wenn das Löschen der E-Mail(s) fehlschlägt"
+  },
+  "detailsSummary": {
+    "message": "Weitere Details",
+    "description": "Mehr Details im Drop-Down"
+  },
+  "detailsTextPost": {
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine POST-Anfrage an die folgende URL gesendet:",
+    "description": "Details für eine POST-Anfrage"
+  },
+  "detailsTextEmail": {
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine E-Mail an die folgende Adresse erstellt:",
+    "description": "Details für eine E-Mail"
+  },
+  "detailsTextWeb": {
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird ein Browserfenster geöffnet und die folgende URL besucht:",
+    "description": "Details für einen Web-Link"
   }
 }

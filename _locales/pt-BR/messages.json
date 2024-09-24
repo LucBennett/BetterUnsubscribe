@@ -28,24 +28,16 @@
         "description": "Rótulo do botão de cancelar"
     },
     "deleteButton": {
-        "message": "Excluir E-mail",
-        "description": "Rótulo do botão de exclusão de e-mail"
+        "message": "Excluir ▼",
+        "description": "Rótulo do botão de exclusão com um indicador suspenso"
     },
-    "detailsSummary": {
-        "message": "Mais detalhes",
-        "description": "Menu suspenso de Mais Detalhes"
+    "deleteOneButton": {
+        "message": "Somente este",
+        "description": "Rótulo para o botão de excluir apenas o e-mail atual"
     },
-    "detailsTextPost": {
-        "message": "Quando você clicar em \"Cancelar Inscrição\", uma solicitação POST será enviada para o seguinte URL:",
-        "description": "Detalhes para uma solicitação POST"
-    },
-    "detailsTextEmail": {
-        "message": "Quando você clicar em \"Cancelar Inscrição\", um e-mail será redigido para o seguinte endereço:",
-        "description": "Detalhes para um e-mail"
-    },
-    "detailsTextWeb": {
-        "message": "Quando você clicar em \"Cancelar Inscrição\", uma janela do navegador será aberta e visitará o seguinte URL:",
-        "description": "Detalhes para um link da Web"
+    "deleteAllButton": {
+        "message": "Todos de",
+        "description": "Rótulo para o botão de excluir todos os e-mails de um remetente específico, onde $1 é o endereço de e-mail do remetente"
     },
     "statusTextEmpty": {
         "message": "",
@@ -62,5 +54,33 @@
     "statusTextError": {
         "message": "Erro",
         "description": "Texto de status para estado de erro"
+    },
+    "statusTextDeleting": {
+        "message": "Excluindo e-mail(s)...",
+        "description": "Texto de status enquanto os e-mails estão sendo excluídos"
+    },
+    "statusTextDeleteSuccess": {
+        "message": "E-mail(s) excluído(s) com sucesso.",
+        "description": "Texto de status para exclusão bem-sucedida de e-mails"
+    },
+    "statusTextDeleteError": {
+        "message": "Falha ao excluir o(s) e-mail(s).",
+        "description": "Texto de status quando a exclusão de e-mails falha"
+    },
+    "detailsSummary": {
+        "message": "Mais detalhes",
+        "description": "Menu suspenso de Mais Detalhes"
+    },
+    "detailsTextPost": {
+        "message": "Quando você clicar em \"Cancelar Inscrição\", uma solicitação POST será enviada para o seguinte URL:",
+        "description": "Detalhes para uma solicitação POST"
+    },
+    "detailsTextEmail": {
+        "message": "Quando você clicar em \"Cancelar Inscrição\", um e-mail será redigido para o seguinte endereço:",
+        "description": "Detalhes para um e-mail"
+    },
+    "detailsTextWeb": {
+        "message": "Quando você clicar em \"Cancelar Inscrição\", uma janela do navegador será aberta e visitará o seguinte URL:",
+        "description": "Detalhes para um link da Web"
     }
 }

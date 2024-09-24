@@ -28,24 +28,16 @@
     "description": "Etiqueta para el botón de cancelar"
   },
   "deleteButton": {
-    "message": "Eliminar Correo",
-    "description": "Etiqueta para el botón de eliminar correo"
+    "message": "Eliminar ▼",
+    "description": "Etiqueta para el botón de eliminar con un indicador desplegable"
   },
-  "detailsSummary": {
-    "message": "Más detalles",
-    "description": "Desplegable de más detalles"
+  "deleteOneButton": {
+    "message": "Solo este",
+    "description": "Etiqueta para el botón de eliminar solo el correo actual"
   },
-  "detailsTextPost": {
-    "message": "Cuando haces clic en \"Darse de baja\", se enviará una solicitud POST a la siguiente URL:",
-    "description": "Detalles para una solicitud POST"
-  },
-  "detailsTextEmail": {
-    "message": "Cuando haces clic en \"Darse de baja\", se redactará un correo electrónico a la siguiente dirección:",
-    "description": "Detalles para un correo electrónico"
-  },
-  "detailsTextWeb": {
-    "message": "Cuando haces clic en \"Darse de baja\", se abrirá una ventana del navegador y visitará la siguiente URL:",
-    "description": "Detalles para un enlace web"
+  "deleteAllButton": {
+    "message": "Todos de",
+    "description": "Etiqueta para el botón de eliminar todos los correos de un remitente específico, donde $1 es la dirección de correo electrónico del remitente"
   },
   "statusTextEmpty": {
     "message": "",
@@ -62,5 +54,33 @@
   "statusTextError": {
     "message": "Error",
     "description": "Texto de estado para el estado de error"
+  },
+  "statusTextDeleting": {
+    "message": "Eliminando correo(s)...",
+    "description": "Texto de estado mientras se eliminan los correos"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "Correo(s) eliminados con éxito.",
+    "description": "Texto de estado para la eliminación exitosa de correos"
+  },
+  "statusTextDeleteError": {
+    "message": "Error al eliminar el(los) correo(s).",
+    "description": "Texto de estado cuando la eliminación de correos falla"
+  },
+  "detailsSummary": {
+    "message": "Más detalles",
+    "description": "Desplegable de más detalles"
+  },
+  "detailsTextPost": {
+    "message": "Cuando haces clic en \"Darse de baja\", se enviará una solicitud POST a la siguiente URL:",
+    "description": "Detalles para una solicitud POST"
+  },
+  "detailsTextEmail": {
+    "message": "Cuando haces clic en \"Darse de baja\", se redactará un correo electrónico a la siguiente dirección:",
+    "description": "Detalles para un correo electrónico"
+  },
+  "detailsTextWeb": {
+    "message": "Cuando haces clic en \"Darse de baja\", se abrirá una ventana del navegador y visitará la siguiente URL:",
+    "description": "Detalles para un enlace web"
   }
 }
