@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Request the unsubscribe method from the background script.
     messenger.runtime.sendMessage({messageId: messageId, getMethod: true}).then((r) => {
-        console_log("Received",r);
+        console_log("Received", r);
         let codeElement = document.createElement('code');
         codeElement.textContent = r.address;
 
