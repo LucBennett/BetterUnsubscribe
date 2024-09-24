@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     //const details = document.getElementById('detailsDropDown');
     const detailsText = document.getElementById('detailsText');
 
-// Retrieve the message header to display the author and set the delete all text.
+    // Retrieve the message header to display the author and set the delete all text.
     try {
         let messageHeader = await messenger.messages.get(messageId);
         let author = messageHeader.author;
