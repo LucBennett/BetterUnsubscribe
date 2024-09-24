@@ -1,0 +1,86 @@
+{
+  "extensionName": {
+    "message": "MeilleurDésabonnement",
+    "description": "Le nom de l'extension Thunderbird"
+  },
+  "extensionDescription": {
+    "message": "Cette extension facilite le désabonnement des listes de diffusion.",
+    "description": "La description de l'extension Thunderbird"
+  },
+  "unsubscribeTitle": {
+    "message": "Se désabonner",
+    "description": "Titre de la page de désabonnement"
+  },
+  "unsubscribeHeader": {
+    "message": "Se désabonner",
+    "description": "En-tête de la page de désabonnement"
+  },
+  "emailText": {
+    "message": "Souhaitez-vous vous désabonner de cette liste de diffusion ?",
+    "description": "Texte demandant à l'utilisateur s'il souhaite se désabonner"
+  },
+  "unsubscribeButton": {
+    "message": "Se désabonner",
+    "description": "Libellé pour le bouton de désabonnement"
+  },
+  "cancelButton": {
+    "message": "Annuler",
+    "description": "Libellé pour le bouton d'annulation"
+  },
+  "deleteButton": {
+    "message": "Supprimer ▼",
+    "description": "Libellé pour le bouton de suppression avec un indicateur déroulant"
+  },
+  "deleteOneButton": {
+    "message": "Seulement celui-ci",
+    "description": "Libellé pour le bouton de suppression du courriel actuel"
+  },
+  "deleteAllButton": {
+    "message": "Tous de",
+    "description": "Libellé pour le bouton de suppression de tous les courriels d'un expéditeur spécifique, où $1 est l'adresse e-mail de l'expéditeur"
+  },
+  "statusTextEmpty": {
+    "message": "",
+    "description": "Texte de statut vide"
+  },
+  "statusTextWorking": {
+    "message": "En cours...",
+    "description": "Texte de statut pour l'état en cours"
+  },
+  "statusTextDone": {
+    "message": "Terminé",
+    "description": "Texte de statut pour l'état terminé"
+  },
+  "statusTextError": {
+    "message": "Erreur",
+    "description": "Texte de statut pour l'état d'erreur"
+  },
+  "statusTextDeleting": {
+    "message": "Suppression des courriels en cours...",
+    "description": "Texte de statut pendant la suppression des courriels"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "Courriel(s) supprimé(s) avec succès.",
+    "description": "Texte de statut pour une suppression réussie des courriels"
+  },
+  "statusTextDeleteError": {
+    "message": "Échec de la suppression du/des courriel(s).",
+    "description": "Texte de statut en cas d'échec de suppression des courriels"
+  },
+  "detailsSummary": {
+    "message": "Plus de détails",
+    "description": "Menu déroulant pour plus de détails"
+  },
+  "detailsTextPost": {
+    "message": "Lorsque vous cliquez sur \"Se désabonner\", une requête POST sera envoyée à l'URL suivante :",
+    "description": "Détails pour une requête POST"
+  },
+  "detailsTextEmail": {
+    "message": "Lorsque vous cliquez sur \"Se désabonner\", un courriel sera rédigé à l'adresse suivante :",
+    "description": "Détails pour un courriel"
+  },
+  "detailsTextWeb": {
+    "message": "Lorsque vous cliquez sur \"Se désabonner\", une fenêtre du navigateur s'ouvrira et visitera l'URL suivante :",
+    "description": "Détails pour un lien web"
+  }
+}
