@@ -1,0 +1,86 @@
+{
+  "extensionName": {
+    "message": "MiglioreDisiscrizione",
+    "description": "Il nome dell'estensione Thunderbird"
+  },
+  "extensionDescription": {
+    "message": "Questa estensione facilita la disiscrizione dalle mailing list.",
+    "description": "La descrizione dell'estensione Thunderbird"
+  },
+  "unsubscribeTitle": {
+    "message": "Disiscriviti",
+    "description": "Titolo della pagina di disiscrizione"
+  },
+  "unsubscribeHeader": {
+    "message": "Disiscriviti",
+    "description": "Intestazione della pagina di disiscrizione"
+  },
+  "emailText": {
+    "message": "Vuoi disiscriverti da questa mailing list?",
+    "description": "Testo che chiede all'utente se desidera disiscriversi"
+  },
+  "unsubscribeButton": {
+    "message": "Disiscriviti",
+    "description": "Etichetta per il pulsante di disiscrizione"
+  },
+  "cancelButton": {
+    "message": "Annulla",
+    "description": "Etichetta per il pulsante di annullamento"
+  },
+  "deleteButton": {
+    "message": "Elimina ▼",
+    "description": "Etichetta per il pulsante di eliminazione con un indicatore a discesa"
+  },
+  "deleteOneButton": {
+    "message": "Solo questo",
+    "description": "Etichetta per il pulsante per eliminare solo l'email corrente"
+  },
+  "deleteAllButton": {
+    "message": "Tutti da",
+    "description": "Etichetta per il pulsante per eliminare tutte le email da un mittente specifico, dove $1 è l'indirizzo email del mittente"
+  },
+  "statusTextEmpty": {
+    "message": "",
+    "description": "Testo di stato vuoto"
+  },
+  "statusTextWorking": {
+    "message": "In corso...",
+    "description": "Testo di stato per l'operazione in corso"
+  },
+  "statusTextDone": {
+    "message": "Completato",
+    "description": "Testo di stato per operazione completata"
+  },
+  "statusTextError": {
+    "message": "Errore",
+    "description": "Testo di stato per errore"
+  },
+  "statusTextDeleting": {
+    "message": "Eliminazione delle email in corso...",
+    "description": "Testo di stato durante l'eliminazione delle email"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "Email eliminata/e con successo.",
+    "description": "Testo di stato per eliminazione riuscita delle email"
+  },
+  "statusTextDeleteError": {
+    "message": "Impossibile eliminare l'email/le email.",
+    "description": "Testo di stato per errore durante l'eliminazione delle email"
+  },
+  "detailsSummary": {
+    "message": "Maggiori dettagli",
+    "description": "Menu a discesa per maggiori dettagli"
+  },
+  "detailsTextPost": {
+    "message": "Quando fai clic su \"Disiscriviti\", verrà inviata una richiesta POST al seguente URL:",
+    "description": "Dettagli per una richiesta POST"
+  },
+  "detailsTextEmail": {
+    "message": "Quando fai clic su \"Disiscriviti\", verrà redatta un'email al seguente indirizzo:",
+    "description": "Dettagli per un'email"
+  },
+  "detailsTextWeb": {
+    "message": "Quando fai clic su \"Disiscriviti\", si aprirà una finestra del browser e verrà visitato il seguente URL:",
+    "description": "Dettagli per un collegamento web"
+  }
+}
