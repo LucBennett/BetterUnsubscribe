@@ -28,24 +28,16 @@
         "description": "Label for the cancel button"
     },
     "deleteButton": {
-        "message": "Delete Email",
-        "description": "Label for the delete email button"
+        "message": "Delete ▼",
+        "description": "Label for the delete button with a dropdown indicator"
     },
-    "detailsSummary": {
-        "message": "More details",
-        "description": "More Details Drop-Down"
+    "deleteOneButton": {
+        "message": "Just this",
+        "description": "Label for the button to delete only the current email"
     },
-    "detailsTextPost": {
-        "message": "When you click \"Unsubscribe\", a post request will be sent to the following URL:",
-        "description": "Details for a Post request"
-    },
-    "detailsTextEmail": {
-        "message": "When you click \"Unsubscribe\", an email will be drafted to the following address:",
-        "description": "Details for a Email"
-    },
-    "detailsTextWeb": {
-        "message": "When you click \"Unsubscribe\", a browser window will open and will visit the following URL:",
-        "description": "Details for a Web Link"
+    "deleteAllButton": {
+        "message": "All from",
+        "description": "Label for the button to delete all emails from a specific sender, where $1 is the sender's email"
     },
     "statusTextEmpty": {
         "message": "",
@@ -62,5 +54,33 @@
     "statusTextError": {
         "message": "Error",
         "description": "Status text for error state"
+    },
+    "statusTextDeleting": {
+        "message": "Deleting email(s)...",
+        "description": "Status text while email(s) are being deleted"
+    },
+    "statusTextDeleteSuccess": {
+        "message": "Email(s) deleted successfully.",
+        "description": "Status text for successful email deletion"
+    },
+    "statusTextDeleteError": {
+        "message": "Failed to delete email(s).",
+        "description": "Status text when email deletion fails"
+    },
+    "detailsSummary": {
+        "message": "More details",
+        "description": "More Details Drop-Down"
+    },
+    "detailsTextPost": {
+        "message": "When you click \"Unsubscribe\", a post request will be sent to the following URL:",
+        "description": "Details for a Post request"
+    },
+    "detailsTextEmail": {
+        "message": "When you click \"Unsubscribe\", an email will be drafted to the following address:",
+        "description": "Details for a Email"
+    },
+    "detailsTextWeb": {
+        "message": "When you click \"Unsubscribe\", a browser window will open and will visit the following URL:",
+        "description": "Details for a Web Link"
     }
 }
