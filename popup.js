@@ -170,10 +170,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     deleteOneBtn.addEventListener('click', async () => {
         try {
             deleteOneBtn.disabled = true;
+            statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
             const r = await messenger.runtime.sendMessage({messageId: messageId, delete: true});
             console_log("Deleted this email response:", r);
+            if (r.response === "Deleted") {
+                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
+            } else {
+                deleteOneBtn.disabled = false;
+                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
+            }
+
         } catch (error) {
             console_error("Error deleting just this email:", error);
+            statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
         }
     });
 
@@ -181,10 +190,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     deleteAllBtn.addEventListener('click', async () => {
         try {
             deleteAllBtn.disabled = true;
+            statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
             const r = await messenger.runtime.sendMessage({messageId: messageId, deleteAllFromSender: true});
-            console_log("Deleted all emails from this sender response:", r);
+            console_log("Deleted this email response:", r);
+            if (r.response === "Deleted") {
+                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
+            } else {
+                deleteOneBtn.disabled = false;
+                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
+            }
         } catch (error) {
             console_error("Error deleting all emails from this sender:", error);
+            statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
         }
     });
 });
