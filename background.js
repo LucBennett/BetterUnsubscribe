@@ -572,7 +572,6 @@ messenger.runtime.onMessage.addListener(async (message) => {
 // Export the functions and classes for testing
 module.exports = {
     searchUnsub,
-    checkUnsub,
     UnsubWeb,
     UnsubMail,
     UnsubPostRequest,

@@ -23,7 +23,7 @@ describe('searchUnsub', () => {
     test('should return UnsubWeb when a valid list-unsubscribe HTTPS link is found', async () => {
         const selectedMessage = {id: 1, subject: "Test Subject"};
 
-        // Mock the message with a valid 'list-unsubscribe' header containing a HTTPS link
+        // Mock the message with a valid 'list-unsubscribe' header containing an HTTPS link
         const fullMessage = {
             headers: {
                 'list-unsubscribe': ['<https://unsubscribe.link/test>']

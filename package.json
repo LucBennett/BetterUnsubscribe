@@ -1,6 +1,6 @@
 {
-  "name": "BetterUnsubscribe",
-  "version": "1.0.0",
+  "name": "betterunsubscribe",
+  "version": "2.6.0",
   "description": "A Thunderbird extension for better unsubscribe functionality",
   "scripts": {
     "test": "jest"
