@@ -22,7 +22,7 @@ function console_error(...args) {
  * This function updates various CSS variables to match the active Thunderbird theme's
  * color scheme, ensuring that the UI remains consistent with the user's selected theme.
  *
- * @param {ThemeType} theme - The current theme object, which contains color properties for various UI elements.
+ * @param {messenger._manifest.ThemeType} theme - The current theme object, which contains color properties for various UI elements.
  */
 async function applyTheme(theme) {
     console_log("Apply Theme");
@@ -68,64 +68,58 @@ async function applyTheme(theme) {
  * Retrieves message details, sets up button event listeners, and handles unsubscribe logic.
  */
 document.addEventListener('DOMContentLoaded', async () => {
+    // Apply the current Thunderbird theme to match the extension's UI.
     await applyTheme(await messenger.theme.getCurrent());
 
-    const params = new URLSearchParams(window.location.search);
-    const messageId = parseInt(params.get('messageId'));
-    console_log("MessageId:", messageId);
+    // Retrieve the currently active tab and get the displayed message details.
+    const [tab] = await messenger.tabs.query({active: true, currentWindow: true});
+    const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+    console_log("Message", message.id);
 
     // Retrieve DOM elements for later use.
     const emailText = document.getElementById('emailText');
     const unsubscribeButton = document.getElementById('unsubscribeButton');
     const cancelButton = document.getElementById('cancelButton');
-    //const deleteButton = document.getElementById('deleteButton');
     const deleteOneBtn = document.getElementById('delete-one-btn');
     const deleteAllBtn = document.getElementById('delete-all-btn');
     const statusText = document.getElementById('statusText');
-    //const details = document.getElementById('detailsDropDown');
     const detailsText = document.getElementById('detailsText');
+    const detailsCode = document.getElementById("dynamicCodeBlock");
 
-    // Retrieve the message header to display the author and set the delete all text.
+    // Retrieve the message header to display the author and set the "Delete All" button text.
     try {
-        let messageHeader = await messenger.messages.get(messageId);
-        let author = messageHeader.author;
+        let author = message.author;
 
         // Create a safe line break using a document fragment or multiple elements.
-        emailText.textContent = messenger.i18n.getMessage("emailText");// + " " + author;
+        emailText.textContent = messenger.i18n.getMessage("emailText");
         emailText.appendChild(document.createElement("br"));  // Add a line break manually
         emailText.appendChild(document.createTextNode(author)); // Re-add author after the break
 
         // Update the "Delete All" button similarly, without using innerHTML.
-        deleteAllBtn.textContent = messenger.i18n.getMessage("deleteAllButton");// + " " + author;
+        deleteAllBtn.textContent = messenger.i18n.getMessage("deleteAllButton");
         deleteAllBtn.appendChild(document.createElement("br"));  // Add a line break
         deleteAllBtn.appendChild(document.createTextNode(author));  // Append the author again
-
     } catch (error) {
         console_error(error);
     }
 
-
-    // Request the unsubscribe method from the background script.
-    messenger.runtime.sendMessage({messageId: messageId, getMethod: true}).then((r) => {
+    // Request the unsubscribe method details from the background script.
+    messenger.runtime.sendMessage({messageId: message.id, getMethod: true}).then((r) => {
         console_log("Received", r);
-        let codeElement = document.createElement('code');
-        codeElement.textContent = r.address;
 
+        // Based on the unsubscribe method type (Post, Email, or Browser), update the UI with details.
         switch (r.method) {
             case "Post":
                 detailsText.textContent = messenger.i18n.getMessage("detailsTextPost") + ' ';
-                detailsText.appendChild(codeElement);
-                //details.hidden = false;
+                detailsCode.textContent = r.address;
                 break;
             case "Email":
                 detailsText.textContent = messenger.i18n.getMessage("detailsTextEmail") + ' ';
-                detailsText.appendChild(codeElement);
-                //details.hidden = false;
+                detailsCode.textContent = r.address;
                 break;
             case "Browser":
                 detailsText.textContent = messenger.i18n.getMessage("detailsTextWeb") + ' ';
-                detailsText.appendChild(codeElement);
-                //details.hidden = false;
+                detailsCode.textContent = r.address;
                 break;
             default:
             // No action if no method is provided.
@@ -134,17 +128,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         console_error("Error receiving methodInfo from background:", error);
     });
 
-    // Event listener for the unsubscribe button.
+    /**
+     * Event listener for the "Unsubscribe" button.
+     * Disables the button, updates the status text, and sends an unsubscribe request to the background script.
+     */
     unsubscribeButton.addEventListener('click', async () => {
         unsubscribeButton.disabled = true;
         statusText.textContent = messenger.i18n.getMessage("statusTextWorking");
 
         // Send unsubscribe request to the background script.
-        messenger.runtime.sendMessage({messageId: messageId, unsubscribe: true}).then((r) => {
+        messenger.runtime.sendMessage({messageId: message.id, unsubscribe: true}).then((r) => {
             console_log("Response from background:", r);
             if (r.response === "Unsubscribed") {
                 statusText.textContent = messenger.i18n.getMessage("statusTextDone");
-                //deleteButton.hidden = false;
             } else {
                 unsubscribeButton.disabled = false;
                 statusText.textContent = messenger.i18n.getMessage("statusTextError");
@@ -155,10 +151,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // Event listener for the cancel button.
+    /**
+     * Event listener for the "Cancel" button.
+     * Sends a cancel request to the background script and closes the popup window.
+     */
     cancelButton.addEventListener('click', async () => {
         try {
-            const r = await messenger.runtime.sendMessage({messageId: messageId, cancel: true});
+            const r = await messenger.runtime.sendMessage({messageId: message.id, cancel: true});
             console_log("Response from background:", r);
             window.close();
         } catch (error) {
@@ -166,12 +165,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Event listener for the "Delete Just This Email" button.
+    /**
+     * Event listener for the "Delete Just This Email" button.
+     * Sends a request to delete the current email and updates the status text.
+     */
     deleteOneBtn.addEventListener('click', async () => {
         try {
             deleteOneBtn.disabled = true;
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
-            const r = await messenger.runtime.sendMessage({messageId: messageId, delete: true});
+            const r = await messenger.runtime.sendMessage({messageId: message.id, delete: true});
             console_log("Deleted this email response:", r);
             if (r.response === "Deleted") {
                 statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
@@ -186,12 +188,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Event listener for the "Delete All Emails from This Sender" button.
+    /**
+     * Event listener for the "Delete All Emails from This Sender" button.
+     * Sends a request to delete all emails from the same sender and updates the status text.
+     */
     deleteAllBtn.addEventListener('click', async () => {
         try {
             deleteAllBtn.disabled = true;
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
-            const r = await messenger.runtime.sendMessage({messageId: messageId, deleteAllFromSender: true});
+            const r = await messenger.runtime.sendMessage({messageId: message.id, deleteAllFromSender: true});
             console_log("Deleted this email response:", r);
             if (r.response === "Deleted") {
                 statusText.textContent = r.count + " " + messenger.i18n.getMessage("statusTextDeleteSuccess");
