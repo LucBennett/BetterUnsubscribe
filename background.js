@@ -18,40 +18,17 @@ function console_error() {
 }
 
 /**
- * Listener for when a tab is activated. It checks if the active tab is a message display or mail tab
- * and enables or disables the messageDisplayAction accordingly.
- * @param {object} activeInfo - The information about the activated tab.
+ * Event listener for message display events.
+ * Disables the action button initially and checks if unsubscribe information is available.
+ * If unsubscribe info is found, the action button is enabled.
+ * @param {object} tab - The browser tab where the message is displayed.
+ * @param {messenger.messages.MessageHeader} message - The message being displayed.
  */
-messenger.tabs.onActivated.addListener(async (activeInfo) => {
-    console_log("Tab Activated");
+messenger.messageDisplay.onMessageDisplayed.addListener(async (tab, message) => {
+    console_log("Message displayed");
     await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-    let tab = await messenger.tabs.get(activeInfo.tabId);
-    if (tab) {
-        console_log("Tab type", tab.type);
-        if (tab.type === "messageDisplay" || tab.type === "mail") {
-            let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-            if (messageHeader) {
-                const found = await checkUnsub(messageHeader);
-                if (found === true) {
-                    await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
-                }
-            }
-        }
-    }
-});
-
-/**
- * Listener for when the selected messages in a mail tab change. It checks the selected message
- * for unsubscribe information and enables or disables the messageDisplayAction accordingly.
- * @param {MailTab} tab - The currently active mail tab.
- * @param {MessageList} messageList - The list of selected messages in the tab.
- */
-messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList) => {
-    console_log("Selected Message Changed");
-    await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-    if (messageList.messages.length !== 0) {
-        const messageHeader = messageList.messages[0];
-        const found = await checkUnsub(messageHeader);
+    if (message) {
+        const found = await checkUnsub(message);
         if (found === true) {
             await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
         }
@@ -93,15 +70,6 @@ async function checkUnsub(selectedMessage) {
 }
 
 /**
- * Decodes a URL that may contain encoded characters.
- * @param {string} url - The URL to decode.
- * @returns {string} - The decoded URL.
- */
-function decodeURL(url) {
-    return decodeURIComponent(url.replace(/=([A-Fa-f0-9]{2})/g, '%$1'));
-}
-
-/**
  * Searches for unsubscribe links and information in the message headers and body.
  * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
  * @returns {Promise<UnsubMethod|boolean>} - Unsubscribe Method if found, otherwise false.
@@ -110,13 +78,11 @@ async function searchUnsub(selectedMessage) {
     try {
         let fullMessage = await messenger.messages.getFull(selectedMessage.id);
         let messageHeader = await messenger.messages.get(selectedMessage.id);
-
+        // See RFC 2369 (Mailing list Header)
         if (fullMessage.headers.hasOwnProperty('list-unsubscribe')) {
             const unsubscribeHeader = fullMessage.headers['list-unsubscribe'][0];
-            const httpsLinkMatch = unsubscribeHeader.match(/<(https?:\/\/[^>]+)>/);
-            const httpsLink = httpsLinkMatch ? httpsLinkMatch[1] : null;
-            const emailMatch = unsubscribeHeader.match(/<mailto:([^>]+)>/i);
-            const email = emailMatch ? emailMatch[1] : null;
+            const httpsLink = extractHttpsLink(unsubscribeHeader);
+            const email = extractMailtoLink(unsubscribeHeader);
 
             if (fullMessage.headers.hasOwnProperty('list-unsubscribe-post')) {
                 console_log("OneClick Link Found");
@@ -127,38 +93,11 @@ async function searchUnsub(selectedMessage) {
             }
 
             if (email) {
-                console_log("Unsubscribe Email Found");
-                const emailSplit = email.split("?");
-                const emailAddress = emailSplit[0];
-                let params = {};
-                if (emailSplit.length > 1) {
-                    let paramsString = emailSplit[1];
-                    for (let param of paramsString.split('&')) {
-                        let pair = param.split('=');
-                        params[pair[0]] = pair[1];
-                    }
-                }
+                const [emailAddress, params] = parseMailtoLink(email);
+                const subject = params.subject || 'unsubscribe';
 
-                let subject = "unsubscribe";
-                if ('subject' in params) {
-                    subject = params['subject'];
-                }
-
-                let identity = await getIdentityReceiver(messageHeader);
-
-                if (identity === null) {
-                    identity = await getIdentityForMessage(messageHeader);
-                    if (identity === null) {
-                        let identities = await messenger.identities.list();
-                        if (identities.length !== 0) {
-                            identity = identities[0];
-                        } else {
-                            identity = undefined; // Fallback if no identity is found
-                        }
-                    }
-                }
-
-                return new UnsubMail(identity, emailAddress, subject); // Return unsubscribe email method
+                const identity = await retrieveIdentity(messageHeader);
+                return new UnsubMail(identity, emailAddress, subject);
             }
 
             if (httpsLink) {
@@ -172,6 +111,9 @@ async function searchUnsub(selectedMessage) {
 
         if (embeddedLink) {
             console_log("Embedded HTML Unsubscribe WebLink Found");
+            console_log(embeddedLink);
+            let decoded = decodeURL(embeddedLink);
+            console_log("Decoded:", decoded);
             return new UnsubWeb(embeddedLink); // Return unsubscribe embedded web link method
         }
 
@@ -180,8 +122,9 @@ async function searchUnsub(selectedMessage) {
         if (embeddedLink) {
             console_log("Embedded Unsubscribe WebLink Found");
             console_log(embeddedLink);
-            console_log("Decoded:", decodeURL(embeddedLink));
-            return new UnsubWeb(decodeURL(embeddedLink)); // Return unsubscribe embedded decoded web link method
+            let decoded = decodeURL(embeddedLink);
+            console_log("Decoded:", decoded);
+            return new UnsubWeb(decoded); // Return unsubscribe embedded decoded web link method
         }
 
         return false;
@@ -190,6 +133,72 @@ async function searchUnsub(selectedMessage) {
         console_error(error);
         return false;
     }
+}
+
+// Helper function to extract HTTPS link
+/**
+ * Extracts an HTTPS link from the unsubscribe header.
+ * @param {string} header - The unsubscribe header containing the URL.
+ * @returns {string|null} - The extracted HTTPS link if found, otherwise null.
+ */
+function extractHttpsLink(header) {
+    const httpsLinkMatch = header.match(/<(https?:\/\/[^>]+)>/);
+    return httpsLinkMatch ? httpsLinkMatch[1] : null;
+}
+
+// Helper function to extract mailto link
+/**
+ * Extracts a mailto link from the unsubscribe header.
+ * @param {string} header - The unsubscribe header containing the mailto link.
+ * @returns {string|null} - The extracted mailto link if found, otherwise null.
+ */
+function extractMailtoLink(header) {
+    const emailMatch = header.match(/<mailto:([^>]+)>/i);
+    return emailMatch ? emailMatch[1] : null;
+}
+
+// Helper function to parse mailto link and extract parameters
+/**
+ * Parses a mailto link and extracts the email address and parameters.
+ * @param {string} email - The mailto link to parse.
+ * @returns {Array} - An array containing the email address and parameters.
+ */
+function parseMailtoLink(email) {
+    const emailSplit = email.split("?");
+    const emailAddress = emailSplit[0];
+    let params = {};
+
+    if (emailSplit.length > 1) {
+        params = Object.fromEntries(new URLSearchParams(emailSplit[1]).entries());
+    }
+
+    return [emailAddress, params];
+}
+
+// Helper function to retrieve identity
+/**
+ * Retrieves the MailIdentity associated with the given email's receiver.
+ * @param {messenger.messages.MessageHeader} messageHeader - The message header to search for identities.
+ * @returns {Promise<MailIdentity|undefined>} - The found MailIdentity, or undefined if no identity is found.
+ */
+async function retrieveIdentity(messageHeader) {
+    let identity = await getIdentityReceiver(messageHeader);
+
+    if (identity === null) {
+        identity = await getIdentityForMessage(messageHeader);
+        if (identity === null) {
+            const identities = await messenger.identities.list();
+            if (identities.length !== 0) {
+                identity = identities[0];
+            }
+        }
+    }
+
+    if (!identity) {
+        console_log("No identity found for", messageHeader);
+    }
+
+    return identity || undefined; // Return undefined if no identity is found
 }
 
 /**
@@ -319,7 +328,14 @@ async function getIdentityForMessage(messageHeader) {
     return null; // No matching identity found
 }
 
-// See RFC 2369 (Mailing list Header) and RFC 8058 (Post request)
+/**
+ * Decodes a URL that may contain encoded characters.
+ * @param {string} url - The URL to decode.
+ * @returns {string} - The decoded URL.
+ */
+function decodeURL(url) {
+    return decodeURIComponent(url.replace(/=([A-Fa-f0-9]{2})/g, '%$1'));
+}
 
 /**
  * Base class for different unsubscribe methods.
@@ -360,6 +376,7 @@ class UnsubPostRequest extends UnsubMethod {
 
     /**
      * Executes the unsubscribe action via a POST request.
+     * See RFC 8058 (Post request)
      * @returns {Promise<boolean>} - True if the request is successful, otherwise false.
      */
     async call() {
@@ -516,20 +533,25 @@ messenger.runtime.onMessage.addListener(async (message) => {
             await messenger.messages.delete([messageId], false);
             return {response: 'Deleted'};
         } else if (message.deleteAllFromSender === true) {
-            let messageHeader = await messenger.messages.get(messageId);
-            let author = messageHeader.author;
-            console_log("User wants to delete alls email from", author);
+            //let messageHeader = await messenger.messages.get(messageId);
+            let author = message.author;
+            if (author) {
+                console_log("User wants to delete all emails from", author);
 
-            let messages = await messenger.messages.query({
-                author: author
-            });
+                let messages = await messenger.messages.query({
+                    author: author
+                });
 
-            console_log("Deleting", messages);
+                console_log("Deleting", messages);
 
-            let messageIds = messages.messages.map(message => message.id);
+                let messageIds = messages.messages.map(message => message.id);
 
-            await messenger.messages.delete(messageIds, false);
-            return {response: 'Deleted', count: messageIds.length};
+                await messenger.messages.delete(messageIds, false);
+                return {response: 'Deleted', count: messageIds.length};
+            } else {
+                console_error("Received Invalid author:", author)
+                return {response: 'Error'};
+            }
         } else if (message.getMethod === true) {
             console_log('Method Requested');
             let func = funcMap.get(messageId);
@@ -544,3 +566,15 @@ messenger.runtime.onMessage.addListener(async (message) => {
         return false;
     }
 });
+
+// Your background.js code
+
+// Export the functions and classes for testing
+module.exports = {
+    searchUnsub,
+    checkUnsub,
+    UnsubWeb,
+    UnsubMail,
+    UnsubPostRequest,
+    funcMap
+};
