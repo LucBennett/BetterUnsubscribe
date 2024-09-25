@@ -29,7 +29,7 @@ The latest version can be found [here](https://github.com/LucBennett/BetterUnsub
 1. Open **Thunderbird**.
 2. Go to **Menu** (hamburger icon) -> **Add-ons and Themes**.
 3. Click on **Tools for Add-ons** (gear icon) -> **Install Add-on From File**.
-4. Select `BetterUnsubscribe.xpi` from the `build` directory and add it to Thunderbird.
+4. Select `BetterUnsubscribe.xpi` to add it to Thunderbird.
 
 ## Warning
 
