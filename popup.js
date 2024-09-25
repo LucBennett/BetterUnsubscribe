@@ -22,14 +22,13 @@ function console_error(...args) {
  * This function updates various CSS variables to match the active Thunderbird theme's
  * color scheme, ensuring that the UI remains consistent with the user's selected theme.
  *
- * @param {messenger._manifest.ThemeType} theme - The current theme object, which contains color properties for various UI elements.
+ * @param {ThemeType} theme - The current theme object, which contains color properties for various UI elements.
  */
 async function applyTheme(theme) {
     console_log("Apply Theme");
 
     // Set background color based on the theme's popup color or default to light gray.
     if (theme && theme.colors && theme.colors.popup) {
-        console_log("Using theme for background color");
         document.documentElement.style.setProperty('--in-content-page-background-color', theme.colors.popup);
     } else {
         document.documentElement.style.setProperty('--in-content-page-background-color', '#f0f0f0');
@@ -37,7 +36,6 @@ async function applyTheme(theme) {
 
     // Set primary text color based on the theme's popup text color or default to dark gray.
     if (theme && theme.colors && theme.colors.popup_text) {
-        console_log("Using theme for primary text color");
         document.documentElement.style.setProperty('--in-content-primary-text-color', theme.colors.popup_text);
     } else {
         document.documentElement.style.setProperty('--in-content-primary-text-color', '#1a1a1a');
