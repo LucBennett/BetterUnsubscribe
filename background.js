@@ -81,18 +81,21 @@ async function searchUnsub(selectedMessage) {
         // See RFC 2369 (Mailing list Header)
         if (fullMessage.headers.hasOwnProperty('list-unsubscribe')) {
             const unsubscribeHeader = fullMessage.headers['list-unsubscribe'][0];
+            console_log("Header",unsubscribeHeader);
             const httpsLink = extractHttpsLink(unsubscribeHeader);
             const email = extractMailtoLink(unsubscribeHeader);
 
             if (fullMessage.headers.hasOwnProperty('list-unsubscribe-post')) {
-                console_log("OneClick Link Found");
+                console_log("OneClick Link Found",httpsLink);
                 const postCommand = fullMessage.headers['list-unsubscribe-post'][0];
+                console_log("post",postCommand);
                 if (httpsLink && postCommand) {
                     return new UnsubPostRequest(httpsLink, postCommand); // Return unsubscribe POST request method
                 }
             }
 
             if (email) {
+                console_log("Unsubscribe Email Found",email);
                 const [emailAddress, params] = parseMailtoLink(email);
                 const subject = params.subject || 'unsubscribe';
 
@@ -101,7 +104,7 @@ async function searchUnsub(selectedMessage) {
             }
 
             if (httpsLink) {
-                console_log("Unsubscribe WebLink Found");
+                console_log("Unsubscribe WebLink Found",httpsLink);
                 return new UnsubWeb(httpsLink); // Return unsubscribe web link method
             }
         }
@@ -110,9 +113,9 @@ async function searchUnsub(selectedMessage) {
         let embeddedLink = findEmbeddedUnsubLinkHTML(fullMessage);
 
         if (embeddedLink) {
-            console_log("Embedded HTML Unsubscribe WebLink Found");
+            console_log("Embedded HTML Unsubscribe WebLink Found",embeddedLink);
             console_log(embeddedLink);
-            let decoded = decodeURL(embeddedLink);
+            let decoded = decodeURIComponent(embeddedLink);
             console_log("Decoded:", decoded);
             return new UnsubWeb(embeddedLink); // Return unsubscribe embedded web link method
         }
@@ -120,9 +123,9 @@ async function searchUnsub(selectedMessage) {
         embeddedLink = findEmbeddedUnsubLinkRegex(fullMessage);
 
         if (embeddedLink) {
-            console_log("Embedded Unsubscribe WebLink Found");
+            console_log("Embedded Unsubscribe WebLink Found",embeddedLink);
             console_log(embeddedLink);
-            let decoded = decodeURL(embeddedLink);
+            let decoded = decodeURIComponent(embeddedLink);
             console_log("Decoded:", decoded);
             return new UnsubWeb(decoded); // Return unsubscribe embedded decoded web link method
         }
@@ -142,7 +145,7 @@ async function searchUnsub(selectedMessage) {
  * @returns {string|null} - The extracted HTTPS link if found, otherwise null.
  */
 function extractHttpsLink(header) {
-    const httpsLinkMatch = header.match(/<(https?:\/\/[^>]+)>/);
+    const httpsLinkMatch = header.match(/(https?:\/\/[^>]+)/);
     return httpsLinkMatch ? httpsLinkMatch[1] : null;
 }
 
@@ -153,7 +156,7 @@ function extractHttpsLink(header) {
  * @returns {string|null} - The extracted mailto link if found, otherwise null.
  */
 function extractMailtoLink(header) {
-    const emailMatch = header.match(/<mailto:([^>]+)>/i);
+    const emailMatch = header.match(/mailto:([^>]+)/i);
     return emailMatch ? emailMatch[1] : null;
 }
 
@@ -326,15 +329,6 @@ async function getIdentityForMessage(messageHeader) {
         }
     }
     return null; // No matching identity found
-}
-
-/**
- * Decodes a URL that may contain encoded characters.
- * @param {string} url - The URL to decode.
- * @returns {string} - The decoded URL.
- */
-function decodeURL(url) {
-    return decodeURIComponent(url.replace(/=([A-Fa-f0-9]{2})/g, '%$1'));
 }
 
 /**
@@ -555,6 +549,7 @@ messenger.runtime.onMessage.addListener(async (message) => {
         } else if (message.getMethod === true) {
             console_log('Method Requested');
             let func = funcMap.get(messageId);
+            console_log("Method",func);
             if (func) {
                 return func.getMethodDetails();
             } else {
@@ -567,13 +562,13 @@ messenger.runtime.onMessage.addListener(async (message) => {
     }
 });
 
-// Your background.js code
-
-// Export the functions and classes for testing
-module.exports = {
-    searchUnsub,
-    UnsubWeb,
-    UnsubMail,
-    UnsubPostRequest,
-    funcMap
-};
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+    // Export the functions and classes for testing
+    module.exports = {
+        searchUnsub,
+        UnsubWeb,
+        UnsubMail,
+        UnsubPostRequest,
+        funcMap
+    };
+}
