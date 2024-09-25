@@ -150,4 +150,37 @@ describe('searchUnsub', () => {
         expect(normalizeUrl(result.link)).toBe(normalizeUrl('https://unsubscribe.example.com'));
     });
 
+    test('should return UnsubPostRequest when a valid list-unsubscribe-post header and HTTPS link are found', async () => {
+        const selectedMessage = {id: 6, subject: "Test Subject"};
+
+        // Mock the message with 'list-unsubscribe' and 'list-unsubscribe-post' headers containing valid data
+        const fullMessage = {
+            headers: {
+                'list-unsubscribe': ['<https://unsubscribe.postrequest.test>'],
+                'list-unsubscribe-post': ['One-Click']
+            }
+        };
+
+        const messageHeader = {
+            id: 6,
+            subject: 'Test Subject',
+            recipients: ['user5@example.com'],
+            ccList: [],
+            bccList: [],
+            folder: { accountId: 'account5' }
+        };
+
+        // Mock the messenger methods to return the mocked fullMessage and messageHeader
+        messenger.messages.getFull.mockResolvedValue(fullMessage);
+        messenger.messages.get.mockResolvedValue(messageHeader);
+
+        const result = await searchUnsub(selectedMessage);
+
+        // Expect the result to be an instance of UnsubPostRequest
+        expect(result).toBeInstanceOf(UnsubPostRequest);
+        expect(result.weblink).toBe('https://unsubscribe.postrequest.test');
+        expect(result.command).toBe('One-Click');
+    });
+
+
 });
