@@ -39,10 +39,10 @@ OUTPUT_FILE="./$BUILD_DIR/$(basename "$PWD")-$VERSION.xpi"
 # Create the xpi file, excluding certain files
 if command -v zip >/dev/null 2>&1; then
     echo "zip is installed."
-    zip -r -9 -x '.*' -x "$BUILD_DIR/*" -x '*.sh' -x '*.ps1' -x '*.md' "$OUTPUT_FILE" .
+    zip -r -9 "$OUTPUT_FILE" "./manifest.json" "./_locales" "./icons" "./background.js" "./popup.html" "./popup.js" "./styles.css"
 elif command -v 7z >/dev/null 2>&1; then
     echo "7z is installed."
-    7z a -tzip -mx=9 -xr'!.*' -xr"!$BUILD_DIR" -xr'!*.sh' -xr'!*.ps1' -xr'!*.md' "$OUTPUT_FILE" .
+    7z a -tzip -mx=9 "$OUTPUT_FILE" "./manifest.json" "./_locales" "./icons" "./background.js" "./popup.html" "./popup.js" "./styles.css"
 else
     echo "No archiver found. Please install zip or 7z."
     exit 1

@@ -87,21 +87,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const detailsCode = document.getElementById("dynamicCodeBlock");
 
     // Retrieve the message header to display the author and set the "Delete All" button text.
-    try {
-        let author = message.author;
+    const author = message.author;
 
-        // Create a safe line break using a document fragment or multiple elements.
-        emailText.textContent = messenger.i18n.getMessage("emailText");
-        emailText.appendChild(document.createElement("br"));  // Add a line break manually
-        emailText.appendChild(document.createTextNode(author)); // Re-add author after the break
+    // Create a safe line break using a document fragment or multiple elements.
+    emailText.textContent = messenger.i18n.getMessage("emailText");
+    emailText.appendChild(document.createElement("br"));  // Add a line break manually
+    emailText.appendChild(document.createTextNode(author)); // Re-add author after the break
 
-        // Update the "Delete All" button similarly, without using innerHTML.
-        deleteAllBtn.textContent = messenger.i18n.getMessage("deleteAllButton");
-        deleteAllBtn.appendChild(document.createElement("br"));  // Add a line break
-        deleteAllBtn.appendChild(document.createTextNode(author));  // Append the author again
-    } catch (error) {
-        console_error(error);
-    }
+    // Update the "Delete All" button similarly, without using innerHTML.
+    deleteAllBtn.textContent = messenger.i18n.getMessage("deleteAllButton");
+    deleteAllBtn.appendChild(document.createElement("br"));  // Add a line break
+    deleteAllBtn.appendChild(document.createTextNode(author));  // Append the author again
+
 
     // Request the unsubscribe method details from the background script.
     messenger.runtime.sendMessage({messageId: message.id, getMethod: true}).then((r) => {
@@ -165,25 +162,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    let deleteOneClicked = false;
+    let deleteAllClicked = false;
+
     /**
      * Event listener for the "Delete Just This Email" button.
      * Sends a request to delete the current email and updates the status text.
      */
     deleteOneBtn.addEventListener('click', async () => {
+        if (deleteOneClicked || deleteAllClicked) return; // Prevent multiple clicks
+        deleteOneClicked = true; // Set the flag to true after the first click
         try {
-            deleteOneBtn.disabled = true;
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
             const r = await messenger.runtime.sendMessage({messageId: message.id, delete: true});
             console_log("Deleted this email response:", r);
             if (r.response === "Deleted") {
                 statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
             } else {
-                deleteOneBtn.disabled = false;
+                deleteOneClicked = false; // Reset flag if delete failed
                 statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
             }
-
         } catch (error) {
             console_error("Error deleting just this email:", error);
+            deleteOneClicked = false; // Reset flag if an error occurs
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
         }
     });
@@ -193,20 +194,27 @@ document.addEventListener('DOMContentLoaded', async () => {
      * Sends a request to delete all emails from the same sender and updates the status text.
      */
     deleteAllBtn.addEventListener('click', async () => {
+        if (deleteAllClicked) return; // Prevent multiple clicks
+        deleteAllClicked = true; // Set the flag to true after the first click
         try {
-            deleteAllBtn.disabled = true;
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
-            const r = await messenger.runtime.sendMessage({messageId: message.id, deleteAllFromSender: true});
+            const r = await messenger.runtime.sendMessage({
+                messageId: message.id,
+                author: author,
+                deleteAllFromSender: true
+            });
             console_log("Deleted this email response:", r);
             if (r.response === "Deleted") {
                 statusText.textContent = r.count + " " + messenger.i18n.getMessage("statusTextDeleteSuccess");
             } else {
-                deleteOneBtn.disabled = false;
+                deleteAllClicked = false; // Reset flag if delete failed
                 statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
             }
         } catch (error) {
             console_error("Error deleting all emails from this sender:", error);
+            deleteAllClicked = false; // Reset flag if an error occurs
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
         }
     });
+
 });
