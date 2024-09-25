@@ -8,7 +8,8 @@
 <body>
 <h2 data-i18n="unsubscribeHeader">Unsubscribe</h2>
 <p id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</p>
-<button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe</button>
+<button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe
+</button>
 <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
 
 <div class='button-delete button-dropdown' data-dropdownstate="closed">
@@ -25,9 +26,18 @@
 <details id="detailsDropDown">
     <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
     <div class="details-content">
-        <p id="detailsText" data-i18n="detailsText"></p>
+        <p id="detailsText" data-i18n="detailsText">
+            <!-- General description or text goes here -->
+        </p>
+        <!-- Dedicated container for code block with overflow control -->
+        <div class="code-container">
+            <code id="dynamicCodeBlock">
+                <!-- Dynamically inserted code block added by popup.js -->
+            </code>
+        </div>
     </div>
 </details>
+
 
 <script src="i18n.js"></script>
 <script src="popup.js"></script>

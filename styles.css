@@ -14,8 +14,8 @@
     --in-content-box-border-color: #dcdcdc;
     --in-content-border-radius: 4px;
     --in-content-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --in-content-code-background-color: #f8f9fa; /* Light gray background for code blocks */
-    --in-content-code-color: #212529; /* Dark text color for code */
+    --in-content-code-background-color: #f8f9fa;
+    --in-content-code-color: #212529;
     --dark-theme-background-color: #333333;
     --dark-theme-text-color: #ffffff;
     --dark-theme-button-hover-background-color: #444444;
@@ -24,34 +24,36 @@
     --dark-theme-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 
-body {
+html, body {
+    width: 600px;
+    min-height: 250px;
+    margin: 10px;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
-    padding: 20px;
     background-color: var(--in-content-page-background-color);
     color: var(--in-content-primary-text-color);
     text-align: center;
 }
 
-/* Dark theme adjustments */
 body.dark-theme {
     background-color: var(--dark-theme-background-color);
     color: var(--dark-theme-text-color);
 }
 
+/* Text and headings */
 h2 {
-    font-size: 18px;
     font-weight: 600;
     margin-bottom: 15px;
     color: var(--in-content-primary-text-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
-body.dark-theme h2 {
+body.dark-theme h2, body.dark-theme summary {
     color: var(--dark-theme-text-color);
 }
 
 p {
-    font-size: 14px;
     color: var(--in-content-secondary-text-color);
     margin-bottom: 20px;
 }
@@ -60,6 +62,7 @@ body.dark-theme p {
     color: var(--dark-theme-text-color);
 }
 
+/* Button Styles */
 .button {
     padding: 8px 16px;
     margin: 10px;
@@ -83,7 +86,7 @@ body.dark-theme .button:hover {
     background-color: var(--dark-theme-button-hover-background-color);
 }
 
-/* Button variants */
+/* Button Variants */
 #unsubscribeButton {
     background-color: var(--button-success-background-color);
 }
@@ -100,32 +103,28 @@ body.dark-theme .button:hover {
     background-color: var(--button-danger-hover-background-color);
 }
 
-/* Dropdown improvements */
+/* Dropdown */
 .button-dropdown {
     position: relative;
     display: inline-block;
-    vertical-align: middle;
 }
 
 .button-dropdown div {
-    display: none; /* Initially hidden */
+    display: none;
 }
 
 .button-dropdown ul {
     list-style: none;
     padding: 0;
+    margin-top: -8px;
     position: absolute;
-    left: 0;
-    top: 100%; /* Position it directly below the label */
-    margin-top: -8px; /* Bring the list closer to the label */
     z-index: 100;
     background-color: var(--in-content-box-background-color);
     border: 1px solid var(--in-content-box-border-color);
-    border-radius: var(--in-content-border-radius); /* Make the dropdown rounded like buttons */
-    box-shadow: var(--in-content-shadow); /* Add shadow to match the buttons */
-    white-space: normal; /* Allow text to wrap */
-    max-width: 250px; /* Set a maximum width for the dropdown list */
-    word-wrap: break-word; /* Break long words */
+    border-radius: var(--in-content-border-radius);
+    box-shadow: var(--in-content-shadow);
+    max-width: 150%;
+    word-wrap: break-word;
     transition: max-height 0.5s, padding 0.5s ease-in-out;
 }
 
@@ -138,16 +137,11 @@ body.dark-theme .button-dropdown ul {
 .button-dropdown ul li {
     font-size: 14px;
     padding: 5px 15px;
-    border-top: 1px solid var(--in-content-box-border-color); /* Add border between list items */
+    border-top: 1px solid var(--in-content-box-border-color);
 }
 
 .button-dropdown ul li:first-child {
-    border-radius: var(--in-content-border-radius) var(--in-content-border-radius) 0 0; /* Round top corners */
-    border-top: none; /* Remove border from the first item */
-}
-
-.button-dropdown ul li:last-child {
-    border-radius: 0 0 var(--in-content-border-radius) var(--in-content-border-radius); /* Round bottom corners */
+    border-top: none;
 }
 
 body.dark-theme .button-dropdown ul li {
@@ -155,7 +149,7 @@ body.dark-theme .button-dropdown ul li {
 }
 
 .button-dropdown:hover div {
-    display: block; /* Show the hidden div when hovering */
+    display: block;
 }
 
 .button-dropdown li:hover {
@@ -166,48 +160,43 @@ body.dark-theme .button-dropdown li:hover {
     background-color: var(--dark-theme-button-hover-background-color);
 }
 
+/* Ensure the details container is aligned left and does not expand horizontally */
 details {
-    margin-top: 20px;
-    text-align: left;
-    max-width: 100%;
+    width: 100%; /* Set max width for the details block */
+    box-sizing: border-box;
+    text-align: left; /* Align all content inside details to the left */
 }
 
+/* Align the summary text */
 summary {
-    cursor: pointer;
-    font-weight: bold;
-    margin-bottom: 10px;
     color: var(--in-content-primary-text-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-align: left; /* Align the summary to the left */
+    font-weight: bold;
+    cursor: pointer;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 5px;
 }
 
-body.dark-theme summary {
-    color: var(--dark-theme-text-color);
-}
-
-.details-content {
-    background-color: var(--in-content-box-background-color);
-    padding: 10px;
+/* Scrollable content area inside the details */
+.code-container {
+    max-width: 100%; /* Prevent content from expanding beyond the container */
+    overflow-x: auto; /* Add horizontal scroll if the content overflows */
+    background-color: var(--in-content-code-background-color);
+    margin-right: 15px;
+    padding: 15px;
     border-radius: var(--in-content-border-radius);
     border: 1px solid var(--in-content-box-border-color);
-    box-shadow: var(--in-content-shadow);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
+    box-sizing: border-box;
 }
 
-body.dark-theme .details-content {
-    background-color: var(--dark-theme-box-background-color);
-    border-color: var(--dark-theme-box-border-color);
-    box-shadow: var(--dark-theme-shadow);
-}
-
+/* Ensure code block behaves correctly and scrolls horizontally if necessary */
 code {
     display: block;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
+    white-space: pre; /* Preserve spaces and ensure long lines don't wrap */
+    word-wrap: normal; /* Prevent wrapping within the code block */
+    box-sizing: border-box;
     max-width: 100%;
-    background-color: var(--in-content-code-background-color);
-    color: var(--in-content-code-color);
-    padding: 8px;
-    border-radius: var(--in-content-border-radius);
 }

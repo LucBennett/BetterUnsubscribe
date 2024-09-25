@@ -30,6 +30,7 @@
   "message_display_action": {
     "default_title": "__MSG_unsubscribeTitle__",
     "default_icon": "icons/email.png",
+    "default_popup": "popup.html",
     "theme_icons": [
       {
         "light": "icons/email_48x48_inverted.png",

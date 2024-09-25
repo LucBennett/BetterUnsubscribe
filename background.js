@@ -18,25 +18,6 @@ function console_error() {
 }
 
 /**
- * Opens a dialog for the user to confirm the unsubscribe action when the message display action is clicked.
- * @param {MailTab} tab - The currently active tab.
- */
-messenger.messageDisplayAction.onClicked.addListener(async (tab) => {
-    console_log('Clicked');
-    await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-    if (tab.type === "messageDisplay" || tab.type === "mail") {
-        let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-        if (messageHeader) {
-            const found = await searchForUnsub(messageHeader);
-            if (found === true) {
-                await createPopup(messageHeader);
-                await messenger.messageDisplayAction.enable()
-            }
-        }
-    }
-});
-
-/**
  * Listener for when a tab is activated. It checks if the active tab is a message display or mail tab
  * and enables or disables the messageDisplayAction accordingly.
  * @param {object} activeInfo - The information about the activated tab.
@@ -46,11 +27,11 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
     await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     let tab = await messenger.tabs.get(activeInfo.tabId);
     if (tab) {
-        console_log(tab.type);
+        console_log("Tab type", tab.type);
         if (tab.type === "messageDisplay" || tab.type === "mail") {
             let messageHeader = await messenger.messageDisplay.getDisplayedMessage(tab.id);
             if (messageHeader) {
-                const found = await searchForUnsub(messageHeader);
+                const found = await checkUnsub(messageHeader);
                 if (found === true) {
                     await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
                 }
@@ -70,7 +51,7 @@ messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList
     await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     if (messageList.messages.length !== 0) {
         const messageHeader = messageList.messages[0];
-        const found = await searchForUnsub(messageHeader);
+        const found = await checkUnsub(messageHeader);
         if (found === true) {
             await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
         }
@@ -83,7 +64,7 @@ messenger.mailTabs.onSelectedMessagesChanged.addListener(async (tab, messageList
  * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
  * @returns {Promise<boolean>} - True if unsubscribe information is found, otherwise false.
  */
-async function searchForUnsub(selectedMessage) {
+async function checkUnsub(selectedMessage) {
     if (!funcMap.has(selectedMessage.id)) {
         try {
             let result = await searchUnsub(selectedMessage);
@@ -351,6 +332,15 @@ class UnsubMethod {
     async call() {
         throw new Error('Method call() must be implemented.');
     }
+
+    /**
+     * Method to get details of the unsubscribe method (e.g., type, address).
+     * Must be implemented by subclasses.
+     * @throws {Error} - If the method is not implemented by a subclass.
+     */
+    getMethodDetails() {
+        throw new Error("This method must be implemented by subclasses");
+    }
 }
 
 /**
@@ -400,6 +390,14 @@ class UnsubPostRequest extends UnsubMethod {
             return false;
         }
     }
+
+    /**
+     * Returns details of the unsubscribe method.
+     * @returns {any} - Method details, including type and address.
+     */
+    getMethodDetails() {
+        return {method: "Post", address: this.weblink};
+    }
 }
 
 /**
@@ -443,6 +441,14 @@ class UnsubMail extends UnsubMethod {
             return false;
         }
     }
+
+    /**
+     * Returns details of the unsubscribe method.
+     * @returns {any} - Method details, including type and address.
+     */
+    getMethodDetails() {
+        return {method: "Email", address: this.emailAddress};
+    }
 }
 
 /**
@@ -475,6 +481,14 @@ class UnsubWeb extends UnsubMethod {
             return false;
         }
     }
+
+    /**
+     * Returns details of the unsubscribe method.
+     * @returns {any} - Method details, including type and address.
+     */
+    getMethodDetails() {
+        return {method: "Browser", address: this.link};
+    }
 }
 
 /**
@@ -483,7 +497,7 @@ class UnsubWeb extends UnsubMethod {
  * @param {object} sender - The sender of the message.
  * @param {function} sendResponse - The function to send a response.
  */
-messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+messenger.runtime.onMessage.addListener(async (message) => {
     if (message.messageId) {
         let messageId = parseInt(message.messageId);
         if (message.unsubscribe === true) {
@@ -515,41 +529,18 @@ messenger.runtime.onMessage.addListener(async (message, sender, sendResponse) =>
             let messageIds = messages.messages.map(message => message.id);
 
             await messenger.messages.delete(messageIds, false);
-            return {response: 'Deleted', count:messageIds.length};
+            return {response: 'Deleted', count: messageIds.length};
         } else if (message.getMethod === true) {
             console_log('Method Requested');
             let func = funcMap.get(messageId);
-            console_log(func);
-            if (func instanceof UnsubPostRequest) {
-                return {method: "Post", address: func.weblink};
-            } else if (func instanceof UnsubMail) {
-                return {method: "Email", address: func.emailAddress};
-            } else if (func instanceof UnsubWeb) {
-                return {method: "Browser", address: func.link};
-            } else if (func === false) {
-                return {method: "NONE"};
+            if (func) {
+                return func.getMethodDetails();
             } else {
-                return {method: "IDK"};
+                return {method: "NONE"};
             }
         }
     } else {
-        console_log("No MessageID", message);
+        console_log("IDK", message);
         return false;
     }
 });
-
-/**
- * Creates a popup window for the user to confirm the unsubscribe action.
- * @param {object} message - The message object containing details for the popup.
- */
-async function createPopup(message) {
-    console_log("Create Popup for message id:", message.id);
-    const url = `popup.html?messageId=${message.id}`;
-    await messenger.windows.create({
-        url: url,
-        type: "popup",
-        height: 400,
-        width: 700,
-        allowScriptsToClose: true
-    });
-}
