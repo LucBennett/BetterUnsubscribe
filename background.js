@@ -245,7 +245,7 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
  */
 function findEmbeddedUnsubLinkRegex(messagePart) {
     if (messagePart.hasOwnProperty('body')) {
-        console_log(messagePart.contentType);
+        //console_log(messagePart.contentType);
         let lowerCaseBody = messagePart.body.toLowerCase();
 
         // Check if the body contains the word "unsubscribe"
@@ -268,7 +268,7 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
             }
 
             // Third Regex: Capture cases where "unsubscribe" appears first, followed by a URL within 300 characters
-            embeddedLinkMatch = messagePart.body.match(/unsubscribe[^:]{0,300}(https?:\/\/[^\s"'<>]*)/i);
+            embeddedLinkMatch = messagePart.body.match(/unsubscribe[\s\S]{0,300}(https?:\/\/[^\s"'<>]*)/i);
             embeddedLink = embeddedLinkMatch ? embeddedLinkMatch[1] : null;
             if (embeddedLink) {
                 console_log("Matched Third Regex");
@@ -566,6 +566,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
     // Export the functions and classes for testing
     module.exports = {
         searchUnsub,
+        UnsubMethod,
         UnsubWeb,
         UnsubMail,
         UnsubPostRequest,
