@@ -14,10 +14,11 @@ if (Test-Path "manifest.json")
     else
     {
         Write-Host "jq is not installed."
-        $VERSION = Select-String -Path "manifest.json" -Pattern '"version"' | ForEach-Object {
+        $VERSION = Select-String -Path "manifest.json" -Pattern '"version"\s*:\s*"([^"]+)"' | ForEach-Object {
             $_.Matches[0].Groups[1].Value
         }
     }
+    Write-Host "Version: $VERSION"
 }
 else
 {

@@ -3,19 +3,27 @@ $ErrorActionPreference = "Stop"
 
 $currentDir = Get-Location
 
-if (Test-Path "manifest.json") {
-    if (Get-Command jq -ErrorAction SilentlyContinue) {
+# Check if manifest.json exists and determine version
+if (Test-Path "manifest.json")
+{
+    if (Get-Command jq -ErrorAction SilentlyContinue)
+    {
         Write-Host "jq is installed."
-        $VERSION = & jq -r '.version' "manifest.json"  # Ensure jq is called properly
-    } else {
+        $VERSION = & jq -r '.version' "manifest.json"
+    }
+    else
+    {
         Write-Host "jq is not installed."
-        $VERSION = Select-String -Path "manifest.json" -Pattern '"version"' | ForEach-Object {
-            $_.Matches[0].Groups[1].Value  # Correct way to extract version using regex
+        $VERSION = Select-String -Path "manifest.json" -Pattern '"version"\s*:\s*"([^"]+)"' | ForEach-Object {
+            $_.Matches[0].Groups[1].Value
         }
     }
-} else {
+    Write-Host "Version: $VERSION"
+}
+else
+{
     Write-Host "Error: manifest.json not found."
-    Exit 1  # PowerShell requires Exit with a capital E
+    Exit 1
 }
 
 # Create build directory if it doesn't exist

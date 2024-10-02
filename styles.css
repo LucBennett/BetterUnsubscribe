@@ -1,8 +1,8 @@
 /* Base Styles */
 html, body {
-    width: 600px;
-    min-height: 250px;
-    margin: 5px;
+    width: 500px;
+    min-height: 275px;
+    margin: 10px;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
     text-align: center;
@@ -90,7 +90,7 @@ p {
 
 .button-dropdown ul li {
     font-size: 14px;
-    padding: 5px 15px;
+    padding: 5px;
     color: #1a1a1a; /* Light theme dropdown text */
     border-top: 1px solid #dcdcdc;
 }
@@ -107,7 +107,7 @@ p {
 .code-container {
     max-width: 100%;
     overflow-x: auto;
-    margin-right: 10px;
+    margin-right: 15px;
     padding: 15px;
     border-radius: 4px;
     box-sizing: border-box;
