@@ -70,9 +70,12 @@ async function searchUnsub(selectedMessage) {
     let messageHeader = await messenger.messages.get(selectedMessage.id);
     // See RFC 2369 (Mailing list Header)
     if (fullMessage.headers.hasOwnProperty('list-unsubscribe')) {
-        let unsubscribeHeader = fullMessage.headers['list-unsubscribe'];
-        if (Array.isArray(unsubscribeHeader)){
-            unsubscribeHeader = unsubscribeHeader[0];
+        const unsubscribeHeaders = fullMessage.headers['list-unsubscribe'];
+        let unsubscribeHeader;
+        if (Array.isArray(unsubscribeHeaders)){
+            unsubscribeHeader = unsubscribeHeaders[0];
+        } else {
+            unsubscribeHeader = unsubscribeHeaders;
         }
         console_log("Header", unsubscribeHeader);
         const httpsLink = extractHttpsLink(unsubscribeHeader);

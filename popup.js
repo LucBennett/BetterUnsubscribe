@@ -15,60 +15,11 @@ function console_log(...args) {
 function console_error(...args) {
     console.error("[BetterUnsubscribe][popup.js]", ...args);
 }
-
-/**
- * Applies the current Thunderbird theme to the extension's UI.
- *
- * This function updates various CSS variables to match the active Thunderbird theme's
- * color scheme, ensuring that the UI remains consistent with the user's selected theme.
- *
- * @param {ThemeType} theme - The current theme object, which contains color properties for various UI elements.
- */
-async function applyTheme(theme) {
-    console_log("Apply Theme");
-
-    // Set background color based on the theme's popup color or default to light gray.
-    if (theme && theme.colors && theme.colors.popup) {
-        document.documentElement.style.setProperty('--in-content-page-background-color', theme.colors.popup);
-    } else {
-        document.documentElement.style.setProperty('--in-content-page-background-color', '#f0f0f0');
-    }
-
-    // Set primary text color based on the theme's popup text color or default to dark gray.
-    if (theme && theme.colors && theme.colors.popup_text) {
-        document.documentElement.style.setProperty('--in-content-primary-text-color', theme.colors.popup_text);
-    } else {
-        document.documentElement.style.setProperty('--in-content-primary-text-color', '#1a1a1a');
-    }
-
-    // Set button colors and other UI elements based on the theme, or use default values.
-    document.documentElement.style.setProperty('--in-content-button-color', 'white');
-    document.documentElement.style.setProperty('--in-content-secondary-text-color', theme?.colors?.toolbar_field_text || '#5f6368');
-    document.documentElement.style.setProperty('--in-content-button-background-color', theme?.colors?.button_background_active || '#0078d7');
-    document.documentElement.style.setProperty('--in-content-code-background-color', theme?.colors?.toolbar_field || '#f8f9fa');
-    document.documentElement.style.setProperty('--in-content-code-color', theme?.colors?.sidebar_text || '#212529');
-    document.documentElement.style.setProperty('--in-content-box-background-color', theme?.colors?.toolbar || '#ffffff');
-    document.documentElement.style.setProperty('--in-content-box-border-color', theme?.colors?.sidebar_border || '#dcdcdc');
-    document.documentElement.style.setProperty('--button-danger-background-color', '#d9534f');
-    document.documentElement.style.setProperty('--button-secondary-background-color', '#6c757d');
-    document.documentElement.style.setProperty('--button-success-background-color', '#28a745');
-
-    // Determine if the theme is dark or light based on the toolbar text color.
-    const isDarkTheme = theme?.colors?.toolbar_text === 'white' || theme?.colors?.toolbar_text === '#ffffff';
-
-    // Toggle class based on whether the theme is dark or light.
-    document.body.classList.toggle('dark-theme', isDarkTheme);
-    document.body.classList.toggle('light-theme', !isDarkTheme);
-}
-
 /**
  * Event listener that triggers when the DOM content is fully loaded.
  * Retrieves message details, sets up button event listeners, and handles unsubscribe logic.
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // Apply the current Thunderbird theme to match the extension's UI.
-    await applyTheme(await messenger.theme.getCurrent());
-
     // Retrieve the currently active tab and get the displayed message details.
     const [tab] = await messenger.tabs.query({active: true, currentWindow: true});
     const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);

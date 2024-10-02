@@ -1,109 +1,65 @@
-/* General Thunderbird Theme Colors */
-:root {
-    --in-content-page-background-color: #f0f0f0;
-    --in-content-primary-text-color: #1a1a1a;
-    --in-content-secondary-text-color: #5f6368;
-    --in-content-button-background-color: #0078d7;
-    --in-content-button-hover-background-color: #005a9e;
-    --in-content-button-color: white;
-    --button-danger-background-color: #d9534f;
-    --button-danger-hover-background-color: #c9302c;
-    --button-secondary-background-color: #6c757d;
-    --button-success-background-color: #28a745;
-    --in-content-box-background-color: #ffffff;
-    --in-content-box-border-color: #dcdcdc;
-    --in-content-border-radius: 4px;
-    --in-content-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    --in-content-code-background-color: #f8f9fa;
-    --in-content-code-color: #212529;
-    --dark-theme-background-color: #333333;
-    --dark-theme-text-color: #ffffff;
-    --dark-theme-button-hover-background-color: #444444;
-    --dark-theme-box-background-color: #2c2c2c;
-    --dark-theme-box-border-color: #444444;
-    --dark-theme-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-}
-
+/* Base Styles */
 html, body {
     width: 600px;
-    min-height: 300px;
-    margin: 10px;
+    min-height: 250px;
+    margin: 5px;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
-    background-color: var(--in-content-page-background-color);
-    color: var(--in-content-primary-text-color);
     text-align: center;
+    background-color: #f0f0f0; /* Light theme background */
+    color: #1a1a1a; /* Light theme text color */
 }
 
-body.dark-theme {
-    background-color: var(--dark-theme-background-color);
-    color: var(--dark-theme-text-color);
-}
-
-/* Text and headings */
+/* Common Styles */
 h2 {
     font-weight: 600;
     margin-bottom: 15px;
-    color: var(--in-content-primary-text-color);
     word-wrap: break-word;
     overflow-wrap: break-word;
-}
-
-body.dark-theme h2, body.dark-theme summary {
-    color: var(--dark-theme-text-color);
+    color: #1a1a1a; /* Light theme heading color */
 }
 
 p {
-    color: var(--in-content-secondary-text-color);
-    margin-bottom: 20px;
+    color: #5f6368; /* Light theme paragraph color */
 }
 
-body.dark-theme p {
-    color: var(--dark-theme-text-color);
-}
-
-/* Button Styles */
 .button {
     padding: 8px 16px;
     margin: 10px;
     cursor: pointer;
     border: none;
-    border-radius: var(--in-content-border-radius);
-    background-color: var(--in-content-button-background-color);
-    color: var(--in-content-button-color);
-    box-shadow: var(--in-content-shadow);
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 4px;
     display: inline-block;
     vertical-align: middle;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    background-color: #0078d7; /* Light theme button background */
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover {
-    background-color: var(--in-content-button-hover-background-color);
+    background-color: #005a9e; /* Light theme button hover background */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-body.dark-theme .button:hover {
-    background-color: var(--dark-theme-button-hover-background-color);
 }
 
 /* Button Variants */
 #unsubscribeButton {
-    background-color: var(--button-success-background-color);
+    background-color: #28a745; /* Light theme success button */
 }
 
 #cancelButton {
-    background-color: var(--button-secondary-background-color);
+    background-color: #6c757d; /* Light theme secondary button */
 }
 
 #deleteButton {
-    background-color: var(--button-danger-background-color);
+    background-color: #d9534f; /* Light theme danger button */
 }
 
 #deleteButton:hover {
-    background-color: var(--button-danger-hover-background-color);
+    background-color: #c9302c; /* Light theme danger button hover */
 }
 
-/* Dropdown */
+/* Button Dropdown */
 .button-dropdown {
     position: relative;
     display: inline-block;
@@ -113,90 +69,128 @@ body.dark-theme .button:hover {
     display: none;
 }
 
+.button-dropdown:hover div {
+    display: block;
+}
+
 .button-dropdown ul {
     list-style: none;
     padding: 0;
     margin-top: -8px;
     position: absolute;
     z-index: 100;
-    background-color: var(--in-content-box-background-color);
-    border: 1px solid var(--in-content-box-border-color);
-    border-radius: var(--in-content-border-radius);
-    box-shadow: var(--in-content-shadow);
+    border-radius: 4px;
     max-width: 150%;
     word-wrap: break-word;
     transition: max-height 0.5s, padding 0.5s ease-in-out;
-}
-
-body.dark-theme .button-dropdown ul {
-    background-color: var(--dark-theme-box-background-color);
-    border-color: var(--dark-theme-box-border-color);
-    box-shadow: var(--dark-theme-shadow);
+    background-color: #ffffff; /* Light theme dropdown background */
+    border: 1px solid #dcdcdc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .button-dropdown ul li {
     font-size: 14px;
     padding: 5px 15px;
-    border-top: 1px solid var(--in-content-box-border-color);
+    color: #1a1a1a; /* Light theme dropdown text */
+    border-top: 1px solid #dcdcdc;
 }
 
 .button-dropdown ul li:first-child {
     border-top: none;
 }
 
-body.dark-theme .button-dropdown ul li {
-    color: var(--dark-theme-text-color);
-}
-
-.button-dropdown:hover div {
-    display: block;
-}
-
 .button-dropdown li:hover {
-    background-color: var(--button-danger-hover-background-color);
+    background-color: #c9302c; /* Light theme dropdown hover background */
 }
 
-body.dark-theme .button-dropdown li:hover {
-    background-color: var(--dark-theme-button-hover-background-color);
-}
-
-/* Ensure the details container is aligned left and does not expand horizontally */
-details {
-    width: 100%; /* Set max width for the details block */
-    box-sizing: border-box;
-    text-align: left; /* Align all content inside details to the left */
-}
-
-/* Align the summary text */
-summary {
-    color: var(--in-content-primary-text-color);
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-align: left; /* Align the summary to the left */
-    font-weight: bold;
-    cursor: pointer;
-    max-width: 100%;
-    box-sizing: border-box;
-    margin: 5px;
-}
-
-/* Scrollable content area inside the details */
+/* Code Container */
 .code-container {
-    max-width: 100%; /* Prevent content from expanding beyond the container */
-    overflow-x: auto; /* Add horizontal scroll if the content overflows */
-    background-color: var(--in-content-code-background-color);
-    margin-right: 15px;
+    max-width: 100%;
+    overflow-x: auto;
+    margin-right: 10px;
     padding: 15px;
-    border-radius: var(--in-content-border-radius);
-    border: 1px solid var(--in-content-box-border-color);
+    border-radius: 4px;
     box-sizing: border-box;
+    background-color: #f8f9fa; /* Light theme code background */
+    border: 1px solid #dcdcdc;
 }
 
-/* Ensure code block behaves correctly and scrolls horizontally if necessary */
 code {
     display: block;
-    white-space: pre; /* Preserve spaces and ensure long lines don't wrap */
-    word-wrap: normal; /* Prevent wrapping within the code block */
+    white-space: pre;
+    word-wrap: normal;
     box-sizing: border-box;
     max-width: 100%;
+    color: #212529; /* Light theme code text color */
+}
+
+/* Details and Summary */
+details {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+summary {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-align: left;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 5px;
+    color: #1a1a1a; /* Light theme summary text */
+}
+
+/* Dark Theme Styles */
+@media (prefers-color-scheme: dark) {
+    html,body {
+        background-color: #333333; /* Dark theme background */
+        color: #ffffff; /* Dark theme text color */
+    }
+
+    h2,
+    summary {
+        color: #ffffff; /* Dark theme heading and summary color */
+    }
+
+    p {
+        color: #ffffff; /* Dark theme paragraph color */
+    }
+
+    .button {
+        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .button:hover {
+        background-color: #444444; /* Dark theme button hover background */
+        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    }
+
+    #deleteButton:hover {
+        background-color: #444444; /* Dark theme danger button hover */
+    }
+
+    .button-dropdown ul {
+        background-color: #2c2c2c; /* Dark theme dropdown background */
+        border: 1px solid #444444;
+        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .button-dropdown ul li {
+        color: #ffffff; /* Dark theme dropdown text */
+        border-top: 1px solid #444444;
+    }
+
+    .button-dropdown li:hover {
+        background-color: #444444; /* Dark theme dropdown hover background */
+    }
+
+    .code-container {
+        background-color: #2c2c2c; /* Dark theme code background */
+        border: 1px solid #444444;
+    }
+
+    code {
+        color: #ffffff; /* Dark theme code text color */
+    }
 }
