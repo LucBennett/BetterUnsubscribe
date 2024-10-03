@@ -1,5 +1,27 @@
+# Parse command-line arguments
+param(
+[switch]$use7z,
+[switch]$useZip
+)
+
 # Set to stop on any error
 $ErrorActionPreference = "Stop"
+
+# Ensure at least one of the options is provided or detect available archiver
+if (-not ($use7z -or $useZip)) {
+    if (Get-Command zip -ErrorAction SilentlyContinue) {
+        Write-Host "zip is installed."
+        $useZip = $true
+    }
+    elseif (Get-Command 7z -ErrorAction SilentlyContinue) {
+        Write-Host "7z is installed."
+        $use7z = $true
+    }
+    else {
+        Write-Host "No archiver found. Please install zip or 7z."
+        Exit 1
+    }
+}
 
 $currentDir = Get-Location
 
@@ -52,34 +74,46 @@ $files = @(
     "./src/styles.css"
 )
 
-# Create the archive by adding files with their relative structure
-if (Get-Command zip -ErrorAction SilentlyContinue) {
-    Write-Host "zip is installed."
+# Check for the requested archiver
+if ($useZip) {
+    if (Get-Command zip -ErrorAction SilentlyContinue) {
+        Write-Host "Using zip to create the archive."
 
-    # Loop through each item in the files list
-    foreach ($item in $files) {
-        if (Test-Path $item -PathType Container) {
-            # If it's a directory, add it recursively, including the path
-            & zip -r -9 $xpiFilePath $item
+        # Loop through each item in the files list
+        foreach ($item in $files) {
+            if (Test-Path $item -PathType Container) {
+                # If it's a directory, add it recursively, including the path
+                & zip -r -9 $xpiFilePath $item
+            }
+            elseif (Test-Path $item -PathType Leaf) {
+                # If it's a file, add it without the directory path
+                & zip -j -9 $xpiFilePath $item
+            }
         }
-        elseif (Test-Path $item -PathType Leaf) {
-            # If it's a file, add it without the directory path
-            & zip -j -9 $xpiFilePath $item
+
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to create the archive using zip."
+            Exit 1
         }
     }
-
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Error: Failed to create the archive using zip."
+    else {
+        Write-Host "Error: zip is not installed."
         Exit 1
     }
 }
-elseif (Get-Command 7z -ErrorAction SilentlyContinue) {
-    Write-Host "7z is installed."
+elseif ($use7z) {
+    if (Get-Command 7z -ErrorAction SilentlyContinue) {
+        Write-Host "Using 7z to create the archive."
 
-    & 7z a -tzip -mx=9 $xpiFilePath @files
+        & 7z a -tzip -mx=9 $xpiFilePath @files
 
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Error: Failed to create the archive using 7z."
+        if ($LASTEXITCODE -ne 0) {
+            Write-Host "Error: Failed to create the archive using 7z."
+            Exit 1
+        }
+    }
+    else {
+        Write-Host "Error: 7z is not installed."
         Exit 1
     }
 }

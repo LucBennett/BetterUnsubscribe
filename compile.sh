@@ -1,6 +1,41 @@
 #!/bin/sh
 set -eu
 
+# Define the default archiver
+ARCHIVER=""
+
+# Parse the command-line arguments for -useZip or -use7z
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -useZip)
+            ARCHIVER="zip"
+            ;;
+        -use7z)
+            ARCHIVER="7z"
+            ;;
+        *)
+            echo "Error: Unknown option $1"
+            echo "Usage: $0 [-useZip | -use7z]"
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+# Check if an archiver option was provided
+if [ -z "$ARCHIVER" ]; then
+    if command -v zip >/dev/null 2>&1; then
+        echo "zip is installed."
+        ARCHIVER="zip"
+    elif command -v 7z >/dev/null 2>&1; then
+        echo "7z is installed."
+        ARCHIVER="7z"
+    else
+        echo "No archiver found. Please install zip or 7z."
+        exit 1
+    fi
+fi
+
 # Define the build directory variable
 BUILD_DIR="build"
 
@@ -43,9 +78,15 @@ OUTPUT_FILE="./$BUILD_DIR/$(basename "$PWD")-$VERSION.xpi"
 # Create the list of files as a space-separated string
 FILES="./manifest.json ./_locales ./icons ./src/background.js ./src/popup.html ./src/popup.js ./src/i18n.js ./src/styles.css"
 
-# Create the xpi file, excluding certain files
-if command -v zip >/dev/null 2>&1; then
-    echo "zip is installed."
+# Check which archiver to use based on the flag
+if [ "$ARCHIVER" = "zip" ]; then
+    echo "Using zip to create the archive."
+
+    # Check if zip is installed
+    if ! command -v zip >/dev/null 2>&1; then
+        echo "Error: zip is not installed."
+        exit 1
+    fi
 
     # Loop through each item in the FILES list
     for item in $FILES; do
@@ -57,12 +98,18 @@ if command -v zip >/dev/null 2>&1; then
             zip -j -9 "$OUTPUT_FILE" "$item"
         fi
     done
-elif command -v 7z >/dev/null 2>&1; then
-    echo "7z is installed."
+
+elif [ "$ARCHIVER" = "7z" ]; then
+    echo "Using 7z to create the archive."
+
+    # Check if 7z is installed
+    if ! command -v 7z >/dev/null 2>&1; then
+        echo "Error: 7z is not installed."
+        exit 1
+    fi
+
+    # Create the archive with 7z
     7z a -tzip -mx=9 "$OUTPUT_FILE" $FILES
-else
-    echo "No archiver found. Please install zip or 7z."
-    exit 1
 fi
 
 echo "Archive created successfully at $OUTPUT_FILE"
