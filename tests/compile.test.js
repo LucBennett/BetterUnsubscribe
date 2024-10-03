@@ -28,21 +28,21 @@ const buildScripts = [
 const buildOutputDir = path.join(__dirname, '../build');
 const tempDir = path.join(__dirname, 'temp');
 // Compare the extracted contents with a baseline (set the first run as the baseline)
-const baselineDir = path.join(__dirname, 'baseline');
+const baselineDir = path.join(tempDir, 'baseline');
 
 describe('Build script consistency tests', () => {
     beforeAll(()=>{
+        if (fs.existsSync(tempDir)) {
+            fs.rmSync(tempDir, { recursive: true });
+        }
+        fs.mkdirSync(tempDir);
+
         if (fs.existsSync(baselineDir)) {
             fs.rmSync(baselineDir, { recursive: true });
         }
     })
 
     beforeEach(() => {
-        if (fs.existsSync(tempDir)) {
-            fs.rmSync(tempDir, { recursive: true });
-        }
-        fs.mkdirSync(tempDir);
-
         if (fs.existsSync(buildOutputDir)) {
             fs.rmSync(buildOutputDir, { recursive: true });
         }
@@ -59,7 +59,7 @@ describe('Build script consistency tests', () => {
         if (fs.existsSync(baselineDir)) {
             fs.rmSync(baselineDir, { recursive: true });
         }
-    })
+    });
 
     test.each(buildScripts)(
         'should create consistent build using %s',
