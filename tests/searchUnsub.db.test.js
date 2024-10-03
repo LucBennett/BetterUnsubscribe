@@ -19,7 +19,12 @@ const {searchUnsub, UnsubMethod, UnsubMail, UnsubWeb, UnsubPost} = require('../s
 
 // Read and parse the JSON file
 const fs = require('fs');
-const rawData = fs.readFileSync('./resources/export-annotations.json', 'utf8');
+
+if(!fs.existsSync('tests/resources/export-annotations.json')) {
+    fs.writeFileSync('tests/resources/export-annotations.json',"[]",'utf8');
+}
+
+const rawData = fs.readFileSync('tests/resources/export-annotations.json', 'utf8');
 const emailMessages = JSON.parse(rawData);//.slice(14,15);
 
 describe('searchUnsub', () => {
