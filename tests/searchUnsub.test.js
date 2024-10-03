@@ -83,7 +83,7 @@ describe('searchUnsub', () => {
         expect(result.identity.id).toBe('identity1');
     });
 
-    test('should return false when no unsubscribe information is found', async () => {
+    test('should return null when no unsubscribe information is found', async () => {
 
         // Mock a message without 'list-unsubscribe' header
         const fullMessage = {
@@ -109,7 +109,7 @@ describe('searchUnsub', () => {
         expect(result).toBeNull();
     });
 
-    test('should return false when an error occurs', async () => {
+    test('should return null when an error occurs', async () => {
         const messageHeader = {id: 4, subject: "Test Subject"};
 
         // Mock the messenger API to throw an error
