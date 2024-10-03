@@ -54,19 +54,19 @@ $files = @(
     "./manifest.json",
     "./_locales",
     "./icons",
-    "./background.js",
-    "./popup.html",
-    "./popup.js",
-    "./styles.css"
+    "./src/background.js",
+    "./src/popup.html",
+    "./src/popup.js",
+    "./src/i18n.js",
+    "./src/styles.css"
 )
 
 # Iterate through each file and add it to the ZIP
 foreach ($file in $files)
 {
     $fileObject = Get-Item $file
-
     # Calculate the relative path inside the ZIP archive
-    $relativePath = $fileObject.FullName.Substring($currentDir.Path.Length + 1) -replace '\\', '/'
+    $relativePath = $fileObject.Name #$fileObject.FullName.Substring($currentDir.Path.Length + 1) -replace '\\', '/'
     Write-Host "Adding: $relativePath"
 
     if ($fileObject.PSIsContainer)

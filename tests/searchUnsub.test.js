@@ -17,7 +17,7 @@ jest.spyOn(global.console, 'error').mockImplementation((...args) => {
 
 const {parseMessage} = require("./mailParserUtils.js");
 
-const { searchUnsub, UnsubWeb, UnsubMail, UnsubPost} = require('../background.js');
+const { searchUnsub, UnsubWeb, UnsubMail, UnsubPost} = require('../src/background.js');
 
 describe('searchUnsub', () => {
 
