@@ -20,7 +20,7 @@ The latest version can be found [here](https://github.com/LucBennett/BetterUnsub
 
 1. **Navigate to the project directory**: In your terminal or command prompt, navigate to the directory where the project is located.
 2. **Run the appropriate compile script** for your operating system to build the project. The script will generate `BetterUnsubscribe.xpi` in the `build` directory.
-   - **Unix & macOS**: Run `compile.sh` (requires `/bin/sh`).
+   - **Unix & macOS**: Run `compile.sh` (requires `/bin/sh` and 7z or zip installed).
    - **Windows (with .NET)**: Run `compile.ps1` (requires PowerShell and .NET).
    - **Windows (with 7z/zip)**: Run `compile-z.ps1` (requires PowerShell and 7z or zip installed).
 
@@ -37,10 +37,28 @@ Please be cautious when opening web links provided in emails. Phishing attempts 
 
 Additionally, [here](./Security%20Concerns.md) is a summary of some of the Security and Privacy concerns users should be aware of when using this (or any) unsubscribing tool.
 
-### Translations
+## Running Tests
+
+To ensure the functionality and reliability of BetterUnsubscribe, automated tests are provided. Follow these steps to set up and run the tests:
+
+1. **Install dependencies**: Before running the tests, you need to install the required dependencies. Navigate to the project directory in your terminal and run:
+   ```bash
+   npm install
+   ```
+This will install all the necessary packages defined in `package.json`.
+
+2. **Run the tests**: Once the dependencies are installed, you can run the tests with the following command:
+   ```bash
+   npm test
+   ```
+   This command will execute the test suite using the configured testing framework and provide feedback on the success or failure of each test case.
+
+Make sure to run the tests after making any changes to the codebase to ensure everything works as expected.
+
+## Translations
 
 Brazilian Portuguese translation created by [dataserver](https://github.com/dataserver).
 
-### Icon Credits
+## Icon Credits
 
 The icon is made by [freepik](https://www.freepik.com) and can be found on [FlatIcon](https://www.flaticon.com/free-icon/email_121931).
