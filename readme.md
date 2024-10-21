@@ -1,64 +1,64 @@
 # BetterUnsubscribe
 
-#### A Modern Rewrite of [Unsubscribe](https://addons.thunderbird.net/en-us/thunderbird/addon/unsub/) by NilsKr33, Eicke Godehardt, and Andrej Korinth. Now with Additional Features!
+#### A Modern Rewrite of [Unsubscribe](https://addons.thunderbird.net/en-us/thunderbird/addon/unsub/) by NilsKr33, Eicke Godehardt, and Andrej Korinth, Now with Enhanced Features
 
-BetterUnsubscribe enhances your email experience by simplifying the unsubscribe process. This extension adds a convenient button to your navigation bar, appearing whenever an unsubscribe option is detected in an email.
+BetterUnsubscribe improves your email experience by streamlining the unsubscribe process. This extension adds a button to your navigation bar, which appears whenever an unsubscribe option is detected within an email.
 
 ## Features
 
-BetterUnsubscribe uses multiple methods to handle unsubscription, depending on the available options in the email:
+BetterUnsubscribe offers several unsubscription methods based on what is available in the email:
 
-1. **One-Click Unsubscribe**: If `List-Unsubscribe=One-Click` is found in the email header, a POST request is sent to unsubscribe.
-2. **Unsubscribe via Email**: If a `List-Unsubscribe` email address (`mailto://`) is present in the header, an email draft is prepared for you to send.
-3. **Unsubscribe via Web**: If a `List-Unsubscribe` web address (`https://`) is in the header, the site is opened in your browser.
-4. **Unsubscribe Link in Content**: If an unsubscribe link (`https://`) is found within the email content, the site is opened in your browser.
+1. **One-Click Unsubscribe** _(RFC 8058)_: If a `List-Unsubscribe=One-Click` header is detected, a POST request is sent to unsubscribe you.
+2. **Unsubscribe via Email** _(RFC 2369)_: If a `List-Unsubscribe` email address (`mailto://`) is found in the header, a draft email is prepared for you to send.
+3. **Unsubscribe via Web** _(RFC 2369)_: If a `List-Unsubscribe` web link (`https://`) is provided in the header, the site is opened in your browser.
+4. **Unsubscribe Link in Email Content**: If an unsubscribe link (`https://`) is embedded in the email content, the site is opened in your browser.
 
 ## Download
-The latest version can be found [here](https://github.com/LucBennett/BetterUnsubscribe/releases/latest).
+You can download the latest version of BetterUnsubscribe [here](https://github.com/LucBennett/BetterUnsubscribe/releases/latest).
 
 ## Build Instructions
 
-1. **Navigate to the project directory**: In your terminal or command prompt, navigate to the directory where the project is located.
-2. **Run the appropriate compile script** for your operating system to build the project. The script will generate `BetterUnsubscribe.xpi` in the `build` directory.
+1. **Navigate to the project directory**: Open your terminal or command prompt and navigate to the project folder.
+2. **Run the appropriate compile script** for your operating system to build the project. This will generate the `BetterUnsubscribe.xpi` file in the `build` directory.
    - **Unix & macOS**: Run `compile.sh` (requires `/bin/sh` and 7z or zip installed).
    - **Windows (with .NET)**: Run `compile.ps1` (requires PowerShell and .NET).
    - **Windows (with 7z/zip)**: Run `compile-z.ps1` (requires PowerShell and 7z or zip installed).
 
-## Install
+## Installation Instructions
 
 1. Open **Thunderbird**.
-2. Go to **Menu** (hamburger icon) -> **Add-ons and Themes**.
-3. Click on **Tools for Add-ons** (gear icon) -> **Install Add-on From File**.
-4. Select `BetterUnsubscribe.xpi` to add it to Thunderbird.
+2. Navigate to **Menu** (hamburger icon) -> **Add-ons and Themes**.
+3. Click **Tools for Add-ons** (gear icon) -> **Install Add-on From File**.
+4. Select the `BetterUnsubscribe.xpi` file to install it.
 
 ## Warning
 
-Please be cautious when opening web links provided in emails. Phishing attempts are common, and opening malicious links can compromise your personal information and security. Always verify the legitimacy of the email sender before clicking on any links.
+Please exercise caution when clicking web links provided in emails. Phishing attacks are common, and malicious links can compromise your security and privacy. Always verify the legitimacy of the sender before interacting with any email links.
 
-Additionally, [here](./Security%20Concerns.md) is a summary of some of the Security and Privacy concerns users should be aware of when using this (or any) unsubscribing tool.
+A summary of potential security and privacy risks associated with unsubscribe tools can be found [here](./Security%20Concerns.md).
 
 ## Running Tests
 
-To ensure the functionality and reliability of BetterUnsubscribe, automated tests are provided. Follow these steps to set up and run the tests:
+Automated tests are provided to ensure BetterUnsubscribe works as expected. To run the tests, follow these steps:
 
-1. **Install dependencies**: Before running the tests, you need to install the required dependencies. Navigate to the project directory in your terminal and run:
+1. **Install dependencies**: In the project directory, run:
    ```bash
    npm install
    ```
-This will install all the necessary packages defined in `package.json`.
+   This will install the necessary packages defined in `package.json`.
 
-2. **Run the tests**: Once the dependencies are installed, you can run the tests with the following command:
+2. **Run the tests**: Once the dependencies are installed, run the following command to execute the test suite:
    ```bash
    npm test
    ```
-   This command will execute the test suite using the configured testing framework and provide feedback on the success or failure of each test case.
+   This will test the functionality of BetterUnsubscribe and give feedback on any issues.
 
-Make sure to run the tests after making any changes to the codebase to ensure everything works as expected.
+Remember to run the tests after making changes to ensure everything functions as intended.
 
 ## Translations
 
-Brazilian Portuguese translation created by [dataserver](https://github.com/dataserver).
+A Brazilian Portuguese translation was contributed by [dataserver](https://github.com/dataserver).
 
 ## Icon Credits
 
-The icon is made by [freepik](https://www.freepik.com) and can be found on [FlatIcon](https://www.flaticon.com/free-icon/email_121931).
+The icon was created by [freepik](https://www.freepik.com) and is available on [FlatIcon](https://www.flaticon.com/free-icon/email_121931).
