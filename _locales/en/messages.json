@@ -39,10 +39,6 @@
         "message": "All from",
         "description": "Label for the button to delete all emails from a specific sender, where $1 is the sender's email"
     },
-    "statusTextEmpty": {
-        "message": "",
-        "description": "Empty status text"
-    },
     "statusTextWorking": {
         "message": "Working...",
         "description": "Status text for working state"

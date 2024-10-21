@@ -39,10 +39,6 @@
     "message": "Tutti da",
     "description": "Etichetta per il pulsante per eliminare tutte le email da un mittente specifico, dove $1 è l'indirizzo email del mittente"
   },
-  "statusTextEmpty": {
-    "message": "",
-    "description": "Testo di stato vuoto"
-  },
   "statusTextWorking": {
     "message": "In corso...",
     "description": "Testo di stato per l'operazione in corso"

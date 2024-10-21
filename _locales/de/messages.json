@@ -39,10 +39,6 @@
     "message": "Alle von",
     "description": "Bezeichnung für den Button zum Löschen aller E-Mails von einem bestimmten Absender, wobei $1 die E-Mail-Adresse des Absenders ist"
   },
-  "statusTextEmpty": {
-    "message": "",
-    "description": "Leerer Status-Text"
-  },
   "statusTextWorking": {
     "message": "Arbeitet...",
     "description": "Status-Text für den Arbeitszustand"

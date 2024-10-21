@@ -39,10 +39,6 @@
         "message": "Tous de",
         "description": "Libellé pour le bouton de suppression de tous les courriels d'un expéditeur spécifique, où $1 est l'adresse courriel de l'expéditeur"
     },
-    "statusTextEmpty": {
-        "message": "",
-        "description": "Texte de statut vide"
-    },
     "statusTextWorking": {
         "message": "En cours...",
         "description": "Texte de statut pour l'état en cours"

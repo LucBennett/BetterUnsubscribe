@@ -39,10 +39,6 @@
     "message": "Todos de",
     "description": "Etiqueta para el botón de eliminar todos los correos de un remitente específico, donde $1 es la dirección de correo electrónico del remitente"
   },
-  "statusTextEmpty": {
-    "message": "",
-    "description": "Texto de estado vacío"
-  },
   "statusTextWorking": {
     "message": "Trabajando...",
     "description": "Texto de estado para el estado de trabajo"
