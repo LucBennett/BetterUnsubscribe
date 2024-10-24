@@ -29,8 +29,19 @@ messenger.messageDisplay.onMessageDisplayed.addListener(async (tab, message) => 
     await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
     if (message) {
         try {
-            const found = await checkUnsub(message);
-            if (found === true) {
+            let value;
+
+            if (funcCache.has(message.id)) {
+                // Message is in cache
+                value = funcCache.get(message.id);
+            } else {
+                // Message not in cache, call search(message)
+                value = await searchUnsub(message);
+                // Store the result in cache
+                funcCache.set(message.id, value);
+            }
+
+            if (value !== null) {
                 await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
             }
         } catch (error) {
@@ -40,39 +51,18 @@ messenger.messageDisplay.onMessageDisplayed.addListener(async (tab, message) => 
 });
 
 /**
- * Checks if a message exists in the cache or if unsubscribe information in the message.
- * @param {messenger.messages.MessageHeader} message - The message to check.
- * @returns {Promise<boolean>} - True if the message maps to a non-null object, false otherwise.
- */
-async function checkUnsub(message) {
-    if (funcCache.has(message.id)) {
-        // Message is in cache
-        const value = funcCache.get(message.id);
-        // Return true if value is a non-null object, false if null
-        return value !== null;
-    } else {
-        // Message not in cache, call search(message)
-        const value = await searchUnsub(message); // Assumes search is defined elsewhere
-        // Store the result in cache
-        funcCache.set(message.id, value);
-        // Return true if value is a non-null object, false if null
-        return value !== null;
-    }
-}
-
-/**
  * Searches for unsubscribe links and information in the message headers and body.
  * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
  * @returns {Promise<UnsubMethod>} - Unsubscribe Method if found, otherwise null.
  */
 async function searchUnsub(selectedMessage) {
-    let fullMessage = await messenger.messages.getFull(selectedMessage.id);
-    let messageHeader = await messenger.messages.get(selectedMessage.id);
+    const fullMessage = await messenger.messages.getFull(selectedMessage.id);
+    const messageHeader = await messenger.messages.get(selectedMessage.id);
     // See RFC 2369 (Mailing list Header)
     if (fullMessage.headers.hasOwnProperty('list-unsubscribe')) {
         const unsubscribeHeaders = fullMessage.headers['list-unsubscribe'];
         let unsubscribeHeader;
-        if (Array.isArray(unsubscribeHeaders)){
+        if (Array.isArray(unsubscribeHeaders)) {
             unsubscribeHeader = unsubscribeHeaders[0];
         } else {
             unsubscribeHeader = unsubscribeHeaders;
@@ -110,8 +100,7 @@ async function searchUnsub(selectedMessage) {
 
     if (embeddedLink) {
         console_log("Embedded HTML Unsubscribe WebLink Found", embeddedLink);
-        console_log(embeddedLink);
-        let decoded = decodeURIComponent(embeddedLink);
+        const decoded = decodeURIComponent(embeddedLink);
         console_log("Decoded:", decoded);
         return new UnsubWeb(embeddedLink); // Return unsubscribe embedded web link method
     }
@@ -120,8 +109,7 @@ async function searchUnsub(selectedMessage) {
 
     if (embeddedLink) {
         console_log("Embedded Unsubscribe WebLink Found", embeddedLink);
-        console_log(embeddedLink);
-        let decoded = decodeURIComponent(embeddedLink);
+        const decoded = decodeURIComponent(embeddedLink);
         console_log("Decoded:", decoded);
         return new UnsubWeb(decoded); // Return unsubscribe embedded decoded web link method
     }
@@ -195,40 +183,6 @@ async function retrieveIdentity(messageHeader) {
     return identity || undefined; // Return undefined if no identity is found
 }
 
-/**
- * Finds embedded unsubscribe links within the message body using HTML parsing.
- * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
- * @returns {string|null} - The embedded link if found, otherwise null.
- */
-function findEmbeddedUnsubLinkHTML(messagePart) {
-    if (messagePart.contentType === "text/html") {
-        // Parse the HTML content using DOMParser
-        let parser = new DOMParser();
-        let doc = parser.parseFromString(messagePart.body, 'text/html');
-
-        // Search for all <a> elements
-        let links = doc.querySelectorAll('a');
-        for (let link of links) {
-            // Check if the link text contains "unsubscribe"
-            if (link.textContent.match(unsubscribeRegex) || link.href.match(unsubscribeRegex)) {
-                // Return the href attribute of the matching <a> tag
-                return link.href;
-            }
-        }
-    }
-
-    if (messagePart.hasOwnProperty('parts')) {
-        for (let part of messagePart.parts) {
-            let embeddedLink = findEmbeddedUnsubLinkHTML(part);
-            if (embeddedLink) {
-                return embeddedLink;
-            }
-        }
-    }
-
-    return null;
-}
-
 const unsubscribeRegexString = "\\bun\\W?(?:subscri(?:be|bing|ption))\\b";
 
 const unsubscribeRegex = new RegExp(unsubscribeRegexString, "i");
@@ -244,6 +198,40 @@ const embeddedUnsubRegex = new RegExp(
     ')',
     'i'
 );
+
+/**
+ * Finds embedded unsubscribe links within the message body using HTML parsing.
+ * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
+ * @returns {string|null} - The embedded link if found, otherwise null.
+ */
+function findEmbeddedUnsubLinkHTML(messagePart) {
+    if (messagePart.contentType === "text/html") {
+        // Parse the HTML content using DOMParser
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(messagePart.body, 'text/html');
+
+        // Search for all <a> elements
+        const links = doc.querySelectorAll('a');
+        for (const link of links) {
+            // Check if the link text contains "unsubscribe"
+            if (link.textContent.match(unsubscribeRegex) || link.href.match(unsubscribeRegex)) {
+                // Return the href attribute of the matching <a> tag
+                return link.href;
+            }
+        }
+    }
+
+    if (messagePart.hasOwnProperty('parts')) {
+        for (const part of messagePart.parts) {
+            const embeddedLink = findEmbeddedUnsubLinkHTML(part);
+            if (embeddedLink) {
+                return embeddedLink;
+            }
+        }
+    }
+
+    return null;
+}
 
 /**
  * Finds embedded unsubscribe links within the message body using a single regular expression.
@@ -277,11 +265,11 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
  * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityReceiver(messageHeader) {
-    let allReceivers = new Set([...messageHeader.bccList, ...messageHeader.ccList, ...messageHeader.recipients]);
+    const allReceivers = new Set([...messageHeader.bccList, ...messageHeader.ccList, ...messageHeader.recipients]);
 
-    let identities = await messenger.identities.list();
+    const identities = await messenger.identities.list();
 
-    for (let identity of identities) {
+    for (const identity of identities) {
         if (allReceivers.has(identity.email)) {
             return identity;
         }
@@ -296,12 +284,12 @@ async function getIdentityReceiver(messageHeader) {
  * @returns {Promise<MailIdentity>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
-    if(messageHeader.folder) {
-        let folder = messageHeader.folder;
-        let accounts = await messenger.accounts.list();
+    if (messageHeader.folder) {
+        const folder = messageHeader.folder;
+        const accounts = await messenger.accounts.list();
 
-        for (let account of accounts) {
-            for (let identity of account.identities) {
+        for (const account of accounts) {
+            for (const identity of account.identities) {
                 if (folder.accountId === account.id) {
                     return identity;
                 }
@@ -490,10 +478,10 @@ class UnsubWeb extends UnsubMethod {
  */
 messenger.runtime.onMessage.addListener(async (message) => {
     if (message.messageId) {
-        let messageId = parseInt(message.messageId);
+        const messageId = parseInt(message.messageId);
         if (message.unsubscribe === true) {
             console_log("User chose to unsubscribe from the mailing list");
-            let out = await funcCache.get(messageId).call();
+            const out = await funcCache.get(messageId).call();
             if (out) {
                 return {response: "Unsubscribed"};
             } else {
@@ -507,18 +495,18 @@ messenger.runtime.onMessage.addListener(async (message) => {
             await messenger.messages.delete([messageId], false);
             return {response: 'Deleted'};
         } else if (message.deleteAllFromSender === true) {
-            //let messageHeader = await messenger.messages.get(messageId);
-            let author = message.author;
+            //const messageHeader = await messenger.messages.get(messageId);
+            const author = message.author;
             if (author) {
                 console_log("User wants to delete all emails from", author);
 
-                let messages = await messenger.messages.query({
+                const messages = await messenger.messages.query({
                     author: author
                 });
 
                 console_log("Deleting", messages);
 
-                let messageIds = messages.messages.map(message => message.id);
+                const messageIds = messages.messages.map(message => message.id);
 
                 await messenger.messages.delete(messageIds, false);
                 return {response: 'Deleted', count: messageIds.length};
@@ -528,7 +516,7 @@ messenger.runtime.onMessage.addListener(async (message) => {
             }
         } else if (message.getMethod === true) {
             console_log('Method Requested');
-            let func = funcCache.get(messageId);
+            const func = funcCache.get(messageId);
             console_log("Method", func);
             if (func) {
                 return func.getMethodDetails();
