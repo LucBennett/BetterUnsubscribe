@@ -108,7 +108,7 @@ async function searchUnsub(selectedMessage) {
     embeddedLink = findEmbeddedUnsubLinkRegex(fullMessage);
 
     if (embeddedLink) {
-        console_log("Embedded Unsubscribe WebLink Found", embeddedLink);
+        console_log("Embedded Unsubscribe WebLink Found with Regex", embeddedLink);
         const decoded = decodeURIComponent(embeddedLink);
         console_log("Decoded:", decoded);
         return new UnsubWeb(decoded); // Return unsubscribe embedded decoded web link method
@@ -205,7 +205,7 @@ const embeddedUnsubRegex = new RegExp(
  * @returns {string|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkHTML(messagePart) {
-    if (messagePart.contentType === "text/html") {
+    if (messagePart && messagePart.contentType === "text/html") {
         // Parse the HTML content using DOMParser
         const parser = new DOMParser();
         const doc = parser.parseFromString(messagePart.body, 'text/html');
@@ -221,7 +221,7 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
         }
     }
 
-    if (messagePart.hasOwnProperty('parts')) {
+    if (messagePart && messagePart.parts) {
         for (const part of messagePart.parts) {
             const embeddedLink = findEmbeddedUnsubLinkHTML(part);
             if (embeddedLink) {
