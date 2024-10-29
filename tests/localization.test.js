@@ -1,8 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 
-// List of locales to test
-const locales = ['en', 'de', 'es-MX', 'es-ES', 'fr-CA', 'fr-FR', 'it-IT', 'pt-BR'];
+const directoryPath = './_locales'; // replace with your directory path
+
+const files = fs.readdirSync(directoryPath, { withFileTypes: true })
+
+const locales = files
+    .filter(dirent => dirent.isDirectory())
+    .map(dirent => dirent.name);
 
 model_messages = JSON.parse(fs.readFileSync(path.join(__dirname, "../_locales/en/messages.json"), 'utf8'));
 

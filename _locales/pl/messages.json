@@ -1,0 +1,82 @@
+{
+  "extensionName": {
+    "message": "BetterUnsubscribe",
+    "description": "Nazwa rozszerzenia Thunderbird MailExtension"
+  },
+  "extensionDescription": {
+    "message": "Ułatwia rezygnację z subskrypcji list mailingowych.",
+    "description": "Opis rozszerzenia Thunderbird MailExtension"
+  },
+  "unsubscribeTitle": {
+    "message": "Rezygnacja z subskrypcji",
+    "description": "Tytuł strony rezygnacji z subskrypcji"
+  },
+  "unsubscribeHeader": {
+    "message": "Rezygnacja z subskrypcji",
+    "description": "Nagłówek strony rezygnacji z subskrypcji"
+  },
+  "emailText": {
+    "message": "Czy chcesz zrezygnować z subskrypcji tej listy mailingowej?",
+    "description": "Tekst pytający użytkownika, czy chce zrezygnować z subskrypcji"
+  },
+  "unsubscribeButton": {
+    "message": "Zrezygnuj",
+    "description": "Etykieta przycisku rezygnacji z subskrypcji"
+  },
+  "cancelButton": {
+    "message": "Anuluj",
+    "description": "Etykieta przycisku anulowania"
+  },
+  "deleteButton": {
+    "message": "Usuń ▼",
+    "description": "Etykieta przycisku usuwania z wskaźnikiem rozwijanym"
+  },
+  "deleteOneButton": {
+    "message": "Tylko ten",
+    "description": "Etykieta przycisku do usunięcia tylko bieżącego e-maila"
+  },
+  "deleteAllButton": {
+    "message": "Wszystkie od",
+    "description": "Etykieta przycisku do usunięcia wszystkich wiadomości e-mail od określonego nadawcy, gdzie $1 to adres e-mail nadawcy"
+  },
+  "statusTextWorking": {
+    "message": "Pracuję...",
+    "description": "Tekst statusu dla stanu pracy"
+  },
+  "statusTextDone": {
+    "message": "Gotowe",
+    "description": "Tekst statusu dla stanu ukończonego"
+  },
+  "statusTextError": {
+    "message": "Błąd",
+    "description": "Tekst statusu dla stanu błędu"
+  },
+  "statusTextDeleting": {
+    "message": "Usuwanie e-maila(ów)...",
+    "description": "Tekst statusu podczas usuwania e-maila(ów)"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "E-mail(e) pomyślnie usunięty(e).",
+    "description": "Tekst statusu dla pomyślnego usunięcia e-maila"
+  },
+  "statusTextDeleteError": {
+    "message": "Nie udało się usunąć e-maila(ów).",
+    "description": "Tekst statusu, gdy usunięcie e-maila nie powiodło się"
+  },
+  "detailsSummary": {
+    "message": "Więcej szczegółów",
+    "description": "Rozwijane Więcej szczegółów"
+  },
+  "detailsTextPost": {
+    "message": "Po kliknięciu \"Zrezygnuj\" zostanie wysłane żądanie POST na poniższy adres URL:",
+    "description": "Szczegóły dla żądania POST"
+  },
+  "detailsTextEmail": {
+    "message": "Po kliknięciu \"Zrezygnuj\" zostanie utworzona wiadomość e-mail na poniższy adres:",
+    "description": "Szczegóły dla wiadomości e-mail"
+  },
+  "detailsTextWeb": {
+    "message": "Po kliknięciu \"Zrezygnuj\" zostanie otwarte okno przeglądarki, które przejdzie do poniższego adresu URL:",
+    "description": "Szczegóły dla linku internetowego"
+  }
+}
