@@ -1,11 +1,13 @@
 # Parse command-line arguments
 param(
-[switch]$use7z,
-[switch]$useZip
+    [switch]$use7z,
+    [switch]$useZip
 )
 
 # Set to stop on any error
 $ErrorActionPreference = "Stop"
+
+$manifestFile = "./src/manifest.json"
 
 # Ensure at least one of the options is provided or detect available archiver
 if (-not ($use7z -or $useZip)) {
@@ -26,19 +28,19 @@ if (-not ($use7z -or $useZip)) {
 $currentDir = Get-Location
 
 # Check if manifest.json exists and determine version
-if (Test-Path "manifest.json") {
+if (Test-Path "$manifestFile") {
     if (Get-Command jq -ErrorAction SilentlyContinue) {
         Write-Host "jq is installed."
-        $VERSION = & jq -r '.version' "manifest.json"
+        $VERSION = & jq -r '.version' "$manifestFile"
     }
     else {
         Write-Host "jq is not installed. Using regex to extract version."
-        $versionMatch = Select-String -Path "manifest.json" -Pattern '"version"\s*:\s*"([^"]+)"'
+        $versionMatch = Select-String -Path "$manifestFile" -Pattern '"version"\s*:\s*"([^"]+)"'
         if ($versionMatch) {
             $VERSION = $versionMatch.Matches[0].Groups[1].Value
         }
         else {
-            Write-Host "Error: Could not extract version from manifest.json."
+            Write-Host "Error: Could not extract version from $manifestFile."
             Exit 1
         }
     }
@@ -62,16 +64,16 @@ $fileName = "$baseName-$VERSION"
 $xpiFileName = "$fileName.xpi"
 $xpiFilePath = Join-Path -Path $buildDir -ChildPath $xpiFileName
 
-# List of files and directories to add
+# List of files and directories to add, relative to ./src
 $files = @(
-    "./manifest.json",
-    "./_locales",
-    "./icons",
-    "./src/background.js",
-    "./src/popup.html",
-    "./src/popup.js",
-    "./src/i18n.js",
-    "./src/styles.css"
+    "manifest.json",
+    "_locales",
+    "icons",
+    "background.js",
+    "popup.html",
+    "popup.js",
+    "i18n.js",
+    "styles.css"
 )
 
 # Check for the requested archiver
@@ -79,16 +81,25 @@ if ($useZip) {
     if (Get-Command zip -ErrorAction SilentlyContinue) {
         Write-Host "Using zip to create the archive."
 
-        # Loop through each item in the files list
-        foreach ($item in $files) {
-            if (Test-Path $item -PathType Container) {
-                # If it's a directory, add it recursively, including the path
-                & zip -r -9 $xpiFilePath $item
+        # Temporarily change directory to src
+        Push-Location -Path "./src"
+
+        try {
+            # Create the archive, adding each file and directory without the "src" prefix
+            foreach ($item in $files) {
+                if (Test-Path $item -PathType Container) {
+                    # If it's a directory, add it recursively
+                    & zip -r -9 "$xpiFilePath" $item
+                }
+                elseif (Test-Path $item -PathType Leaf) {
+                    # If it's a file, add it without the directory path
+                    & zip -j -9 "$xpiFilePath" $item
+                }
             }
-            elseif (Test-Path $item -PathType Leaf) {
-                # If it's a file, add it without the directory path
-                & zip -j -9 $xpiFilePath $item
-            }
+        }
+        finally {
+            # Return to the original directory
+            Pop-Location
         }
 
         if ($LASTEXITCODE -ne 0) {
@@ -105,7 +116,17 @@ elseif ($use7z) {
     if (Get-Command 7z -ErrorAction SilentlyContinue) {
         Write-Host "Using 7z to create the archive."
 
-        & 7z a -tzip -mx=9 $xpiFilePath @files
+        # Temporarily change directory to src
+        Push-Location -Path "./src"
+
+        try {
+            # Create the archive using 7z with relative paths
+            & 7z a -tzip -mx=9 $xpiFilePath @($files)
+        }
+        finally {
+            # Return to the original directory
+            Pop-Location
+        }
 
         if ($LASTEXITCODE -ne 0) {
             Write-Host "Error: Failed to create the archive using 7z."

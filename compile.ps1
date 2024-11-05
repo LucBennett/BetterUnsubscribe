@@ -2,19 +2,24 @@
 $ErrorActionPreference = "Stop"
 
 $currentDir = Get-Location
+$workingDir = Get-Item -Path (Join-Path -Path $currentDir -ChildPath "src")
+
+Write-Host "The working directory path is:" $workingDir.Path
+
+$manifestFile = "./src/manifest.json"
 
 # Check if manifest.json exists and determine version
-if (Test-Path "manifest.json")
+if (Test-Path "$manifestFile")
 {
     if (Get-Command jq -ErrorAction SilentlyContinue)
     {
         Write-Host "jq is installed."
-        $VERSION = & jq -r '.version' "manifest.json"
+        $VERSION = & jq -r '.version' "$manifestFile"
     }
     else
     {
         Write-Host "jq is not installed."
-        $VERSION = Select-String -Path "manifest.json" -Pattern '"version"\s*:\s*"([^"]+)"' | ForEach-Object {
+        $VERSION = Select-String -Path "$manifestFile" -Pattern '"version"\s*:\s*"([^"]+)"' | ForEach-Object {
             $_.Matches[0].Groups[1].Value
         }
     }
@@ -51,9 +56,9 @@ $zip = [System.IO.Compression.ZipFile]::Open($zipFilePath, [System.IO.Compressio
 
 # List of files to include in the ZIP
 $files = @(
-    "./manifest.json",
-    "./_locales",
-    "./icons",
+    "./src/manifest.json",
+    "./src/_locales",
+    "./src/icons",
     "./src/background.js",
     "./src/popup.html",
     "./src/popup.js",
@@ -66,7 +71,7 @@ foreach ($file in $files)
 {
     $fileObject = Get-Item $file
     # Calculate the relative path inside the ZIP archive
-    $relativePath = $fileObject.Name #$fileObject.FullName.Substring($currentDir.Path.Length + 1) -replace '\\', '/'
+    $relativePath = $fileObject.Name #$fileObject.FullName.Substring($workingDir.FullName.Length + 1) -replace '\\', '/'
     Write-Host "Adding: $relativePath"
 
     if ($fileObject.PSIsContainer)
@@ -75,7 +80,7 @@ foreach ($file in $files)
         $directoryFiles = Get-ChildItem -Path $fileObject.FullName -Recurse -File
         foreach ($dirFile in $directoryFiles)
         {
-            $relativeDirFilePath = $dirFile.FullName.Substring($currentDir.Path.Length + 1) -replace '\\', '/'
+            $relativeDirFilePath = $dirFile.FullName.Substring($workingDir.FullName.Length + 1) -replace '\\', '/'
             [System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile($zip, $dirFile.FullName, $relativeDirFilePath)
         }
     }

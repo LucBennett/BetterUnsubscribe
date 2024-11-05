@@ -1,31 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <title data-i18n="unsubscribeTitle">Unsubscribe</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
+    <title>Unsubscribe</title>
 </head>
-<body class="light-theme">
-<h2 data-i18n="unsubscribeHeader">Unsubscribe</h2>
-<p id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</p>
-<button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">Unsubscribe
-</button>
-<button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
 
-<div class='button-delete button-dropdown' data-dropdownstate="closed">
-    <label id="deleteButton" class="button" data-i18n="deleteButton" aria-label="Delete">Delete ▼</label>
-    <div>
-        <ul>
-            <li id="delete-one-btn" data-i18n="deleteOneButton">Just this email</li>
-            <li id="delete-all-btn" data-i18n="deleteAllButton">All from "Name" &lt;sender@example.com&gt;</li>
-        </ul>
-    </div>
+<body class="light-theme">
+
+<h1 data-i18n="unsubscribeHeader">Unsubscribe</h1>
+<h2 id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</h2>
+
+<div class="button-container">
+    <button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton"
+            aria-label="Unsubscribe">Unsubscribe</button>
+    <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
+    <button id="deleteButton" class="button" data-i18n="deleteButton" aria-label="Delete">Delete</button>
+
+    <br>
+
+    <!-- Dropdown for Delete options -->
+    <select id="deleteDropdown" class="button">
+        <option id="deleteOneOption" value="delete-this" data-i18n="deleteOneOption">Delete just this</option>
+        <option id="deleteAllNameAddrOption" value="delete-all-name-addr" data-i18n="deleteAllNameAddrOption">
+            Delete all from name-addr
+        </option>
+        <option id="deleteAllAddrOption" value="delete-all-addr-spec" data-i18n="deleteAllAddrOption">Delete all
+            from addr-spec
+        </option>
+        <option id="deleteAllDomainOption" value="delete-all-domain" data-i18n="deleteAllDomainOption">Delete all
+            from domain
+        </option>
+    </select>
 </div>
 
-<h3 id="statusText" role="tab"></h3>
+
+<h3 id="statusText" role="tab" data-i18n="statusText"></h3>
 <details id="detailsDropDown">
     <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
-    <p id="detailsText">
+    <p id="detailsText" data-i18n="detailsText">
         <!-- General description or text goes here -->
         Post-Request to unsubscribe from this mailing list
     </p>
@@ -38,8 +53,8 @@
     </div>
 </details>
 
-
 <script src="i18n.js"></script>
 <script src="popup.js"></script>
 </body>
+
 </html>

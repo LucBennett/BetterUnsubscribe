@@ -9,7 +9,7 @@ html, body {
 }
 
 /* Common Styles */
-h2 {
+h2, h3 {
     font-weight: 600;
     margin-bottom: 1em;
     word-wrap: break-word;
@@ -53,52 +53,22 @@ p {
     background-color: #d9534f; /* Light theme danger button */
 }
 
-#deleteButton:hover {
-    background-color: #c9302c; /* Light theme danger button hover */
-}
-
-/* Button Dropdown */
-.button-dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.button-dropdown div {
-    display: none;
-}
-
-.button-dropdown:hover div {
-    display: block;
-}
-
-.button-dropdown ul {
-    list-style: none;
-    padding: 0;
-    margin-top: -1em;
-    position: absolute;
-    z-index: 100;
-    border-radius: 4px;
-    max-width: 200%;
-    word-wrap: break-word;
-    transition: max-height 0.5s, padding 0.5s ease-in-out;
-    background-color: #ffffff; /* Light theme dropdown background */
-    border: 1px solid #dcdcdc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.button-dropdown ul li {
+/* Dropdown Styles */
+#deleteDropdown {
+    padding: 0.4em 0.6em;
+    margin-top: 1em;
     font-size: 14px;
-    padding: .5em;
-    color: #1a1a1a; /* Light theme dropdown text */
-    border-top: 1px solid #dcdcdc;
+    border: 1px solid #dcdcdc;
+    border-radius: 4px;
+    background-color: #f8f9fa; /* Light theme dropdown background */
+    color: #1a1a1a; /* Light theme text color */
+    cursor: pointer;
+    appearance: none;
 }
 
-.button-dropdown ul li:first-child {
-    border-top: none;
-}
-
-.button-dropdown li:hover {
-    background-color: #c9302c; /* Light theme dropdown hover background */
+#deleteDropdown:hover,
+#deleteDropdown:focus {
+    border-color: #0078d7; /* Highlight on hover/focus */
 }
 
 /* Code Container */
@@ -164,23 +134,10 @@ summary {
         box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
 
-    #deleteButton:hover {
-        background-color: #444444; /* Dark theme danger button hover */
-    }
-
-    .button-dropdown ul {
+    #deleteDropdown {
         background-color: #2c2c2c; /* Dark theme dropdown background */
-        border: 1px solid #444444;
-        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-    }
-
-    .button-dropdown ul li {
-        color: #ffffff; /* Dark theme dropdown text */
-        border-top: 1px solid #444444;
-    }
-
-    .button-dropdown li:hover {
-        background-color: #444444; /* Dark theme dropdown hover background */
+        color: #ffffff;
+        border-color: #444444;
     }
 
     .code-container {

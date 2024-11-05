@@ -2,16 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const {JSDOM} = require("jsdom");
 
-const locales_files = fs.readdirSync('./_locales', { withFileTypes: true })
+const locales_files = fs.readdirSync('./src/_locales', { withFileTypes: true })
 
 const locales = locales_files
     .filter(dirent => dirent.isDirectory())
     .map(dirent => dirent.name);
 
-const model_messages = JSON.parse(fs.readFileSync(path.join(__dirname, "../_locales/en/messages.json"), 'utf8'));
+const model_messages = JSON.parse(fs.readFileSync(path.join(__dirname, "../src/_locales/en/messages.json"), 'utf8'));
 
 const required_keys = Object.keys(model_messages);
-console.log(required_keys);
+//console.log(required_keys);
 
 // Test each locale's messages.json file
 describe('Locale Messages Test', () => {
@@ -20,7 +20,7 @@ describe('Locale Messages Test', () => {
 
         // Load the messages.json file before each test for the specific locale
         beforeEach(() => {
-            const messagesPath = path.join(__dirname, `../_locales/${locale}/messages.json`);
+            const messagesPath = path.join(__dirname, `../src/_locales/${locale}/messages.json`);
             messages = JSON.parse(fs.readFileSync(messagesPath, 'utf8'));
         });
 
@@ -95,7 +95,7 @@ describe("Check JS Files", () => {
             // Iterate over all matches and check if arguments are in required_keys
             while ((match = regex.exec(data)) !== null) {
                 const i18nKey = match[2].trim().replace(/['"`]/g, ''); // Remove quotes around the argument
-                console.log(i18nKey,required_keys.includes(i18nKey))
+                console.log(i18nKey,required_keys.includes(i18nKey));
                 expect(required_keys.includes(i18nKey)).toBeTruthy();
             }
         });

@@ -39,11 +39,13 @@ fi
 # Define the build directory variable
 BUILD_DIR="build"
 
+MANIFEST_FILE="./src/manifest.json"
+
 # Check for jq and use it if available to set the version
 if command -v jq >/dev/null 2>&1; then
     echo "jq is installed."
-    if [ -f "manifest.json" ]; then
-        VERSION=$(jq -r '.version' manifest.json)
+    if [ -f "$MANIFEST_FILE" ]; then
+        VERSION=$(jq -r '.version' "$MANIFEST_FILE")
     else
         echo "Error: manifest.json not found."
         exit 1
@@ -51,10 +53,10 @@ if command -v jq >/dev/null 2>&1; then
 else
     echo "jq is not installed."
     # Fall back to grep and awk to parse manifest.json
-    if [ -f "manifest.json" ]; then
-        VERSION=$(grep -m 1 '"version"' manifest.json | awk -F'"' '{print $4}')
+    if [ -f "$MANIFEST_FILE" ]; then
+        VERSION=$(grep -m 1 '"version"' "$MANIFEST_FILE" | awk -F'"' '{print $4}')
         if [ -z "$VERSION" ]; then
-            echo "Error: Could not extract version from manifest.json."
+            echo "Error: Could not extract version from $MANIFEST_FILE"
             exit 1
         fi
     else
@@ -72,11 +74,13 @@ fi
 # Create build directory if it doesn't exist
 mkdir -p "$BUILD_DIR"
 
-# Define the archive output path using the build directory variable
-OUTPUT_FILE="./$BUILD_DIR/$(basename "$PWD")-$VERSION.xpi"
+cd "./src/"
 
-# Create the list of files as a space-separated string
-FILES="./manifest.json ./_locales ./icons ./src/background.js ./src/popup.html ./src/popup.js ./src/i18n.js ./src/styles.css"
+# Define the list of files and directories to include, relative to ./src
+FILES="manifest.json _locales icons background.js popup.html popup.js i18n.js styles.css"
+
+# Define the archive output path using the build directory variable
+OUTPUT_FILE="../$BUILD_DIR/$(basename "$PWD")-$VERSION.xpi"
 
 # Check which archiver to use based on the flag
 if [ "$ARCHIVER" = "zip" ]; then
@@ -88,16 +92,8 @@ if [ "$ARCHIVER" = "zip" ]; then
         exit 1
     fi
 
-    # Loop through each item in the FILES list
-    for item in $FILES; do
-        if [ -d "$item" ]; then
-            # If it's a directory, add it recursively, including the path
-            zip -r -9 "$OUTPUT_FILE" "$item"
-        elif [ -f "$item" ]; then
-            # If it's a file, add it without the directory path
-            zip -j -9 "$OUTPUT_FILE" "$item"
-        fi
-    done
+    # Change to the src directory to keep paths relative
+    zip -r -9 "$OUTPUT_FILE" $FILES
 
 elif [ "$ARCHIVER" = "7z" ]; then
     echo "Using 7z to create the archive."
@@ -108,7 +104,6 @@ elif [ "$ARCHIVER" = "7z" ]; then
         exit 1
     fi
 
-    # Create the archive with 7z
     7z a -tzip -mx=9 "$OUTPUT_FILE" $FILES
 fi
 
