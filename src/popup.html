@@ -17,21 +17,23 @@
     <div>
         <ul>
             <li id="delete-one-btn" data-i18n="deleteOneButton">Just this email</li>
-            <li id="delete-all-btn" data-i18n="deleteAllButton">All from sender@example.com</li>
+            <li id="delete-all-btn" data-i18n="deleteAllButton">All from "Name" &lt;sender@example.com&gt;</li>
         </ul>
     </div>
 </div>
 
-<h3 id="statusText" role="tab" data-i18n="statusText"></h3>
+<h3 id="statusText" role="tab"></h3>
 <details id="detailsDropDown">
     <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
-    <p id="detailsText" data-i18n="detailsText">
+    <p id="detailsText">
         <!-- General description or text goes here -->
+        Post-Request to unsubscribe from this mailing list
     </p>
     <!-- Dedicated container for code block with overflow control -->
     <div class="code-container">
         <code id="dynamicCodeBlock">
             <!-- Dynamically inserted code block added by popup.js -->
+            https://unsubscribable.example.com
         </code>
     </div>
 </details>

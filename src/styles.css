@@ -1,8 +1,6 @@
 /* Base Styles */
 html, body {
-    width: 500px;
-    min-height: 275px;
-    margin: 10px;
+    margin: 1em;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
     text-align: center;
@@ -13,7 +11,7 @@ html, body {
 /* Common Styles */
 h2 {
     font-weight: 600;
-    margin-bottom: 15px;
+    margin-bottom: 1em;
     word-wrap: break-word;
     overflow-wrap: break-word;
     color: #1a1a1a; /* Light theme heading color */
@@ -24,8 +22,8 @@ p {
 }
 
 .button {
-    padding: 8px 16px;
-    margin: 10px;
+    padding: .6em 1em;
+    margin: 1em;
     cursor: pointer;
     border: none;
     border-radius: 4px;
@@ -76,11 +74,11 @@ p {
 .button-dropdown ul {
     list-style: none;
     padding: 0;
-    margin-top: -8px;
+    margin-top: -1em;
     position: absolute;
     z-index: 100;
     border-radius: 4px;
-    max-width: 150%;
+    max-width: 200%;
     word-wrap: break-word;
     transition: max-height 0.5s, padding 0.5s ease-in-out;
     background-color: #ffffff; /* Light theme dropdown background */
@@ -90,7 +88,7 @@ p {
 
 .button-dropdown ul li {
     font-size: 14px;
-    padding: 5px;
+    padding: .5em;
     color: #1a1a1a; /* Light theme dropdown text */
     border-top: 1px solid #dcdcdc;
 }
@@ -107,8 +105,8 @@ p {
 .code-container {
     max-width: 100%;
     overflow-x: auto;
-    margin-right: 15px;
-    padding: 15px;
+    margin-right: 1em;
+    padding: 1em;
     border-radius: 4px;
     box-sizing: border-box;
     background-color: #f8f9fa; /* Light theme code background */
@@ -137,13 +135,13 @@ summary {
     text-align: left;
     font-weight: bold;
     cursor: pointer;
-    margin: 5px;
+    margin: .5em;
     color: #1a1a1a; /* Light theme summary text */
 }
 
 /* Dark Theme Styles */
 @media (prefers-color-scheme: dark) {
-    html,body {
+    html, body {
         background-color: #333333; /* Dark theme background */
         color: #ffffff; /* Dark theme text color */
     }

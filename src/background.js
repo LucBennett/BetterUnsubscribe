@@ -185,19 +185,23 @@ async function retrieveIdentity(messageHeader) {
 
 const unsubscribeRegexString = "\\bun\\W?(?:subscri(?:be|bing|ption))\\b";
 
+// More precise URL pattern with length limits and exclusion of common URL-ending characters
+const urlPattern = 'https?:\\/\\/[^\\s"\'<>]{1,1000}';
+
 const unsubscribeRegex = new RegExp(unsubscribeRegexString, "i");
 
-// Precompile the regex pattern outside the function to avoid recompiling it on each call
+// Improved regex with limited quantifiers and refined character classes
 const embeddedUnsubRegex = new RegExp(
     '(?:' +
-    '(https?:\\/\\/[\\S]*' + unsubscribeRegexString + '[\\S]*)' +         // URL containing 'unsubscribe'
+    '(' + urlPattern + '[^\\s"\'<>]*' + unsubscribeRegexString + '[^\\s"\'<>]*)' + // URL containing 'unsubscribe'
     ')|(?:' +
-    '(https?:\\/\\/[\\S]*)[\\s\\S]{0,300}' + unsubscribeRegexString + // URL followed by 'unsubscribe' within 300 chars
+    '(' + urlPattern + ')[\\s\\S]{0,300}' + unsubscribeRegexString + // URL followed by 'unsubscribe' within 300 chars
     ')|(?:' +
-    unsubscribeRegexString + '[\\s\\S]{0,300}(https?:\\/\\/[\\S]*)' + // 'unsubscribe' followed by URL within 300 chars
+    unsubscribeRegexString + '[\\s\\S]{0,300}(' + urlPattern + ')' + // 'unsubscribe' followed by URL within 300 chars
     ')',
     'i'
 );
+
 
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing.
@@ -495,8 +499,8 @@ messenger.runtime.onMessage.addListener(async (message) => {
             await messenger.messages.delete([messageId], false);
             return {response: 'Deleted'};
         } else if (message.deleteAllFromSender === true) {
-            //const messageHeader = await messenger.messages.get(messageId);
-            const author = message.author;
+            const messageHeader = await messenger.messages.get(messageId);
+            const author = messageHeader.author;
             if (author) {
                 console_log("User wants to delete all emails from", author);
 
