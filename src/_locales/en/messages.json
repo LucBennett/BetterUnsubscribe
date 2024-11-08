@@ -28,16 +28,24 @@
         "description": "Label for the cancel button"
     },
     "deleteButton": {
-        "message": "Delete ▼",
+        "message": "Delete",
         "description": "Label for the delete button with a dropdown indicator"
     },
     "deleteOneButton": {
         "message": "Just this",
-        "description": "Label for the button to delete only the current email"
+        "description": "Button to delete only the current email"
     },
-    "deleteAllButton": {
-        "message": "All from",
-        "description": "Label for the button to delete all emails from a specific sender, where $1 is the sender's email"
+    "deleteAllNameAddrButton": {
+        "message": "All from sender:",
+        "description": "Button to delete all emails from a specific sender"
+    },
+    "deleteAllAddrButton": {
+        "message": "All from address:",
+        "description": "Button to delete all emails from an address"
+    },
+    "deleteAllDomainButton": {
+        "message": "All from domain:",
+        "description": "Button to delete all emails from a domain"
     },
     "statusTextWorking": {
         "message": "Working...",

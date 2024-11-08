@@ -1,24 +1,36 @@
 /* Base Styles */
-html, body {
+html,
+body {
+    width: 400px;
     margin: 1em;
+    padding-right: 1em;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
     text-align: center;
-    background-color: #f0f0f0; /* Light theme background */
-    color: #1a1a1a; /* Light theme text color */
+    background-color: #f0f0f0;
+    /* Light theme background */
+    color: #1a1a1a;
+    /* Light theme text color */
 }
 
 /* Common Styles */
-h2, h3 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     font-weight: 600;
     margin-bottom: 1em;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    color: #1a1a1a; /* Light theme heading color */
+    color: #1a1a1a;
+    /* Light theme heading color */
 }
 
 p {
-    color: #5f6368; /* Light theme paragraph color */
+    color: #5f6368;
+    /* Light theme paragraph color */
 }
 
 .button {
@@ -30,66 +42,109 @@ p {
     display: inline-block;
     vertical-align: middle;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    background-color: #0078d7; /* Light theme button background */
+    background-color: #0078d7;
+    /* Light theme button background */
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .button:hover {
-    background-color: #005a9e; /* Light theme button hover background */
+    background-color: #005a9e;
+    /* Light theme button hover background */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Button Variants */
 #unsubscribeButton {
-    background-color: #28a745; /* Light theme success button */
+    background-color: #28a745;
+    /* Light theme success button */
 }
 
 #cancelButton {
-    background-color: #6c757d; /* Light theme secondary button */
+    background-color: #6c757d;
+    /* Light theme secondary button */
 }
 
 #deleteButton {
-    background-color: #d9534f; /* Light theme danger button */
+    background-color: #d9534f;
+    /* Light theme danger button */
 }
 
-/* Dropdown Styles */
-#deleteDropdown {
-    padding: 0.4em 0.6em;
-    margin-top: 1em;
-    font-size: 14px;
-    border: 1px solid #dcdcdc;
+#deleteButton:hover {
+    background-color: #c9302c;
+    /* Light theme danger button hover */
+}
+
+/* Button Dropdown */
+.button-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.button-dropdown div {
+    display: none;
+}
+
+.button-dropdown:hover div {
+    display: block;
+}
+
+.button-dropdown ul {
+    position: absolute;
+    right: 80%;
+    left: auto;
+    max-width: 300%;
+    top: -150%;
+    list-style: none;
+    padding: 0;
+    z-index: 100;
     border-radius: 4px;
-    background-color: #f8f9fa; /* Light theme dropdown background */
-    color: #1a1a1a; /* Light theme text color */
-    cursor: pointer;
-    appearance: none;
+    white-space: nowrap;
+    transition: max-height 0.5s, padding 0.5s ease-in-out;
+    background-color: #ffffff;
+    /* Light theme dropdown background */
+    border: 1px solid #dcdcdc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-#deleteDropdown:hover,
-#deleteDropdown:focus {
-    border-color: #0078d7; /* Highlight on hover/focus */
+.button-dropdown ul li {
+    font-size: 14px;
+    padding: .6em .8em;
+    color: #1a1a1a;
+    /* Light theme dropdown text */
+    border-top: 1px solid #dcdcdc;
+    overflow-x: scroll;
+}
+
+.button-dropdown ul li:first-child {
+    border-top: none;
+}
+
+.button-dropdown li:hover {
+    background-color: #c9302c;
+    /* Light theme dropdown hover background */
 }
 
 /* Code Container */
 .code-container {
     max-width: 100%;
     overflow-x: auto;
-    margin-right: 1em;
-    padding: 1em;
     border-radius: 4px;
     box-sizing: border-box;
-    background-color: #f8f9fa; /* Light theme code background */
+    background-color: #f8f9fa;
+    /* Light theme code background */
     border: 1px solid #dcdcdc;
 }
 
 code {
+    margin: 1em;
     display: block;
     white-space: pre;
     word-wrap: normal;
     box-sizing: border-box;
     max-width: 100%;
-    color: #212529; /* Light theme code text color */
+    color: #212529;
+    /* Light theme code text color */
 }
 
 /* Details and Summary */
@@ -105,24 +160,35 @@ summary {
     text-align: left;
     font-weight: bold;
     cursor: pointer;
-    margin: .5em;
-    color: #1a1a1a; /* Light theme summary text */
+    color: #1a1a1a;
+    /* Light theme summary text */
 }
 
 /* Dark Theme Styles */
 @media (prefers-color-scheme: dark) {
-    html, body {
-        background-color: #333333; /* Dark theme background */
-        color: #ffffff; /* Dark theme text color */
+
+    html,
+    body {
+        background-color: #333333;
+        /* Dark theme background */
+        color: #ffffff;
+        /* Dark theme text color */
     }
 
+    h1,
     h2,
+    h3,
+    h4,
+    h5,
+    h6,
     summary {
-        color: #ffffff; /* Dark theme heading and summary color */
+        color: #ffffff;
+        /* Dark theme heading and summary color */
     }
 
     p {
-        color: #ffffff; /* Dark theme paragraph color */
+        color: #ffffff;
+        /* Dark theme paragraph color */
     }
 
     .button {
@@ -130,22 +196,42 @@ summary {
     }
 
     .button:hover {
-        background-color: #444444; /* Dark theme button hover background */
+        background-color: #444444;
+        /* Dark theme button hover background */
         box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
     }
 
-    #deleteDropdown {
-        background-color: #2c2c2c; /* Dark theme dropdown background */
+    #deleteButton:hover {
+        background-color: #444444;
+        /* Dark theme danger button hover */
+    }
+
+    .button-dropdown ul {
+        background-color: #2c2c2c;
+        /* Dark theme dropdown background */
+        border: 1px solid #444444;
+        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+    }
+
+    .button-dropdown ul li {
         color: #ffffff;
-        border-color: #444444;
+        /* Dark theme dropdown text */
+        border-top: 1px solid #444444;
+    }
+
+    .button-dropdown li:hover {
+        background-color: #444444;
+        /* Dark theme dropdown hover background */
     }
 
     .code-container {
-        background-color: #2c2c2c; /* Dark theme code background */
+        background-color: #2c2c2c;
+        /* Dark theme code background */
         border: 1px solid #444444;
     }
 
     code {
-        color: #ffffff; /* Dark theme code text color */
+        color: #ffffff;
+        /* Dark theme code text color */
     }
 }

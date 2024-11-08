@@ -3,44 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="unsubscribeTitle">Unsubscribe</title>
     <link rel="stylesheet" href="styles.css">
-    <title>Unsubscribe</title>
 </head>
 
 <body class="light-theme">
 
-<h1 data-i18n="unsubscribeHeader">Unsubscribe</h1>
-<h2 id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</h2>
+<h3 id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</h3>
 
-<div class="button-container">
-    <button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton"
-            aria-label="Unsubscribe">Unsubscribe</button>
-    <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
-    <button id="deleteButton" class="button" data-i18n="deleteButton" aria-label="Delete">Delete</button>
+<button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton"
+        aria-label="Unsubscribe">Unsubscribe
+</button>
+<button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
 
-    <br>
-
-    <!-- Dropdown for Delete options -->
-    <select id="deleteDropdown" class="button">
-        <option id="deleteOneOption" value="delete-this" data-i18n="deleteOneOption">Delete just this</option>
-        <option id="deleteAllNameAddrOption" value="delete-all-name-addr" data-i18n="deleteAllNameAddrOption">
-            Delete all from name-addr
-        </option>
-        <option id="deleteAllAddrOption" value="delete-all-addr-spec" data-i18n="deleteAllAddrOption">Delete all
-            from addr-spec
-        </option>
-        <option id="deleteAllDomainOption" value="delete-all-domain" data-i18n="deleteAllDomainOption">Delete all
-            from domain
-        </option>
-    </select>
+<div class='button-delete button-dropdown' data-dropdownstate="closed">
+    <button id="deleteButton" class="button" data-i18n="deleteButton" aria-label="Delete">Delete ▼</button>
+    <div>
+        <ul>
+            <li id="deleteOneButton" data-i18n="deleteOneButton">Delete just this</li>
+            <li id="deleteAllNameAddrButton" data-i18n="deleteAllNameAddrButton">Delete all from name-addr</li>
+            <li id="deleteAllAddrButton" data-i18n="deleteAllAddrButton">Delete all from addr-spec</li>
+            <li id="deleteAllDomainButton" data-i18n="deleteAllDomainButton">Delete all from domain</li>
+        </ul>
+    </div>
 </div>
 
-
-<h3 id="statusText" role="tab" data-i18n="statusText"></h3>
+<h4 id="statusText" role="tab" data-i18n="statusText"></h4>
 <details id="detailsDropDown">
     <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
-    <p id="detailsText" data-i18n="detailsText">
+    <p id="detailsText">
         <!-- General description or text goes here -->
         Post-Request to unsubscribe from this mailing list
     </p>

@@ -30,23 +30,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     const emailText = document.getElementById('emailText');
     const unsubscribeButton = document.getElementById('unsubscribeButton');
     const cancelButton = document.getElementById('cancelButton');
-    const deleteOneBtn = document.getElementById('deleteButton');
     const statusText = document.getElementById('statusText');
     const detailsText = document.getElementById('detailsText');
     const detailsCode = document.getElementById("dynamicCodeBlock");
 
+    const deleteOneButton = document.getElementById("deleteOneButton");
+    const deleteAllNameAddrButton = document.getElementById("deleteAllNameAddrButton");
+    const deleteAllAddrButton = document.getElementById("deleteAllAddrButton");
+    const deleteAllDomainButton = document.getElementById("deleteAllDomainButton");
+
     // Retrieve the message header to display the author and set the "Delete All" button text.
     const author = message.author;
+    console_log(author);
+
+    let name = undefined;
+    let sender = undefined;
+    let domain = undefined;
+
+    const addressRegex = new RegExp("^(\"?([a-zA-Z\\s'\\-]+)\"?\\s+)?<([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})>$");
+    const match = author.match(addressRegex);
+    if (match) {
+        name = match[2] || ''; // Fallback if name is optional and not present
+        sender = match[3];
+        domain = match[4];
+        console_log(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
+    } else {
+        console_error("Invalid email format");
+    }
+
 
     // Create a safe line break using a document fragment or multiple elements.
     emailText.textContent = messenger.i18n.getMessage("emailText");
     emailText.appendChild(document.createElement("br"));  // Add a line break manually
     emailText.appendChild(document.createTextNode(author)); // Re-add author after the break
 
-    // Update the "Delete All" button similarly, without using innerHTML.
-    deleteAllBtn.textContent = messenger.i18n.getMessage("deleteAllButton");
-    deleteAllBtn.appendChild(document.createElement("br"));  // Add a line break
-    deleteAllBtn.appendChild(document.createTextNode(author));  // Append the author again
+    if (author) {
+        deleteAllNameAddrButton.appendChild(document.createElement("br"));
+        deleteAllNameAddrButton.appendChild(document.createTextNode(author));
+    }
+    if (sender && domain) {
+        deleteAllAddrButton.appendChild(document.createElement("br"));
+        deleteAllAddrButton.appendChild(document.createTextNode(`${sender}@${domain}`));
+    }
+    if (domain) {
+        deleteAllDomainButton.appendChild(document.createElement("br"));
+        deleteAllDomainButton.appendChild(document.createTextNode(domain));
+    }
 
 
     // Request the unsubscribe method details from the background script.
@@ -111,63 +140,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    let deleteClicked = false;
-
-    /**
-     * Event listener for the "Delete Just This Email" button.
-     * Sends a request to delete the current email and updates the status text.
-     */
-    deleteOneBtn.addEventListener('click', async () => {
-        if (deleteClicked) return; // Prevent multiple clicks
-        deleteClicked = true; // Set the flag to true after the first click
-        try {
-            statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
-            const r = await messenger.runtime.sendMessage({
-                messageId: message.id,
-                delete: true
-            });
-            console_log("Deleted this email response:", r);
-            if (r.response === "Deleted") {
-                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
-                window.close();
-            } else {
-                deleteClicked = false; // Reset flag if delete failed
-                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
-            }
-        } catch (error) {
-            console_error("Error deleting just this email:", error);
-            deleteClicked = false; // Reset flag if an error occurs
-            statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
-        }
+    deleteOneButton.addEventListener('click', async () => {
+        console_log("deleteOneButton");
     });
-
-    /**
-     * Event listener for the "Delete All Emails from This Sender" button.
-     * Sends a request to delete all emails from the same sender and updates the status text.
-     */
-    deleteAllBtn.addEventListener('click', async () => {
-        if (deleteClicked) return; // Prevent multiple clicks
-        deleteClicked = true; // Set the flag to true after the first click
-        try {
-            statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
-            const r = await messenger.runtime.sendMessage({
-                messageId: message.id,
-                deleteAllFromSender: true
-            });
-            console_log("Deleted this email response:", r);
-            if (r.response === "Deleted") {
-                statusText.textContent = r.count + " " +
-                    messenger.i18n.getMessage("statusTextDeleteSuccess");
-                window.close();
-            } else {
-                deleteClicked = false; // Reset flag if delete failed
-                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
-            }
-        } catch (error) {
-            console_error("Error deleting all emails from this sender:", error);
-            deleteClicked = false; // Reset flag if an error occurs
-            statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
-        }
-    });
-
+    deleteAllNameAddrButton.addEventListener('click', async () => {
+        console_log("deleteAllNameAddrButton");
+    })
+    deleteAllAddrButton.addEventListener('click', async () => {
+        console_log("deleteAllAddrButton");
+    })
+    deleteAllDomainButton.addEventListener('click', async () => {
+        console_log("deleteAllDomainButton");
+    })
 });
