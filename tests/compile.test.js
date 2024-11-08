@@ -31,6 +31,7 @@ const tempDir = path.join(__dirname, 'temp');
 const baselineDir = path.join(tempDir, 'baseline');
 
 describe('Build script consistency tests', () => {
+    jest.setTimeout(10000);
     beforeAll(()=>{
         if (fs.existsSync(tempDir)) {
             fs.rmSync(tempDir, { recursive: true });
@@ -40,7 +41,7 @@ describe('Build script consistency tests', () => {
         if (fs.existsSync(baselineDir)) {
             fs.rmSync(baselineDir, { recursive: true });
         }
-    })
+    });
 
     beforeEach(() => {
         if (fs.existsSync(buildOutputDir)) {

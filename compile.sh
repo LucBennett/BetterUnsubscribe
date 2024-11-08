@@ -80,7 +80,7 @@ cd "./src/"
 FILES="manifest.json _locales icons background.js popup.html popup.js i18n.js styles.css"
 
 # Define the archive output path using the build directory variable
-OUTPUT_FILE="../$BUILD_DIR/$(basename "$PWD")-$VERSION.xpi"
+OUTPUT_FILE="../$BUILD_DIR/BetterUnsubscribe-$VERSION.xpi"
 
 # Check which archiver to use based on the flag
 if [ "$ARCHIVER" = "zip" ]; then

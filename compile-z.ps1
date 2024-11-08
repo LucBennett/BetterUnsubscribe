@@ -59,8 +59,7 @@ if (-not (Test-Path $buildDir)) {
 }
 
 # Define variables
-$baseName = (Get-Item .).BaseName
-$fileName = "$baseName-$VERSION"
+$fileName = "BetterUnsubscribe-$VERSION"
 $xpiFileName = "$fileName.xpi"
 $xpiFilePath = Join-Path -Path $buildDir -ChildPath $xpiFileName
 

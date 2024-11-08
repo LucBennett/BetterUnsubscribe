@@ -40,8 +40,7 @@ if (-not (Test-Path $buildDir))
 }
 
 # Define variables
-$baseName = (Get-Item .).BaseName
-$fileName = "$baseName-$VERSION"
+$fileName = "BetterUnsubscribe-$VERSION"
 $zipFileName = "$fileName.zip"
 $xpiFileName = "$fileName.xpi"
 $zipFilePath = Join-Path -Path "$buildDir" -ChildPath $zipFileName
