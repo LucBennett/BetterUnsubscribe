@@ -35,9 +35,17 @@
         "message": "Somente este",
         "description": "Rótulo para o botão de excluir apenas o e-mail atual"
     },
-    "deleteAllButton": {
-        "message": "Todos de",
-        "description": "Rótulo para o botão de excluir todos os e-mails de um remetente específico, onde $1 é o endereço de e-mail do remetente"
+    "deleteAllNameAddrButton": {
+        "message": "Todos do remetente:",
+        "description": "Botão para excluir todos os e-mails de um remetente específico"
+    },
+    "deleteAllAddrButton": {
+        "message": "Todos do endereço:",
+        "description": "Botão para excluir todos os e-mails de um endereço"
+    },
+    "deleteAllDomainButton": {
+        "message": "Todos do domínio:",
+        "description": "Botão para excluir todos os e-mails de um domínio"
     },
     "statusTextWorking": {
         "message": "Trabalhando...",

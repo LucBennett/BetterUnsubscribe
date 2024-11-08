@@ -16,10 +16,10 @@
 </button>
 <button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">Cancel</button>
 
-<div class='button-delete button-dropdown' data-dropdownstate="closed">
+<div id="deleteDiv" class='button-delete button-dropdown' data-dropdownstate="closed">
     <button id="deleteButton" class="button" data-i18n="deleteButton" aria-label="Delete">Delete ▼</button>
     <div>
-        <ul>
+        <ul id="dropdownList">
             <li id="deleteOneButton" data-i18n="deleteOneButton">Delete just this</li>
             <li id="deleteAllNameAddrButton" data-i18n="deleteAllNameAddrButton">Delete all from name-addr</li>
             <li id="deleteAllAddrButton" data-i18n="deleteAllAddrButton">Delete all from addr-spec</li>
@@ -28,7 +28,7 @@
     </div>
 </div>
 
-<h4 id="statusText" role="tab" data-i18n="statusText"></h4>
+<h4 id="statusText" role="tab"></h4>
 <details id="detailsDropDown">
     <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
     <p id="detailsText">

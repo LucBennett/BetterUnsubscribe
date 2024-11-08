@@ -35,9 +35,17 @@
         "message": "Seulement ceci",
         "description": "Libellé pour le bouton de suppression du courriel actuel"
     },
-    "deleteAllButton": {
-        "message": "Tous de",
-        "description": "Libellé pour le bouton de suppression de tous les courriels d'un expéditeur spécifique, où $1 est l'adresse courriel de l'expéditeur"
+    "deleteAllNameAddrButton": {
+        "message": "Tous de l'expéditeur :",
+        "description": "Bouton pour supprimer tous les courriels d'un expéditeur spécifique"
+    },
+    "deleteAllAddrButton": {
+        "message": "Tous de l'adresse :",
+        "description": "Bouton pour supprimer tous les courriels d'une adresse"
+    },
+    "deleteAllDomainButton": {
+        "message": "Tous du domaine :",
+        "description": "Bouton pour supprimer tous les courriels d'un domaine"
     },
     "statusTextWorking": {
         "message": "En cours...",

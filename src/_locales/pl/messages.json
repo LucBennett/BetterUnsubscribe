@@ -35,9 +35,17 @@
     "message": "Tylko ten",
     "description": "Etykieta przycisku do usunięcia tylko bieżącego e-maila"
   },
-  "deleteAllButton": {
-    "message": "Wszystkie od",
-    "description": "Etykieta przycisku do usunięcia wszystkich wiadomości e-mail od określonego nadawcy, gdzie $1 to adres e-mail nadawcy"
+  "deleteAllNameAddrButton": {
+    "message": "Wszystkie od nadawcy:",
+    "description": "Przycisk do usunięcia wszystkich e-maili od konkretnego nadawcy"
+  },
+  "deleteAllAddrButton": {
+    "message": "Wszystkie z adresu:",
+    "description": "Przycisk do usunięcia wszystkich e-maili z określonego adresu"
+  },
+  "deleteAllDomainButton": {
+    "message": "Wszystkie z domeny:",
+    "description": "Przycisk do usunięcia wszystkich e-maili z domeny"
   },
   "statusTextWorking": {
     "message": "Pracuję...",

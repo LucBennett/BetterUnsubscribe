@@ -35,9 +35,17 @@
     "message": "Solo questo",
     "description": "Etichetta per il pulsante per eliminare solo l'email corrente"
   },
-  "deleteAllButton": {
-    "message": "Tutti da",
-    "description": "Etichetta per il pulsante per eliminare tutte le email da un mittente specifico, dove $1 è l'indirizzo email del mittente"
+  "deleteAllNameAddrButton": {
+    "message": "Tutti dal mittente:",
+    "description": "Pulsante per eliminare tutte le email di un mittente specifico"
+  },
+  "deleteAllAddrButton": {
+    "message": "Tutti dall'indirizzo:",
+    "description": "Pulsante per eliminare tutte le email da un indirizzo"
+  },
+  "deleteAllDomainButton": {
+    "message": "Tutti dal dominio:",
+    "description": "Pulsante per eliminare tutte le email da un dominio"
   },
   "statusTextWorking": {
     "message": "In corso...",

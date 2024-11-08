@@ -34,6 +34,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const detailsText = document.getElementById('detailsText');
     const detailsCode = document.getElementById("dynamicCodeBlock");
 
+    const deleteDiv = document.getElementById("deleteDiv");
+    const dropdownList = document.getElementById("dropdownList");
     const deleteOneButton = document.getElementById("deleteOneButton");
     const deleteAllNameAddrButton = document.getElementById("deleteAllNameAddrButton");
     const deleteAllAddrButton = document.getElementById("deleteAllAddrButton");
@@ -140,16 +142,56 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    deleteOneButton.addEventListener('click', async () => {
-        console_log("deleteOneButton");
-    });
-    deleteAllNameAddrButton.addEventListener('click', async () => {
-        console_log("deleteAllNameAddrButton");
-    })
-    deleteAllAddrButton.addEventListener('click', async () => {
-        console_log("deleteAllAddrButton");
-    })
-    deleteAllDomainButton.addEventListener('click', async () => {
-        console_log("deleteAllDomainButton");
-    })
+    deleteOneButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteOneButton", name, sender, domain));
+    deleteAllNameAddrButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteAllNameAddrButton", name, sender, domain));
+    deleteAllAddrButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteAllAddrButton", name, sender, domain));
+    deleteAllDomainButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteAllDomainButton", name, sender, domain));
 });
+
+function getDeleteFunc(message, statusText, deleteDiv, dropdownList, type, name, sender, domain) {
+    return async () => {
+        try {
+            console_log("hide dropdown");
+            dropdownList.style.pointerEvents = 'none';
+
+            // Enable pointer events after a short delay
+            setTimeout(() => {
+                dropdownList.style.pointerEvents = 'auto';
+            }, 1);
+
+            let message_obj = {};
+            switch (type) {
+                case "deleteAllNameAddrButton":
+                    message_obj['name'] = name;
+                case "deleteAllAddrButton":
+                    message_obj['sender'] = sender;
+                case "deleteAllDomainButton":
+                    message_obj['domain'] = domain;
+                case "deleteOneButton":
+                    message_obj['delete'] = true;
+                default:
+                    message_obj['messageId'] = message.id;
+            }
+
+            statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
+
+            const r = await messenger.runtime.sendMessage(message_obj);
+
+            if (r.response === "Deleted") {
+                if (r.count) {
+                    statusText.textContent = r.count + " " + messenger.i18n.getMessage("statusTextDeleteSuccess");
+                } else {
+                    statusText.textContent = messenger.i18n.getMessage("statusTextDeleteSuccess");
+                }
+                setTimeout(() => {
+                    window.close();
+                }, 500);
+            } else {
+                statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
+            }
+        } catch (error) {
+            console_error("Error deleting all emails from this sender:", error);
+            statusText.textContent = messenger.i18n.getMessage("statusTextDeleteError");
+        }
+    };
+}

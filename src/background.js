@@ -480,10 +480,10 @@ class UnsubWeb extends UnsubMethod {
  * @param {object} sender - The sender of the message.
  * @param {function} sendResponse - The function to send a response.
  */
-messenger.runtime.onMessage.addListener(async (message) => {
-    if (message.messageId) {
-        const messageId = parseInt(message.messageId);
-        if (message.unsubscribe === true) {
+messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
+    if (messageFromPopup.messageId) {
+        const messageId = parseInt(messageFromPopup.messageId);
+        if (messageFromPopup.unsubscribe === true) {
             console_log("User chose to unsubscribe from the mailing list");
             const out = await funcCache.get(messageId).call();
             if (out) {
@@ -491,34 +491,72 @@ messenger.runtime.onMessage.addListener(async (message) => {
             } else {
                 return {response: "Error"};
             }
-        } else if (message.cancel === true) {
+        } else if (messageFromPopup.cancel === true) {
             console_log("User canceled the unsubscribe action.");
             return {response: "Canceled"};
-        } else if (message.delete === true) {
-            console_log("User wants to delete the email");
-            await messenger.messages.delete([messageId], false);
-            return {response: 'Deleted'};
-        } else if (message.deleteAllFromSender === true) {
-            const messageHeader = await messenger.messages.get(messageId);
-            const author = messageHeader.author;
-            if (author) {
-                console_log("User wants to delete all emails from", author);
+        } else if (messageFromPopup.delete === true) {
+            console_log(messageFromPopup);
 
-                const messages = await messenger.messages.query({
-                    author: author
-                });
+            try {
+                let messages;
+                let messageIds;
+                if (messageFromPopup.name && messageFromPopup.sender && messageFromPopup.domain) {
+                    // Handle delete all with name address
+                    const name = messageFromPopup.name.trim().toLowerCase();
+                    const sender = messageFromPopup.sender.trim().toLowerCase();
+                    const domain = messageFromPopup.domain.trim().toLowerCase();
+                    console.log("Deleting all messages associated with name:", messageFromPopup.name);
+                    messages = await messenger.messages.query({
+                        author: `${name} <${sender}@${domain}>`
+                    });
+                    messageIds = messages.messages.map(message => message.id);
+                } else if (messageFromPopup.sender && messageFromPopup.domain) {
+                    // Handle delete all from sender
+                    const sender = messageFromPopup.sender.trim().toLowerCase();
+                    const domain = messageFromPopup.domain.trim().toLowerCase();
+                    console.log("Deleting all messages from sender:", messageFromPopup.sender);
+                    messages = await messenger.messages.query({
+                        author: `${sender}@${domain}`
+                    });
+                    messageIds = messages.messages.map(message => message.id);
+                } else if (messageFromPopup.domain) {
+                    // Handle delete all from domain
+                    const domain = messageFromPopup.domain.trim().toLowerCase();
+                    const atDomain = "@" + domain;
+                    console.log("Deleting all messages from domain:", domain);
+                    messages = await messenger.messages.query({
+                        fullText: atDomain
+                    });
 
-                console_log("Deleting", messages);
+                    messageIds = messages.messages.filter(
+                        message => message.author
+                            .trim()
+                            .toLowerCase()
+                            .includes(atDomain)
+                    ).map(message => message.id);
+                } else if (messageFromPopup.messageId) {
+                    // Handle deleting one specific message
+                    console.log("Deleting a specific message with ID:", messageFromPopup.messageId);
+                    messageIds = [messageFromPopup.messageId];
+                } else {
+                    // Default case for handling other messages
+                    console.log("Default case - Handling message ID:", messageFromPopup.messageId);
+                    messageIds = [];
+                }
 
-                const messageIds = messages.messages.map(message => message.id);
-
-                await messenger.messages.delete(messageIds, false);
-                return {response: 'Deleted', count: messageIds.length};
-            } else {
-                console_error("Received Invalid author:", author)
-                return {response: 'Error'};
+                if (messageIds.length > 0) {
+                    //await messenger.messages.delete(messageIds, false);
+                    return {response: "Deleted", count: messageIds.length};
+                } else {
+                    console.log("No messages found to delete.");
+                    return {response: "No Messages Found"};
+                }
+            } catch (error) {
+                console.error("Error processing deletion request:", error);
+                return {response: "Error", error: error.message};
             }
-        } else if (message.getMethod === true) {
+
+        } else if (messageFromPopup.getMethod === true) {
             console_log('Method Requested');
             const func = funcCache.get(messageId);
             console_log("Method", func);
@@ -529,7 +567,7 @@ messenger.runtime.onMessage.addListener(async (message) => {
             }
         }
     } else {
-        console_log("IDK", message);
+        console_log("IDK", messageFromPopup);
         return false;
     }
 });

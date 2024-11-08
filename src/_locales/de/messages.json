@@ -35,9 +35,17 @@
     "message": "Nur diese",
     "description": "Bezeichnung für den Button zum Löschen nur der aktuellen E-Mail"
   },
-  "deleteAllButton": {
-    "message": "Alle von",
-    "description": "Bezeichnung für den Button zum Löschen aller E-Mails von einem bestimmten Absender, wobei $1 die E-Mail-Adresse des Absenders ist"
+  "deleteAllNameAddrButton": {
+    "message": "Alle von Absender:",
+    "description": "Bezeichnung für den Button zum Löschen aller E-Mails von einem bestimmten Absender"
+  },
+  "deleteAllAddrButton": {
+    "message": "Alle von Adresse:",
+    "description": "Bezeichnung für den Button zum Löschen aller E-Mails von einer Adresse"
+  },
+  "deleteAllDomainButton": {
+    "message": "Alle von Domain:",
+    "description": "Bezeichnung für den Button zum Löschen aller E-Mails von einer Domain"
   },
   "statusTextWorking": {
     "message": "Arbeitet...",
