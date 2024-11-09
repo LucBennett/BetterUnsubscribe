@@ -1,8 +1,9 @@
 // Map to store functions for different unsubscribe actions associated with message IDs
-const funcCache = new Map(); //MessageId:UnsubMethod
+const funcCache = new Map(); // MessageId:UnsubMethod
 
 /**
  * Logs messages to the console with a specific prefix.
+ * Useful for tracking debug information related to BetterUnsubscribe in background scripts.
  * @param {...*} arguments - The arguments to be logged.
  */
 function console_log() {
@@ -11,6 +12,7 @@ function console_log() {
 
 /**
  * Logs errors to the console with a specific prefix.
+ * Helps identify error messages specific to BetterUnsubscribe's background script.
  * @param {...*} arguments - The arguments to be logged as errors.
  */
 function console_error() {
@@ -35,7 +37,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(async (tab, message) => 
                 // Message is in cache
                 value = funcCache.get(message.id);
             } else {
-                // Message not in cache, call search(message)
+                // Message not in cache, call searchUnsub(message)
                 value = await searchUnsub(message);
                 // Store the result in cache
                 funcCache.set(message.id, value);
@@ -52,22 +54,20 @@ messenger.messageDisplay.onMessageDisplayed.addListener(async (tab, message) => 
 
 /**
  * Searches for unsubscribe links and information in the message headers and body.
+ * This function scans for standard unsubscribe headers (RFC 2369) and embedded links.
  * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
- * @returns {Promise<UnsubMethod>} - Unsubscribe Method if found, otherwise null.
+ * @returns {Promise<UnsubMethod|null>} - Unsubscribe Method if found, otherwise null.
  */
 async function searchUnsub(selectedMessage) {
     const fullMessage = await messenger.messages.getFull(selectedMessage.id);
     const messageHeader = await messenger.messages.get(selectedMessage.id);
-    // See RFC 2369 (Mailing list Header)
+
+    // Check for standard unsubscribe headers (RFC 2369)
     if (fullMessage.headers.hasOwnProperty('list-unsubscribe')) {
         const unsubscribeHeaders = fullMessage.headers['list-unsubscribe'];
-        let unsubscribeHeader;
-        if (Array.isArray(unsubscribeHeaders)) {
-            unsubscribeHeader = unsubscribeHeaders[0];
-        } else {
-            unsubscribeHeader = unsubscribeHeaders;
-        }
+        let unsubscribeHeader = Array.isArray(unsubscribeHeaders) ? unsubscribeHeaders[0] : unsubscribeHeaders;
         console_log("Header", unsubscribeHeader);
+
         const httpsLink = extractHttpsLink(unsubscribeHeader);
         const email = extractMailtoLink(unsubscribeHeader);
 
@@ -97,7 +97,6 @@ async function searchUnsub(selectedMessage) {
 
     // Check for embedded unsubscribe links in the message body
     let embeddedLink = findEmbeddedUnsubLinkHTML(fullMessage);
-
     if (embeddedLink) {
         console_log("Embedded HTML Unsubscribe WebLink Found", embeddedLink);
         const decoded = decodeURIComponent(embeddedLink);
@@ -106,7 +105,6 @@ async function searchUnsub(selectedMessage) {
     }
 
     embeddedLink = findEmbeddedUnsubLinkRegex(fullMessage);
-
     if (embeddedLink) {
         console_log("Embedded Unsubscribe WebLink Found with Regex", embeddedLink);
         const decoded = decodeURIComponent(embeddedLink);
@@ -114,10 +112,10 @@ async function searchUnsub(selectedMessage) {
         return new UnsubWeb(decoded); // Return unsubscribe embedded decoded web link method
     }
 
-    return null;
+    return null; // No unsubscribe information found
 }
 
-// Helper function to extract HTTPS link
+// Helper function to extract HTTPS link from the header
 /**
  * Extracts an HTTPS link from the unsubscribe header.
  * @param {string} header - The unsubscribe header containing the URL.
@@ -128,7 +126,7 @@ function extractHttpsLink(header) {
     return httpsLinkMatch ? httpsLinkMatch[1] : null;
 }
 
-// Helper function to extract mailto link
+// Helper function to extract mailto link from the header
 /**
  * Extracts a mailto link from the unsubscribe header.
  * @param {string} header - The unsubscribe header containing the mailto link.
@@ -157,7 +155,7 @@ function parseMailtoLink(email) {
     return [emailAddress, params];
 }
 
-// Helper function to retrieve identity
+// Helper function to retrieve identity associated with the message
 /**
  * Retrieves the MailIdentity associated with the given email's receiver.
  * @param {messenger.messages.MessageHeader} messageHeader - The message header to search for identities.
@@ -183,6 +181,7 @@ async function retrieveIdentity(messageHeader) {
     return identity || undefined; // Return undefined if no identity is found
 }
 
+// Regular expression to match 'unsubscribe' in different forms for embedded links
 const unsubscribeRegexString = "\\bun\\W?(?:subscri(?:be|bing|ption))\\b";
 
 // More precise URL pattern with length limits and exclusion of common URL-ending characters
@@ -190,7 +189,7 @@ const urlPattern = 'https?:\\/\\/[^\\s"\'<>]{1,1000}';
 
 const unsubscribeRegex = new RegExp(unsubscribeRegexString, "i");
 
-// Improved regex with limited quantifiers and refined character classes
+// Improved regex for detecting embedded unsubscribe links within the message body
 const embeddedUnsubRegex = new RegExp(
     '(?:' +
     '(' + urlPattern + '[^\\s"\'<>]*' + unsubscribeRegexString + '[^\\s"\'<>]*)' + // URL containing 'unsubscribe'
@@ -201,7 +200,6 @@ const embeddedUnsubRegex = new RegExp(
     ')',
     'i'
 );
-
 
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing.
@@ -234,11 +232,11 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
         }
     }
 
-    return null;
+    return null; // No embedded link found
 }
 
 /**
- * Finds embedded unsubscribe links within the message body using a single regular expression.
+ * Finds embedded unsubscribe links within the message body using a regular expression.
  * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
  * @returns {string|null} - The embedded link if found, otherwise null.
  */
@@ -260,11 +258,13 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
         }
     }
 
-    return null;
+    return null; // No embedded link found
 }
+
 
 /**
  * Retrieves the MailIdentity associated with the given email headers receiver.
+ * This function checks the BCC, CC, and recipient lists to find a matching identity.
  * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
  * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
  */
@@ -279,13 +279,14 @@ async function getIdentityReceiver(messageHeader) {
         }
     }
 
-    return null;
+    return null; // Return null if no matching identity is found
 }
 
 /**
  * Retrieves the MailIdentity associated with the given message's folder.
+ * This function iterates over accounts to match identities based on the folder's account ID.
  * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
- * @returns {Promise<MailIdentity>} - The MailIdentity if found, otherwise null.
+ * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
     if (messageHeader.folder) {
@@ -305,6 +306,7 @@ async function getIdentityForMessage(messageHeader) {
 
 /**
  * Base class for different unsubscribe methods.
+ * This class is extended by specific unsubscribe action implementations.
  */
 class UnsubMethod {
     /**
@@ -327,6 +329,7 @@ class UnsubMethod {
 
 /**
  * Class for unsubscribing via a POST request.
+ * This class handles the logic for making POST requests to specified URLs for unsubscription.
  */
 class UnsubPost extends UnsubMethod {
     /**
@@ -342,7 +345,7 @@ class UnsubPost extends UnsubMethod {
 
     /**
      * Executes the unsubscribe action via a POST request.
-     * See RFC 8058 (Post request)
+     * This implementation follows RFC 8058 (Post request).
      * @returns {Promise<boolean>} - True if the request is successful, otherwise false.
      */
     async call() {
@@ -385,11 +388,12 @@ class UnsubPost extends UnsubMethod {
 
 /**
  * Class for unsubscribing via an email.
+ * This class handles composing and sending an unsubscribe email.
  */
 class UnsubMail extends UnsubMethod {
     /**
      * Constructor for UnsubMail.
-     * @param {MailIdentity} identity - The identity for the email
+     * @param {MailIdentity} identity - The identity for the email.
      * @param {string} emailAddress - The email address to send the unsubscribe request to.
      * @param {string} subject - The subject of the unsubscribe email.
      */
@@ -402,6 +406,7 @@ class UnsubMail extends UnsubMethod {
 
     /**
      * Executes the unsubscribe action via an email.
+     * Opens a new compose window with the unsubscribe message.
      * @returns {Promise<boolean>} - True if the email is successfully composed, otherwise false.
      */
     async call() {
@@ -436,6 +441,7 @@ class UnsubMail extends UnsubMethod {
 
 /**
  * Class for unsubscribing via a web link.
+ * This class handles opening a web page for unsubscription.
  */
 class UnsubWeb extends UnsubMethod {
     /**
@@ -474,6 +480,11 @@ class UnsubWeb extends UnsubMethod {
     }
 }
 
+/**
+ * Generator function to yield messages from a paginated list.
+ * @param {Promise<object>} list - The paginated list of messages.
+ * @returns {AsyncGenerator<object>} - An async generator that yields messages.
+ */
 async function* getMessages(list) {
     let page = await list;
     for (let message of page.messages) {
@@ -488,7 +499,12 @@ async function* getMessages(list) {
     }
 }
 
-async function* getAllMessages(){
+/**
+ * Generator function to yield messages from all inbox folders across all accounts.
+ * This function finds and processes messages from each inbox folder.
+ * @returns {AsyncGenerator<object>} - An async generator that yields messages from all inboxes.
+ */
+async function* getAllMessages() {
     // Step 1: Get all accounts
     let accounts = await messenger.accounts.list();
 
@@ -508,9 +524,9 @@ async function* getAllMessages(){
 
 /**
  * Handles runtime messages for the extension.
- * @param {object} message - The message received.
- * @param {object} sender - The sender of the message.
- * @param {function} sendResponse - The function to send a response.
+ * Processes different actions such as fetching unsubscribe methods, executing unsubscribe operations,
+ * or deleting specific messages based on input data.
+ * @param {object} messageFromPopup - The message received from the popup.
  */
 messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
     if (messageFromPopup.messageId) {
@@ -570,17 +586,13 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
                     const atDomain = "@" + domain;
                     console_log("Selecting all messages from domain:", domain);
 
-                    /*const messageHeader = await messenger.messages.get(messageId);
-
-                    const messages = getMessages(messenger.messages.query({
-                        folder:messageHeader.folder
-                    }));*/
+                    // Query using message.folder?
 
                     const messages = getAllMessages();
 
                     for await (let message of messages) {
-                        if(message.author.trim().toLowerCase().includes(atDomain)){
-                            messageIds.push(message.id)
+                        if (message.author.trim().toLowerCase().includes(atDomain)) {
+                            messageIds.push(message.id);
                         }
                     }
                 } else {
@@ -590,7 +602,7 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
                 }
 
                 if (messageIds.length > 0) {
-                    console_log("Deleting Selected Messages")
+                    console_log("Deleting Selected Messages");
                     await messenger.messages.delete(messageIds, false);
                     return {response: "Deleted", count: messageIds.length};
                 } else {
@@ -601,16 +613,15 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
                 console_error("Error processing deletion request:", error);
                 return {response: "Error", error: error.message};
             }
-
         }
     } else {
-        console_log("IDK", messageFromPopup);
+        console_log("Unknown action", messageFromPopup);
         return false;
     }
 });
 
+// Export module functions and classes for testing if in a Node.js environment
 if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
-    // Export the functions and classes for testing
     module.exports = {
         searchUnsub,
         UnsubMethod,

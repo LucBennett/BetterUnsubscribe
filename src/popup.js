@@ -1,7 +1,7 @@
 /**
- * Logs messages to the console with a custom prefix.
- * This helps identify logs specific to BetterUnsubscribe's popup.js.
- * @param {...any} args - The arguments to log.
+ * Logs messages to the console with a custom prefix for better identification.
+ * Used for debug and informational messages related to BetterUnsubscribe's popup.js.
+ * @param {...any} args - The arguments to log to the console.
  */
 function console_log(...args) {
     console.log("[BetterUnsubscribe][popup.js]", ...args);
@@ -9,24 +9,25 @@ function console_log(...args) {
 
 /**
  * Logs error messages to the console with a custom prefix.
- * This helps in debugging by clearly identifying error messages specific to BetterUnsubscribe.
- * @param {...any} args - The error arguments to log.
+ * This is useful for clear and specific error reporting during development and debugging.
+ * @param {...any} args - The error arguments to log to the console.
  */
 function console_error(...args) {
     console.error("[BetterUnsubscribe][popup.js]", ...args);
 }
 
 /**
- * Event listener that triggers when the DOM content is fully loaded.
- * Retrieves message details, sets up button event listeners, and handles unsubscribe logic.
+ * Main event listener for the DOMContentLoaded event.
+ * Responsible for retrieving the active tab and displayed message,
+ * setting up button event listeners, and managing the unsubscribe logic.
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    // Retrieve the currently active tab and get the displayed message details.
+    // Retrieve the currently active tab in the current window and get displayed message details.
     const [tab] = await messenger.tabs.query({active: true, currentWindow: true});
     const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
     console_log("Message", message.id);
 
-    // Retrieve DOM elements for later use.
+    // Retrieve and cache references to various DOM elements for later use.
     const emailText = document.getElementById('emailText');
     const unsubscribeButton = document.getElementById('unsubscribeButton');
     const cancelButton = document.getElementById('cancelButton');
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const deleteAllAddrButton = document.getElementById("deleteAllAddrButton");
     const deleteAllDomainButton = document.getElementById("deleteAllDomainButton");
 
-    // Retrieve the message header to display the author and set the "Delete All" button text.
+    // Retrieve the message's author and parse it to extract name, sender, and domain information.
     const author = message.author;
     console_log(author);
 
@@ -49,10 +50,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let sender = undefined;
     let domain = undefined;
 
+    // Regex to match and parse email addresses with optional name prefix.
     const addressRegex = new RegExp("^(\"?([a-zA-Z\\s'\\-]+)\"?\\s+)?<([a-zA-Z0-9._%+-]+)@([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})>$");
     const match = author.match(addressRegex);
     if (match) {
-        name = match[2] || ''; // Fallback if name is optional and not present
+        name = match[2] || ''; // Optional name fallback if not present.
         sender = match[3];
         domain = match[4];
         console_log(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
@@ -60,12 +62,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         console_error("Invalid email format");
     }
 
-
-    // Create a safe line break using a document fragment or multiple elements.
+    // Display the author's email in the UI.
     emailText.textContent = messenger.i18n.getMessage("emailText");
-    emailText.appendChild(document.createElement("br"));  // Add a line break manually
-    emailText.appendChild(document.createTextNode(author)); // Re-add author after the break
+    emailText.appendChild(document.createElement("br"));  // Add a line break manually.
+    emailText.appendChild(document.createTextNode(author)); // Add the author's email after the break.
 
+    // Update "Delete All" button text based on extracted author information.
     if (author) {
         deleteAllNameAddrButton.appendChild(document.createElement("br"));
         deleteAllNameAddrButton.appendChild(document.createTextNode(author));
@@ -79,12 +81,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         deleteAllDomainButton.appendChild(document.createTextNode(domain));
     }
 
-
     // Request the unsubscribe method details from the background script.
     messenger.runtime.sendMessage({messageId: message.id, getMethod: true}).then((r) => {
         console_log("Received", r);
 
-        // Based on the unsubscribe method type (Post, Email, or Browser), update the UI with details.
+        // Update the UI based on the received unsubscribe method (Post, Email, or Browser).
         switch (r.method) {
             case "Post":
                 detailsText.textContent = messenger.i18n.getMessage("detailsTextPost") + ' ';
@@ -99,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 detailsCode.textContent = r.address;
                 break;
             default:
-            // No action if no method is provided.
+            // No action required if no method is provided.
         }
     }).catch((error) => {
         console_error("Error receiving methodInfo from background:", error);
@@ -107,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /**
      * Event listener for the "Unsubscribe" button.
-     * Disables the button, updates the status text, and sends an unsubscribe request to the background script.
+     * Sends an unsubscribe request to the background script, updates UI status, and handles button state.
      */
     unsubscribeButton.addEventListener('click', async () => {
         unsubscribeButton.disabled = true;
@@ -130,7 +131,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     /**
      * Event listener for the "Cancel" button.
-     * Sends a cancel request to the background script and closes the popup window.
+     * Sends a cancel request to the background script and closes the popup window upon completion.
      */
     cancelButton.addEventListener('click', async () => {
         try {
@@ -142,23 +143,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // Event listeners for the "Delete" buttons, each using the getDeleteFunc utility function to handle different cases.
     deleteOneButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteOneButton", name, sender, domain));
     deleteAllNameAddrButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteAllNameAddrButton", name, sender, domain));
     deleteAllAddrButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteAllAddrButton", name, sender, domain));
     deleteAllDomainButton.addEventListener('click', getDeleteFunc(message, statusText, deleteDiv, dropdownList, "deleteAllDomainButton", name, sender, domain));
 });
 
+/**
+ * Generates a function to handle deleting specific messages or message groups based on input parameters.
+ * @param {Object} message - The current message object.
+ * @param {HTMLElement} statusText - The status text element to update.
+ * @param {HTMLElement} deleteDiv - The container for delete options.
+ * @param {HTMLElement} dropdownList - The dropdown list element.
+ * @param {string} type - The type of delete operation ("deleteOneButton", "deleteAllNameAddrButton", etc.).
+ * @param {string} name - The name extracted from the author (if available).
+ * @param {string} sender - The sender email extracted from the author (if available).
+ * @param {string} domain - The domain extracted from the author (if available).
+ * @returns {Function} The function to handle the specific delete operation.
+ */
 function getDeleteFunc(message, statusText, deleteDiv, dropdownList, type, name, sender, domain) {
     return async () => {
         try {
             console_log("hide dropdown");
             dropdownList.style.pointerEvents = 'none';
 
-            // Enable pointer events after a short delay
+            // Enable pointer events after a short delay for responsiveness.
             setTimeout(() => {
                 dropdownList.style.pointerEvents = 'auto';
             }, 1);
 
+            // Create a message object based on the type of delete operation.
             let message_obj = {};
             switch (type) {
                 case "deleteAllNameAddrButton":
@@ -175,6 +190,7 @@ function getDeleteFunc(message, statusText, deleteDiv, dropdownList, type, name,
 
             statusText.textContent = messenger.i18n.getMessage("statusTextDeleting");
 
+            // Send a delete request to the background script.
             const r = await messenger.runtime.sendMessage(message_obj);
 
             if (r.response === "Deleted") {
