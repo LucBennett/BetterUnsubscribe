@@ -2,14 +2,14 @@
 /* Defines basic styles for the html and body elements, setting width, margins, padding, font styles, and default colors. */
 html,
 body {
-    width: 400px;
-    margin: 1em;
-    padding-right: 1em;
-    font-family: "Segoe UI", sans-serif;
-    font-size: 14px;
-    text-align: center;
-    background-color: #f0f0f0; /* Light theme background */
-    color: #1a1a1a; /* Light theme text color */
+  width: 400px;
+  margin: 1em;
+  padding-right: 1em;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 14px;
+  text-align: center;
+  background-color: #f0f0f0; /* Light theme background */
+  color: #1a1a1a; /* Light theme text color */
 }
 
 /* Common Styles */
@@ -20,210 +20,213 @@ h3,
 h4,
 h5,
 h6 {
-    font-weight: 600;
-    margin-bottom: 1em;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    color: #1a1a1a; /* Light theme heading color */
+  font-weight: 600;
+  margin-bottom: 1em;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  color: #1a1a1a; /* Light theme heading color */
 }
 
 /* Styles for paragraph elements to apply consistent colors for text content. */
 p {
-    color: #5f6368; /* Light theme paragraph color */
+  color: #5f6368; /* Light theme paragraph color */
 }
 
 /* Button Styles */
 /* Basic button styles including padding, cursor behavior, border properties, and background and shadow effects. */
 .button {
-    padding: .6em 1em;
-    margin: 1em;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    display: inline-block;
-    vertical-align: middle;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
-    background-color: #0078d7; /* Light theme button background */
-    color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 0.6em 1em;
+  margin: 1em;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  display: inline-block;
+  vertical-align: middle;
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+  background-color: #0078d7; /* Light theme button background */
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Hover effect for buttons, changing background color and shadow on hover. */
 .button:hover {
-    background-color: #005a9e; /* Light theme button hover background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #005a9e; /* Light theme button hover background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Specific Button Variants */
 /* Styling for specific buttons with unique background colors to indicate different actions (success, cancel, danger). */
 #unsubscribeButton {
-    background-color: #28a745; /* Light theme success button */
+  background-color: #28a745; /* Light theme success button */
 }
 
 #cancelButton {
-    background-color: #6c757d; /* Light theme secondary button */
+  background-color: #6c757d; /* Light theme secondary button */
 }
 
 #deleteButton {
-    background-color: #d9534f; /* Light theme danger button */
+  background-color: #d9534f; /* Light theme danger button */
 }
 
 /* Hover effect for the delete button to indicate potential irreversible actions. */
 #deleteButton:hover {
-    background-color: #c9302c; /* Light theme danger button hover */
+  background-color: #c9302c; /* Light theme danger button hover */
 }
 
 /* Button Dropdown Styles */
 /* Container for dropdown buttons with position and display control. */
 .button-dropdown {
-    position: relative;
-    display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 /* Dropdown content hidden by default, shown on hover. */
 .button-dropdown div {
-    display: none;
+  display: none;
 }
 
 .button-dropdown:hover div {
-    display: block;
+  display: block;
 }
 
 /* Dropdown list styles including positioning, list reset, padding, and box-shadow. */
 .button-dropdown ul {
-    position: absolute;
-    right: 80%;
-    left: auto;
-    max-width: 300%;
-    top: -150%;
-    list-style: none;
-    padding: 0;
-    z-index: 100;
-    border-radius: 4px;
-    white-space: nowrap;
-    transition: max-height 0.5s, padding 0.5s ease-in-out;
-    background-color: #ffffff; /* Light theme dropdown background */
-    border: 1px solid #dcdcdc;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  right: 80%;
+  left: auto;
+  max-width: 200%;
+  top: -150%;
+  list-style: none;
+  padding: 0;
+  z-index: 100;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition:
+    max-height 0.5s,
+    padding 0.5s ease-in-out;
+  background-color: #ffffff; /* Light theme dropdown background */
+  border: 1px solid #dcdcdc;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Styles for individual dropdown list items, including padding and border properties. */
 .button-dropdown ul li {
-    font-size: 14px;
-    padding: .6em .8em;
-    color: #1a1a1a; /* Light theme dropdown text */
-    border-top: 1px solid #dcdcdc;
-    overflow-x: scroll;
+  font-size: 14px;
+  padding: 0.6em 0.8em;
+  color: #1a1a1a; /* Light theme dropdown text */
+  border-top: 1px solid #dcdcdc;
+  overflow-x: scroll;
 }
 
 /* Removes the top border for the first dropdown list item. */
 .button-dropdown ul li:first-child {
-    border-top: none;
+  border-top: none;
 }
 
 /* Hover effect for dropdown list items to indicate focus. */
 .button-dropdown li:hover {
-    background-color: #c9302c; /* Light theme dropdown hover background */
+  background-color: #c9302c; /* Light theme dropdown hover background */
 }
 
 /* Code Container Styles */
 /* Container for displaying code with overflow control and background and border styling. */
 .code-container {
-    max-width: 100%;
-    overflow-x: auto;
-    border-radius: 4px;
-    box-sizing: border-box;
-    background-color: #f8f9fa; /* Light theme code background */
-    border: 1px solid #dcdcdc;
+  max-width: 100%;
+  overflow-x: auto;
+  border-radius: 4px;
+  box-sizing: border-box;
+  background-color: #f8f9fa; /* Light theme code background */
+  border: 1px solid #dcdcdc;
 }
 
 /* Styles for <code> elements, providing spacing, color, and word-wrap properties. */
 code {
-    margin: 1em;
-    display: block;
-    white-space: pre;
-    word-wrap: normal;
-    box-sizing: border-box;
-    max-width: 100%;
-    color: #212529; /* Light theme code text color */
+  margin: 1em;
+  display: block;
+  white-space: pre;
+  word-wrap: normal;
+  box-sizing: border-box;
+  max-width: 100%;
+  color: #212529; /* Light theme code text color */
 }
 
 /* Details and Summary Styles */
 /* Styling for <details> element to ensure width consistency and text alignment. */
 details {
-    width: 100%;
-    box-sizing: border-box;
-    text-align: left;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
 }
 
 /* Styling for <summary> element for clickable section headers. */
 summary {
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    text-align: left;
-    font-weight: bold;
-    cursor: pointer;
-    color: #1a1a1a; /* Light theme summary text */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+  font-weight: bold;
+  cursor: pointer;
+  color: #1a1a1a; /* Light theme summary text */
 }
 
 /* Dark Theme Styles */
 /* Media query for applying dark theme styles based on user preferences. */
 @media (prefers-color-scheme: dark) {
+  html,
+  body {
+    background-color: #333333; /* Dark theme background */
+    color: #ffffff; /* Dark theme text color */
+  }
 
-    html,
-    body {
-        background-color: #333333; /* Dark theme background */
-        color: #ffffff; /* Dark theme text color */
-    }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  summary {
+    color: #ffffff; /* Dark theme heading and summary color */
+  }
 
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6,
-    summary {
-        color: #ffffff; /* Dark theme heading and summary color */
-    }
+  p {
+    color: #ffffff; /* Dark theme paragraph color */
+  }
 
-    p {
-        color: #ffffff; /* Dark theme paragraph color */
-    }
+  .button {
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  }
 
-    .button {
-        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-    }
+  .button:hover {
+    background-color: #444444; /* Dark theme button hover background */
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+  }
 
-    .button:hover {
-        background-color: #444444; /* Dark theme button hover background */
-        box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
-    }
+  #deleteButton:hover {
+    background-color: #444444; /* Dark theme danger button hover */
+  }
 
-    #deleteButton:hover {
-        background-color: #444444; /* Dark theme danger button hover */
-    }
+  .button-dropdown ul {
+    background-color: #2c2c2c; /* Dark theme dropdown background */
+    border: 1px solid #444444;
+    box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+  }
 
-    .button-dropdown ul {
-        background-color: #2c2c2c; /* Dark theme dropdown background */
-        border: 1px solid #444444;
-        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
-    }
+  .button-dropdown ul li {
+    color: #ffffff; /* Dark theme dropdown text */
+    border-top: 1px solid #444444;
+  }
 
-    .button-dropdown ul li {
-        color: #ffffff; /* Dark theme dropdown text */
-        border-top: 1px solid #444444;
-    }
+  .button-dropdown li:hover {
+    background-color: #444444; /* Dark theme dropdown hover background */
+  }
 
-    .button-dropdown li:hover {
-        background-color: #444444; /* Dark theme dropdown hover background */
-    }
+  .code-container {
+    background-color: #2c2c2c; /* Dark theme code background */
+    border: 1px solid #444444;
+  }
 
-    .code-container {
-        background-color: #2c2c2c; /* Dark theme code background */
-        border: 1px solid #444444;
-    }
-
-    code {
-        color: #ffffff; /* Dark theme code text color */
-    }
+  code {
+    color: #ffffff; /* Dark theme code text color */
+  }
 }

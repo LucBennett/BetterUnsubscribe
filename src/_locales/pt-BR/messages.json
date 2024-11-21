@@ -1,90 +1,90 @@
 {
-    "extensionName": {
-        "message": "BetterUnsubscribe",
-        "description": "O nome da extensão do Thunderbird"
-    },
-    "extensionDescription": {
-        "message": "Facilita o cancelamento de inscrições em listas de e-mails.",
-        "description": "A descrição da extensão do Thunderbird"
-    },
-    "unsubscribeTitle": {
-        "message": "Cancelar Inscrição",
-        "description": "Título da página de cancelamento de inscrição"
-    },
-    "unsubscribeHeader": {
-        "message": "Cancelar Inscrição",
-        "description": "Cabeçalho da página de cancelamento de inscrição"
-    },
-    "emailText": {
-        "message": "Você gostaria de cancelar a inscrição nesta lista de e-mails?",
-        "description": "Texto perguntando ao usuário se deseja cancelar a inscrição"
-    },
-    "unsubscribeButton": {
-        "message": "Cancelar Inscrição",
-        "description": "Rótulo do botão de cancelamento de inscrição"
-    },
-    "cancelButton": {
-        "message": "Cancelar",
-        "description": "Rótulo do botão de cancelar"
-    },
-    "deleteButton": {
-        "message": "Excluir ▼",
-        "description": "Rótulo do botão de exclusão com um indicador suspenso"
-    },
-    "deleteOneButton": {
-        "message": "Somente este",
-        "description": "Rótulo para o botão de excluir apenas o e-mail atual"
-    },
-    "deleteAllNameAddrButton": {
-        "message": "Todos do remetente:",
-        "description": "Botão para excluir todos os e-mails de um remetente específico"
-    },
-    "deleteAllAddrButton": {
-        "message": "Todos do endereço:",
-        "description": "Botão para excluir todos os e-mails de um endereço"
-    },
-    "deleteAllDomainButton": {
-        "message": "Todos do domínio:",
-        "description": "Botão para excluir todos os e-mails de um domínio"
-    },
-    "statusTextWorking": {
-        "message": "Trabalhando...",
-        "description": "Texto de status para estado de trabalho"
-    },
-    "statusTextDone": {
-        "message": "Concluído",
-        "description": "Texto de status para estado concluído"
-    },
-    "statusTextError": {
-        "message": "Erro",
-        "description": "Texto de status para estado de erro"
-    },
-    "statusTextDeleting": {
-        "message": "Excluindo e-mail(s)...",
-        "description": "Texto de status enquanto os e-mails estão sendo excluídos"
-    },
-    "statusTextDeleteSuccess": {
-        "message": "E-mail(s) excluído(s) com sucesso.",
-        "description": "Texto de status para exclusão bem-sucedida de e-mails"
-    },
-    "statusTextDeleteError": {
-        "message": "Falha ao excluir o(s) e-mail(s).",
-        "description": "Texto de status quando a exclusão de e-mails falha"
-    },
-    "detailsSummary": {
-        "message": "Mais detalhes",
-        "description": "Menu suspenso de Mais Detalhes"
-    },
-    "detailsTextPost": {
-        "message": "Quando você clicar em \"Cancelar Inscrição\", uma solicitação POST será enviada para o seguinte URL:",
-        "description": "Detalhes para uma solicitação POST"
-    },
-    "detailsTextEmail": {
-        "message": "Quando você clicar em \"Cancelar Inscrição\", um e-mail será redigido para o seguinte endereço:",
-        "description": "Detalhes para um e-mail"
-    },
-    "detailsTextWeb": {
-        "message": "Quando você clicar em \"Cancelar Inscrição\", uma janela do navegador será aberta e visitará o seguinte URL:",
-        "description": "Detalhes para um link da Web"
-    }
+  "extensionName": {
+    "message": "BetterUnsubscribe",
+    "description": "O nome da extensão do Thunderbird"
+  },
+  "extensionDescription": {
+    "message": "Facilita o cancelamento de inscrições em listas de e-mails.",
+    "description": "A descrição da extensão do Thunderbird"
+  },
+  "unsubscribeTitle": {
+    "message": "Cancelar Inscrição",
+    "description": "Título da página de cancelamento de inscrição"
+  },
+  "unsubscribeHeader": {
+    "message": "Cancelar Inscrição",
+    "description": "Cabeçalho da página de cancelamento de inscrição"
+  },
+  "emailText": {
+    "message": "Você gostaria de cancelar a inscrição nesta lista de e-mails?",
+    "description": "Texto perguntando ao usuário se deseja cancelar a inscrição"
+  },
+  "unsubscribeButton": {
+    "message": "Cancelar Inscrição",
+    "description": "Rótulo do botão de cancelamento de inscrição"
+  },
+  "cancelButton": {
+    "message": "Cancelar",
+    "description": "Rótulo do botão de cancelar"
+  },
+  "deleteButton": {
+    "message": "Excluir ▼",
+    "description": "Rótulo do botão de exclusão com um indicador suspenso"
+  },
+  "deleteOneButton": {
+    "message": "Somente este",
+    "description": "Rótulo para o botão de excluir apenas o e-mail atual"
+  },
+  "deleteAllNameAddrButton": {
+    "message": "Todos do remetente:",
+    "description": "Botão para excluir todos os e-mails de um remetente específico"
+  },
+  "deleteAllAddrButton": {
+    "message": "Todos do endereço:",
+    "description": "Botão para excluir todos os e-mails de um endereço"
+  },
+  "deleteAllDomainButton": {
+    "message": "Todos do domínio:",
+    "description": "Botão para excluir todos os e-mails de um domínio"
+  },
+  "statusTextWorking": {
+    "message": "Trabalhando...",
+    "description": "Texto de status para estado de trabalho"
+  },
+  "statusTextDone": {
+    "message": "Concluído",
+    "description": "Texto de status para estado concluído"
+  },
+  "statusTextError": {
+    "message": "Erro",
+    "description": "Texto de status para estado de erro"
+  },
+  "statusTextDeleting": {
+    "message": "Excluindo e-mail(s)...",
+    "description": "Texto de status enquanto os e-mails estão sendo excluídos"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "E-mail(s) excluído(s) com sucesso.",
+    "description": "Texto de status para exclusão bem-sucedida de e-mails"
+  },
+  "statusTextDeleteError": {
+    "message": "Falha ao excluir o(s) e-mail(s).",
+    "description": "Texto de status quando a exclusão de e-mails falha"
+  },
+  "detailsSummary": {
+    "message": "Mais detalhes",
+    "description": "Menu suspenso de Mais Detalhes"
+  },
+  "detailsTextPost": {
+    "message": "Quando você clicar em \"Cancelar Inscrição\", uma solicitação POST será enviada para o seguinte URL:",
+    "description": "Detalhes para uma solicitação POST"
+  },
+  "detailsTextEmail": {
+    "message": "Quando você clicar em \"Cancelar Inscrição\", um e-mail será redigido para o seguinte endereço:",
+    "description": "Detalhes para um e-mail"
+  },
+  "detailsTextWeb": {
+    "message": "Quando você clicar em \"Cancelar Inscrição\", uma janela do navegador será aberta e visitará o seguinte URL:",
+    "description": "Detalhes para um link da Web"
+  }
 }

@@ -14,6 +14,7 @@ BetterUnsubscribe offers several unsubscription methods based on what is availab
 4. **Unsubscribe Link in Email Content**: If an unsubscribe link (`https://`) is embedded in the email content, the site is opened in your browser.
 
 ## Download
+
 You can download the latest version of BetterUnsubscribe [here](https://github.com/LucBennett/BetterUnsubscribe/releases/latest).
 
 ## Build Instructions
@@ -42,9 +43,11 @@ A summary of potential security and privacy risks associated with unsubscribe to
 Automated tests are provided to ensure BetterUnsubscribe works as expected. To run the tests, follow these steps:
 
 1. **Install dependencies**: In the project directory, run:
+
    ```bash
    npm install
    ```
+
    This will install the necessary packages defined in `package.json`.
 
 2. **Run the tests**: Once the dependencies are installed, run the following command to execute the test suite:

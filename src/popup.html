@@ -1,69 +1,99 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
+  <head>
     <!-- Meta charset to define character encoding -->
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <!-- Page title with internationalization support -->
     <title data-i18n="unsubscribeTitle">Unsubscribe</title>
     <!-- Link to external stylesheet for page styling -->
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body class="light-theme">
+  <body class="light-theme">
+    <!-- Main prompt for user action, with internationalization support for text content -->
+    <h3 id="emailText" data-i18n="emailText">
+      Would you like to unsubscribe from this mailing list?
+    </h3>
 
-<!-- Main prompt for user action, with internationalization support for text content -->
-<h3 id="emailText" data-i18n="emailText">Would you like to unsubscribe from this mailing list?</h3>
+    <!-- Button for confirming unsubscription, with accessibility attributes -->
+    <button
+      id="unsubscribeButton"
+      class="button"
+      data-i18n="unsubscribeButton"
+      aria-label="Unsubscribe"
+    >
+      Unsubscribe
+    </button>
+    <!-- Button for canceling the operation, with accessibility attributes -->
+    <button
+      id="cancelButton"
+      class="button"
+      data-i18n="cancelButton"
+      aria-label="Cancel"
+    >
+      Cancel
+    </button>
 
-<!-- Button for confirming unsubscription, with accessibility attributes -->
-<button id="unsubscribeButton" class="button" data-i18n="unsubscribeButton" aria-label="Unsubscribe">
-    Unsubscribe
-</button>
-<!-- Button for canceling the operation, with accessibility attributes -->
-<button id="cancelButton" class="button" data-i18n="cancelButton" aria-label="Cancel">
-    Cancel
-</button>
-
-<!-- Container for delete options, with dropdown behavior controlled via data attributes -->
-<div id="deleteDiv" class="button-delete button-dropdown" data-dropdownstate="closed">
-    <!-- Button that triggers the display of delete options -->
-    <button id="deleteButton" class="button" data-i18n="deleteButton" aria-label="Delete">Delete ▼</button>
-    <div>
+    <!-- Container for delete options, with dropdown behavior controlled via data attributes -->
+    <div
+      id="deleteDiv"
+      class="button-delete button-dropdown"
+      data-dropdownstate="closed"
+    >
+      <!-- Button that triggers the display of delete options -->
+      <button
+        id="deleteButton"
+        class="button"
+        data-i18n="deleteButton"
+        aria-label="Delete"
+      >
+        Delete ▼
+      </button>
+      <div>
         <!-- List of delete options -->
         <ul id="dropdownList">
-            <!-- Individual list items representing different delete options -->
-            <li id="deleteOneButton" data-i18n="deleteOneButton">Delete just this</li>
-            <li id="deleteAllNameAddrButton" data-i18n="deleteAllNameAddrButton">Delete all from name-addr</li>
-            <li id="deleteAllAddrButton" data-i18n="deleteAllAddrButton">Delete all from addr-spec</li>
-            <li id="deleteAllDomainButton" data-i18n="deleteAllDomainButton">Delete all from domain</li>
+          <!-- Individual list items representing different delete options -->
+          <li id="deleteOneButton" data-i18n="deleteOneButton">
+            Delete just this
+          </li>
+          <li id="deleteAllNameAddrButton" data-i18n="deleteAllNameAddrButton">
+            Delete all from name-addr
+          </li>
+          <li id="deleteAllAddrButton" data-i18n="deleteAllAddrButton">
+            Delete all from addr-spec
+          </li>
+          <li id="deleteAllDomainButton" data-i18n="deleteAllDomainButton">
+            Delete all from domain
+          </li>
         </ul>
+      </div>
     </div>
-</div>
 
-<!-- Status text element to display feedback to the user, with ARIA role for accessibility -->
-<h4 id="statusText" role="tab"></h4>
+    <!-- Status text element to display feedback to the user, with ARIA role for accessibility -->
+    <h4 id="statusText" role="tab"></h4>
 
-<!-- Details element to toggle additional information visibility -->
-<details id="detailsDropDown">
-    <!-- Summary section for the details element, with internationalization and ARIA attributes -->
-    <summary data-i18n="detailsSummary" aria-expanded="false">More details</summary>
-    <!-- Paragraph for general description or additional text -->
-    <p id="detailsText">
+    <!-- Details element to toggle additional information visibility -->
+    <details id="detailsDropDown">
+      <!-- Summary section for the details element, with internationalization and ARIA attributes -->
+      <summary data-i18n="detailsSummary" aria-expanded="false">
+        More details
+      </summary>
+      <!-- Paragraph for general description or additional text -->
+      <p id="detailsText">
         <!-- Placeholder content; dynamically populated by JavaScript -->
         Post-Request to unsubscribe from this mailing list
-    </p>
-    <!-- Container for dynamically inserted code block; overflow control for long content -->
-    <div class="code-container">
+      </p>
+      <!-- Container for dynamically inserted code block; overflow control for long content -->
+      <div class="code-container">
         <code id="dynamicCodeBlock">
-            <!-- Example URL to be replaced dynamically by JavaScript -->
-            https://unsubscribable.example.com
+          <!-- Example URL to be replaced dynamically by JavaScript -->
+          https://unsubscribable.example.com
         </code>
-    </div>
-</details>
+      </div>
+    </details>
 
-<!-- JavaScript for internationalization and core functionality -->
-<script src="i18n.js"></script>
-<script src="popup.js"></script>
-</body>
-
+    <!-- JavaScript for internationalization and core functionality -->
+    <script src="i18n.js"></script>
+    <script src="popup.js"></script>
+  </body>
 </html>

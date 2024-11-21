@@ -1,90 +1,90 @@
 {
-    "extensionName": {
-        "message": "BetterUnsubscribe",
-        "description": "The name of the Thunderbird MailExtension"
-    },
-    "extensionDescription": {
-        "message": "Makes it easier to unsubscribe from mailing lists.",
-        "description": "The description of the Thunderbird MailExtension"
-    },
-    "unsubscribeTitle": {
-        "message": "Unsubscribe",
-        "description": "Title of the unsubscribe page"
-    },
-    "unsubscribeHeader": {
-        "message": "Unsubscribe",
-        "description": "Header of the unsubscribe page"
-    },
-    "emailText": {
-        "message": "Would you like to unsubscribe from this mailing list?",
-        "description": "Text asking the user if they want to unsubscribe"
-    },
-    "unsubscribeButton": {
-        "message": "Unsubscribe",
-        "description": "Label for the unsubscribe button"
-    },
-    "cancelButton": {
-        "message": "Cancel",
-        "description": "Label for the cancel button"
-    },
-    "deleteButton": {
-        "message": "Delete",
-        "description": "Label for the delete button with a dropdown indicator"
-    },
-    "deleteOneButton": {
-        "message": "Just this",
-        "description": "Button to delete only the current email"
-    },
-    "deleteAllNameAddrButton": {
-        "message": "All from sender:",
-        "description": "Button to delete all emails from a specific sender"
-    },
-    "deleteAllAddrButton": {
-        "message": "All from address:",
-        "description": "Button to delete all emails from an address"
-    },
-    "deleteAllDomainButton": {
-        "message": "All from domain:",
-        "description": "Button to delete all emails from a domain"
-    },
-    "statusTextWorking": {
-        "message": "Working...",
-        "description": "Status text for working state"
-    },
-    "statusTextDone": {
-        "message": "Done",
-        "description": "Status text for done state"
-    },
-    "statusTextError": {
-        "message": "Error",
-        "description": "Status text for error state"
-    },
-    "statusTextDeleting": {
-        "message": "Deleting email(s)...",
-        "description": "Status text while email(s) are being deleted"
-    },
-    "statusTextDeleteSuccess": {
-        "message": "Email(s) deleted successfully.",
-        "description": "Status text for successful email deletion"
-    },
-    "statusTextDeleteError": {
-        "message": "Failed to delete email(s).",
-        "description": "Status text when email deletion fails"
-    },
-    "detailsSummary": {
-        "message": "More details",
-        "description": "More Details Drop-Down"
-    },
-    "detailsTextPost": {
-        "message": "When you click \"Unsubscribe\", a post request will be sent to the following URL:",
-        "description": "Details for a Post request"
-    },
-    "detailsTextEmail": {
-        "message": "When you click \"Unsubscribe\", an email will be drafted to the following address:",
-        "description": "Details for a Email"
-    },
-    "detailsTextWeb": {
-        "message": "When you click \"Unsubscribe\", a browser window will open and will visit the following URL:",
-        "description": "Details for a Web Link"
-    }
+  "extensionName": {
+    "message": "BetterUnsubscribe",
+    "description": "The name of the Thunderbird MailExtension"
+  },
+  "extensionDescription": {
+    "message": "Makes it easier to unsubscribe from mailing lists.",
+    "description": "The description of the Thunderbird MailExtension"
+  },
+  "unsubscribeTitle": {
+    "message": "Unsubscribe",
+    "description": "Title of the unsubscribe page"
+  },
+  "unsubscribeHeader": {
+    "message": "Unsubscribe",
+    "description": "Header of the unsubscribe page"
+  },
+  "emailText": {
+    "message": "Would you like to unsubscribe from this mailing list?",
+    "description": "Text asking the user if they want to unsubscribe"
+  },
+  "unsubscribeButton": {
+    "message": "Unsubscribe",
+    "description": "Label for the unsubscribe button"
+  },
+  "cancelButton": {
+    "message": "Cancel",
+    "description": "Label for the cancel button"
+  },
+  "deleteButton": {
+    "message": "Delete",
+    "description": "Label for the delete button with a dropdown indicator"
+  },
+  "deleteOneButton": {
+    "message": "Just this",
+    "description": "Button to delete only the current email"
+  },
+  "deleteAllNameAddrButton": {
+    "message": "All from sender:",
+    "description": "Button to delete all emails from a specific sender"
+  },
+  "deleteAllAddrButton": {
+    "message": "All from address:",
+    "description": "Button to delete all emails from an address"
+  },
+  "deleteAllDomainButton": {
+    "message": "All from domain:",
+    "description": "Button to delete all emails from a domain"
+  },
+  "statusTextWorking": {
+    "message": "Working...",
+    "description": "Status text for working state"
+  },
+  "statusTextDone": {
+    "message": "Done",
+    "description": "Status text for done state"
+  },
+  "statusTextError": {
+    "message": "Error",
+    "description": "Status text for error state"
+  },
+  "statusTextDeleting": {
+    "message": "Deleting email(s)...",
+    "description": "Status text while email(s) are being deleted"
+  },
+  "statusTextDeleteSuccess": {
+    "message": "Email(s) deleted successfully.",
+    "description": "Status text for successful email deletion"
+  },
+  "statusTextDeleteError": {
+    "message": "Failed to delete email(s).",
+    "description": "Status text when email deletion fails"
+  },
+  "detailsSummary": {
+    "message": "More details",
+    "description": "More Details Drop-Down"
+  },
+  "detailsTextPost": {
+    "message": "When you click \"Unsubscribe\", a post request will be sent to the following URL:",
+    "description": "Details for a Post request"
+  },
+  "detailsTextEmail": {
+    "message": "When you click \"Unsubscribe\", an email will be drafted to the following address:",
+    "description": "Details for a Email"
+  },
+  "detailsTextWeb": {
+    "message": "When you click \"Unsubscribe\", a browser window will open and will visit the following URL:",
+    "description": "Details for a Web Link"
+  }
 }

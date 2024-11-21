@@ -23,9 +23,7 @@
     "64": "icons/email.png"
   },
   "background": {
-    "scripts": [
-      "background.js"
-    ]
+    "scripts": ["background.js"]
   },
   "message_display_action": {
     "default_title": "__MSG_unsubscribeTitle__",
