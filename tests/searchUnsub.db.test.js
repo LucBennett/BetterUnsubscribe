@@ -47,7 +47,7 @@ describe('searchUnsub', () => {
 
   // Step 2: Create parameterized tests with test.each
   test.each(emailMessages)('Test message %# against db', async (message) => {
-    console.log(message.text);
+    // console.log(message.text);
     const [messageHeader, fullMessage] = await parseMessage(message.text); // Use message.message if it's the correct field
 
     // Mock the messenger methods to return the mocked fullMessage and messageHeader
@@ -55,7 +55,7 @@ describe('searchUnsub', () => {
     messenger.messages.get.mockResolvedValue(messageHeader);
 
     const expected = getChoice(message);
-    console.log('Expecting:', expected);
+    // console.log('Expecting:', expected);
     const result = await searchUnsub(messageHeader);
     if (expected) {
       expect(result).toBeInstanceOf(expected);

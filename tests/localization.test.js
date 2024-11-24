@@ -80,7 +80,7 @@ describe('Check HTML Files', () => {
       // Check each element's data-i18n attribute against required_keys
       elements.forEach((element) => {
         const i18nKey = element.getAttribute('data-i18n').trim();
-        console.log(i18nKey, required_keys.includes(i18nKey));
+        // console.log(i18nKey, required_keys.includes(i18nKey));
         expect(required_keys.includes(i18nKey)).toBeTruthy();
       });
     });
@@ -101,7 +101,7 @@ describe('Check JS Files', () => {
       // Iterate over all matches and check if arguments are in required_keys
       while ((match = regex.exec(data)) !== null) {
         const i18nKey = match[2].trim().replace(/['"`]/g, ''); // Remove quotes around the argument
-        console.log(i18nKey, required_keys.includes(i18nKey));
+        // console.log(i18nKey, required_keys.includes(i18nKey));
         expect(required_keys.includes(i18nKey)).toBeTruthy();
       }
     });

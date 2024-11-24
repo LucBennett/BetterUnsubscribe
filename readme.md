@@ -21,6 +21,7 @@ You can download the latest version of BetterUnsubscribe [here](https://github.c
 
 1. **Navigate to the project directory**: Open your terminal or command prompt and navigate to the project folder.
 2. **Run the appropriate compile script** for your operating system to build the project. This will generate the `BetterUnsubscribe.xpi` file in the `build` directory.
+   - **Node.js**: Run `node compile.js` (requires node.js)
    - **Unix & macOS**: Run `compile.sh` (requires `/bin/sh` and 7z or zip installed).
    - **Windows (with .NET)**: Run `compile.ps1` (requires PowerShell and .NET).
    - **Windows (with 7z/zip)**: Run `compile-z.ps1` (requires PowerShell and 7z or zip installed).
