@@ -18,6 +18,7 @@ function compareDirectories(dir1, dir2) {
 // Path to the build scripts
 const buildScripts = [
   { name: 'compile.ps1', cmd: 'powershell ./compile.ps1' },
+  { name: 'compile.js', cmd: 'node ./compile.js' },
   { name: 'compile-z.ps1 (7z)', cmd: 'powershell ./compile-z.ps1 -use7z' },
   { name: 'compile-z.ps1 (zip)', cmd: 'powershell ./compile-z.ps1 -useZip' },
   { name: 'compile.sh (zip)', cmd: 'bash ./compile.sh -useZip' },
@@ -90,7 +91,7 @@ describe('Build script consistency tests', () => {
       await extractZip(outputZip, outputExtracted);
 
       if (!fs.existsSync(baselineDir)) {
-        console.log('Baseline set by', script.name);
+        // console.log('Baseline set by', script.name);
         // Set the first successful build as the baseline
         fs.mkdirSync(baselineDir);
         fs.cpSync(outputExtracted, baselineDir, { recursive: true });
