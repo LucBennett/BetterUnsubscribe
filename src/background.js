@@ -65,7 +65,7 @@ async function searchUnsub(selectedMessage) {
   const messageHeader = await messenger.messages.get(selectedMessage.id);
 
   // Check for standard unsubscribe headers (RFC 2369)
-  if (fullMessage.headers.hasOwnProperty('list-unsubscribe')) {
+  if ('list-unsubscribe' in fullMessage.headers) {
     const unsubscribeHeaders = fullMessage.headers['list-unsubscribe'];
     let unsubscribeHeader = Array.isArray(unsubscribeHeaders)
       ? unsubscribeHeaders[0]
@@ -75,7 +75,7 @@ async function searchUnsub(selectedMessage) {
     const httpsLink = extractHttpsLink(unsubscribeHeader);
     const email = extractMailtoLink(unsubscribeHeader);
 
-    if (fullMessage.headers.hasOwnProperty('list-unsubscribe-post')) {
+    if ('list-unsubscribe-post' in fullMessage.headers) {
       console_log('OneClick Link Found', httpsLink);
       const postCommand = fullMessage.headers['list-unsubscribe-post'][0];
       console_log('post', postCommand);
@@ -86,11 +86,8 @@ async function searchUnsub(selectedMessage) {
 
     if (email) {
       console_log('Unsubscribe Email Found', email);
-      const [emailAddress, params] = parseMailtoLink(email);
-      const subject = params.subject || 'unsubscribe';
-
       const identity = await retrieveIdentity(messageHeader);
-      return new UnsubMail(identity, emailAddress, subject);
+      return new UnsubMail(identity, email);
     }
 
     if (httpsLink) {
@@ -99,21 +96,12 @@ async function searchUnsub(selectedMessage) {
     }
   }
 
-  // Check for embedded unsubscribe links in the message body
-  let embeddedLink = findEmbeddedUnsubLinkHTML(fullMessage);
+  const embeddedLink =
+    findEmbeddedUnsubLinkHTML(fullMessage) ||
+    findEmbeddedUnsubLinkRegex(fullMessage);
   if (embeddedLink) {
     console_log('Embedded HTML Unsubscribe WebLink Found', embeddedLink);
-    const decoded = decodeURIComponent(embeddedLink);
-    console_log('Decoded:', decoded);
     return new UnsubWeb(embeddedLink); // Return unsubscribe embedded web link method
-  }
-
-  embeddedLink = findEmbeddedUnsubLinkRegex(fullMessage);
-  if (embeddedLink) {
-    console_log('Embedded Unsubscribe WebLink Found with Regex', embeddedLink);
-    const decoded = decodeURIComponent(embeddedLink);
-    console_log('Decoded:', decoded);
-    return new UnsubWeb(decoded); // Return unsubscribe embedded decoded web link method
   }
 
   return null; // No unsubscribe information found
@@ -123,40 +111,25 @@ async function searchUnsub(selectedMessage) {
 /**
  * Extracts an HTTPS link from the unsubscribe header.
  * @param {string} header - The unsubscribe header containing the URL.
- * @returns {string|null} - The extracted HTTPS link if found, otherwise null.
+ * @returns {URL|null} - The extracted HTTPS link if found, otherwise null.
  */
 function extractHttpsLink(header) {
   const httpsLinkMatch = header.match(/(https?:\/\/[^>]+)/);
-  return httpsLinkMatch ? httpsLinkMatch[1] : null;
+  return httpsLinkMatch ? new URL(httpsLinkMatch[1]) : null;
 }
 
 // Helper function to extract mailto link from the header
 /**
  * Extracts a mailto link from the unsubscribe header.
  * @param {string} header - The unsubscribe header containing the mailto link.
- * @returns {string|null} - The extracted mailto link if found, otherwise null.
+ * @returns {URL|null} - The extracted mailto link if found, otherwise null.
  */
 function extractMailtoLink(header) {
-  const emailMatch = header.match(/mailto:([^>]+)/i);
-  return emailMatch ? emailMatch[1] : null;
-}
-
-// Helper function to parse mailto link and extract parameters
-/**
- * Parses a mailto link and extracts the email address and parameters.
- * @param {string} email - The mailto link to parse.
- * @returns {Array} - An array containing the email address and parameters.
- */
-function parseMailtoLink(email) {
-  const emailSplit = email.split('?');
-  const emailAddress = emailSplit[0];
-  let params = {};
-
-  if (emailSplit.length > 1) {
-    params = Object.fromEntries(new URLSearchParams(emailSplit[1]).entries());
+  const emailMatch = header.match(/<(mailto:[^>]+)/i);
+  if (emailMatch) {
+    return new URL(emailMatch[1].replace(/^mailto:\/*/, 'mailto:'));
   }
-
-  return [emailAddress, params];
+  return null;
 }
 
 // Helper function to retrieve identity associated with the message
@@ -218,7 +191,7 @@ const embeddedUnsubRegex = new RegExp(
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing.
  * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
- * @returns {string|null} - The embedded link if found, otherwise null.
+ * @returns {URL|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkHTML(messagePart) {
   if (messagePart && messagePart.contentType === 'text/html') {
@@ -235,7 +208,7 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
         link.href.match(unsubscribeRegex)
       ) {
         // Return the href attribute of the matching <a> tag
-        return link.href;
+        return new URL(link.href);
       }
     }
   }
@@ -255,14 +228,18 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
 /**
  * Finds embedded unsubscribe links within the message body using a regular expression.
  * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
- * @returns {string|null} - The embedded link if found, otherwise null.
+ * @returns {URL|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkRegex(messagePart) {
   if (messagePart && messagePart.body) {
     const match = messagePart.body.match(embeddedUnsubRegex);
     if (match) {
       // Return the first non-null captured group
-      return match[1] || match[2] || match[3] || null;
+      const link = match[1] || match[2] || match[3] || null;
+      if (link) {
+        return new URL(link);
+      }
+      return null;
     }
   }
 
@@ -354,7 +331,7 @@ class UnsubMethod {
 class UnsubPost extends UnsubMethod {
   /**
    * Constructor for UnsubPost.
-   * @param {string} weblink - The web link to send the POST request to.
+   * @param {URL} weblink - The web link to send the POST request to.
    * @param {string} command - The command to be sent in the POST request.
    */
   constructor(weblink, command) {
@@ -402,7 +379,7 @@ class UnsubPost extends UnsubMethod {
    * @returns {any} - Method details, including type and address.
    */
   getMethodDetails() {
-    return { method: 'Post', address: this.weblink };
+    return { method: 'Post', address: this.weblink.href };
   }
 }
 
@@ -414,14 +391,12 @@ class UnsubMail extends UnsubMethod {
   /**
    * Constructor for UnsubMail.
    * @param {MailIdentity} identity - The identity for the email.
-   * @param {string} emailAddress - The email address to send the unsubscribe request to.
-   * @param {string} subject - The subject of the unsubscribe email.
+   * @param {URL} email - The email address to send the unsubscribe request to.
    */
-  constructor(identity, emailAddress, subject) {
+  constructor(identity, email) {
     super();
     this.identity = identity;
-    this.emailAddress = emailAddress;
-    this.subject = subject;
+    this.email = email;
   }
 
   /**
@@ -432,8 +407,10 @@ class UnsubMail extends UnsubMethod {
   async call() {
     try {
       let details = {
-        to: this.emailAddress,
-        subject: this.subject,
+        to: this.email.pathname,
+        subject: this.email.searchParams.has('subject')
+          ? this.email.searchParams.get('subject')
+          : 'unsubscribe',
         body: 'Please unsubscribe me from your mailing list. Thank you.',
       };
 
@@ -455,7 +432,7 @@ class UnsubMail extends UnsubMethod {
    * @returns {any} - Method details, including type and address.
    */
   getMethodDetails() {
-    return { method: 'Email', address: this.emailAddress };
+    return { method: 'Email', address: this.email.pathname };
   }
 }
 
@@ -466,7 +443,7 @@ class UnsubMail extends UnsubMethod {
 class UnsubWeb extends UnsubMethod {
   /**
    * Constructor for UnsubWeb.
-   * @param {string} link - The web link to visit for unsubscribing.
+   * @param {URL} link - The web link to visit for unsubscribing.
    */
   constructor(link) {
     super();
@@ -480,7 +457,7 @@ class UnsubWeb extends UnsubMethod {
   async call() {
     try {
       await messenger.windows.create({
-        url: this.link,
+        url: this.link.href,
         type: 'popup',
       });
 
@@ -496,7 +473,7 @@ class UnsubWeb extends UnsubMethod {
    * @returns {any} - Method details, including type and address.
    */
   getMethodDetails() {
-    return { method: 'Browser', address: this.link };
+    return { method: 'Browser', address: this.link.href };
   }
 }
 
@@ -557,17 +534,15 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
       console_log('Method', func);
       if (func) {
         return func.getMethodDetails();
-      } else {
-        return { method: 'NONE' };
       }
+      return { method: 'NONE' };
     } else if (messageFromPopup.unsubscribe === true) {
       console_log('User chose to unsubscribe from the mailing list');
       const out = await funcCache.get(messageId).call();
       if (out) {
         return { response: 'Unsubscribed' };
-      } else {
-        return { response: 'Error' };
       }
+      return { response: 'Error' };
     } else if (messageFromPopup.cancel === true) {
       console_log('User canceled the unsubscribe action.');
       return { response: 'Canceled' };
@@ -638,23 +613,21 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
           messageIds.push(messageFromPopup.messageId);
         }
 
-        if (messageIds.length > 0) {
+        if (messageIds.length) {
           console_log('Deleting Selected Messages');
           await messenger.messages.delete(messageIds, false);
           return { response: 'Deleted', count: messageIds.length };
-        } else {
-          console_log('No messages found to delete.');
-          return { response: 'No Messages Found' };
         }
+        console_log('No messages found to delete.');
+        return { response: 'No Messages Found' };
       } catch (error) {
         console_error('Error processing deletion request:', error);
         return { response: 'Error', error: error.message };
       }
     }
-  } else {
-    console_log('Unknown action', messageFromPopup);
-    return false;
   }
+  console_log('Unknown action', messageFromPopup);
+  return false;
 });
 
 // Export module functions and classes for testing if in a Node.js environment
