@@ -1,10 +1,15 @@
 // Assign the mocked messenger object globally to simulate the Thunderbird environment
-global.messenger = require('./__mocks__/messenger.js');
+jest.mock('./__mocks__/messenger.js');
+
+const messenger = require('./__mocks__/messenger.js');
+
+// Assign the mocked messenger object globally to simulate the Thunderbird environment
+global.messenger = messenger;
 
 const { JSDOM } = require('jsdom');
 // Mock DOMParser using JSDOM
 global.DOMParser = class {
-  parseFromString(string, contentType) {
+  parseFromString(string, _contentType) {
     const { window } = new JSDOM(string);
     return window.document;
   }
@@ -17,7 +22,6 @@ jest.spyOn(global.console, 'error').mockImplementation((...args) => {
 const { parseMessage } = require('./mailParserUtils.js');
 const {
   searchUnsub,
-  UnsubMethod,
   UnsubMail,
   UnsubWeb,
   UnsubPost,

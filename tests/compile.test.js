@@ -97,9 +97,7 @@ describe('Build script consistency tests', () => {
       } else {
         // Compare the new build with the baseline
         const areSame = compareDirectories(outputExtracted, baselineDir);
-        if (!areSame) {
-          throw new Error(`Build output differs for ${script.name}`);
-        }
+        expect(areSame).toBe(true);
       }
     }
   );

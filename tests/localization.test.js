@@ -40,15 +40,13 @@ describe('Locale Messages Test', () => {
 
         // Check if the key exists
         expect(messageObject).toBeDefined();
-        if (messageObject) {
-          // Check if 'message' field exists and is non-empty
-          expect(messageObject.message).toBeDefined();
-          expect(messageObject.message).not.toBe('');
+        // Check if 'message' field exists and is non-empty
+        expect(messageObject.message).toBeDefined();
+        expect(messageObject.message).not.toBe('');
 
-          // Check if 'description' field exists and is non-empty
-          expect(messageObject.description).toBeDefined();
-          expect(messageObject.description).not.toBe('');
-        }
+        // Check if 'description' field exists and is non-empty
+        expect(messageObject.description).toBeDefined();
+        expect(messageObject.description).not.toBe('');
       });
     });
   });

@@ -83,11 +83,11 @@ async function parseMessage(text) {
 
   function parseLink(value) {
     let values = [];
-    if (value.hasOwnProperty('url')) {
+    if ('url' in value) {
       values.push('<' + value.url + '>');
     }
 
-    if (value.hasOwnProperty('mail')) {
+    if ('mail' in value) {
       values.push('<mailto:' + value.mail + '>');
     }
 
@@ -104,16 +104,16 @@ async function parseMessage(text) {
       }
       return out;
     } else if (typeof value === 'object') {
-      if (value.hasOwnProperty('value')) {
+      if ('value' in value) {
         return value.value;
-      } else if (value.hasOwnProperty('text')) {
+      } else if ('text' in value) {
         return value.text;
-      } else if (value.hasOwnProperty('url') || value.hasOwnProperty('mail')) {
+      } else if ('url' in value || 'mail' in value) {
         return parseLink(value);
-      } else {
-        return parseHeaders(key, value);
       }
+      return parseHeaders(key, value);
     }
+    return null;
   }
 
   function parseHeaders(superKey, headersMap) {
@@ -178,7 +178,7 @@ async function parseMessage(text) {
     }
 
     // Handle multipart content
-    if (part.childNodes && part.childNodes.length > 0) {
+    if (part.childNodes && part.childNodes.length) {
       messagePart.parts = [];
       part.childNodes.forEach((child, index) => {
         messagePart.parts.push(

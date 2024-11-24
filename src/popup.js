@@ -257,15 +257,19 @@ function getDeleteFunc(
       let message_obj = {};
       switch (type) {
         case 'deleteAllNameAddrButton':
-          message_obj['name'] = name;
+          message_obj.name = name;
+        // fall through
         case 'deleteAllAddrButton':
-          message_obj['sender'] = sender;
+          message_obj.sender = sender;
+        // fall through
         case 'deleteAllDomainButton':
-          message_obj['domain'] = domain;
+          message_obj.domain = domain;
+        // fall through
         case 'deleteOneButton':
-          message_obj['delete'] = true;
+          message_obj.delete = true;
+        // fall through
         default:
-          message_obj['messageId'] = message.id;
+          message_obj.messageId = message.id;
       }
 
       statusText.textContent = messenger.i18n.getMessage('statusTextDeleting');
