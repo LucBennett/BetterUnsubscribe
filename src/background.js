@@ -563,7 +563,7 @@ function handleGetMethod(messageId) {
 /**
  * Executes the unsubscribe operation.
  * @param {number} messageId - The ID of the message.
- * @returns {object} - Response indicating the result of the unsubscribe operation.
+ * @returns {Promise<object>} - Response indicating the result of the unsubscribe operation.
  */
 async function handleUnsubscribe(messageId) {
   console_log('User chose to unsubscribe from the mailing list');
@@ -584,7 +584,7 @@ function handleCancel() {
 /**
  * Handles the deletion of messages based on provided criteria.
  * @param {object} messageFromPopup - The message data containing deletion criteria.
- * @returns {object} - Response indicating the result of the deletion operation.
+ * @returns {Promise<object>} - Response indicating the result of the deletion operation.
  */
 async function handleDelete(messageFromPopup) {
   console_log(messageFromPopup);
@@ -608,7 +608,7 @@ async function handleDelete(messageFromPopup) {
 /**
  * Collects message IDs to delete based on the provided criteria.
  * @param {object} messageFromPopup - The message data containing deletion criteria.
- * @returns {Array<number>} - An array of message IDs to delete.
+ * @returns {Promise<Array<number>>} - An array of message IDs to delete.
  */
 async function collectMessageIdsToDelete(messageFromPopup) {
   let messageIds = [];
