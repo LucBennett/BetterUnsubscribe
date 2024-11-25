@@ -125,6 +125,9 @@ async function parseMessage(text) {
     for (let [key, value] of headersMap) {
       //let value = headersMap[key];
       //console.log(key,typeof value);
+      if (key === 'name') {
+        return value;
+      }
       if (superKey) {
         key = superKey + '-' + key;
       }
