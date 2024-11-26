@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Regex to match and parse email addresses with optional name prefix.
   const addressRegex = new RegExp(
-    '^("?([\\w\\s\'\\-]+)"?\\s+)?<?([\\w._%+-]+)@([\\w.-]+\\.[a-zA-Z]{2,})>?$'
+    '^("?([^"]+)"?\\s+)?<?([\\w._%+-]+)@([\\w.-]+\\.[a-zA-Z]{2,})>?$'
   );
   const match = author.match(addressRegex);
   if (match) {
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     domain = match[4];
     console_log(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
   } else {
-    console_error('Invalid email format');
+    console_error(`Invalid email format: ${author}`);
   }
 
   // Display the author's email in the UI.
