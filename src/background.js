@@ -542,10 +542,9 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
     return handleCancel();
   } else if (messageFromPopup.delete === true) {
     return await handleDelete(messageFromPopup);
-  } else {
-    console_log('Unknown action', messageFromPopup);
-    return false;
   }
+  console_log('Unknown action', messageFromPopup);
+  return false;
 });
 
 /**
