@@ -1,23 +1,17 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <!-- Meta charset to define character encoding -->
     <meta charset="UTF-8" />
-    <!-- Page title with internationalization support -->
     <title data-i18n="unsubscribeTitle">Unsubscribe</title>
-    <!-- Link to external stylesheet for page styling -->
     <link rel="stylesheet" href="styles.css" />
   </head>
-
-  <body class="light-theme">
-    <!-- Main prompt for user action, with internationalization support for text content -->
+  <body>
     <h3 id="emailText" data-i18n="emailText">
       Would you like to unsubscribe from this mailing list?
       <br />
-      "John Doe" &ltJohn.Doe@example.com&gt
+      "John Doe" &lt;John.Doe@example.com&gt;
     </h3>
 
-    <!-- Button for confirming unsubscription, with accessibility attributes -->
     <button
       id="unsubscribeButton"
       class="button"
@@ -26,7 +20,6 @@
     >
       Unsubscribe
     </button>
-    <!-- Button for canceling the operation, with accessibility attributes -->
     <button
       id="cancelButton"
       class="button"
@@ -36,13 +29,7 @@
       Cancel
     </button>
 
-    <!-- Container for delete options, with dropdown behavior controlled via data attributes -->
-    <div
-      id="deleteDiv"
-      class="button-delete button-dropdown"
-      data-dropdownstate="closed"
-    >
-      <!-- Button that triggers the display of delete options -->
+    <div id="deleteDiv" class="button-delete button-dropdown">
       <button
         id="deleteButton"
         class="button"
@@ -52,9 +39,7 @@
         Delete ▼
       </button>
       <div>
-        <!-- List of delete options -->
         <ul id="dropdownList">
-          <!-- Individual list items representing different delete options -->
           <li id="deleteOneButton" data-i18n="deleteOneButton">
             Delete just this
           </li>
@@ -71,31 +56,19 @@
       </div>
     </div>
 
-    <!-- Status text element to display feedback to the user, with ARIA role for accessibility -->
-    <h4 id="statusText" role="tab"></h4>
+    <h4 id="statusText" role="status"></h4>
 
-    <!-- Details element to toggle additional information visibility -->
     <details id="detailsDropDown">
-      <!-- Summary section for the details element, with internationalization and ARIA attributes -->
-      <summary data-i18n="detailsSummary" aria-expanded="false">
-        More details
-      </summary>
-      <!-- Paragraph for general description or additional text -->
+      <summary data-i18n="detailsSummary">More details</summary>
       <p id="detailsText">
-        <!-- Placeholder content; dynamically populated by JavaScript -->
         When you click "Unsubscribe", a browser window will open and will visit
         the following URL:
       </p>
-      <!-- Container for dynamically inserted code block; overflow control for long content -->
       <div class="code-container">
-        <code id="dynamicCodeBlock">
-          <!-- Example URL to be replaced dynamically by JavaScript -->
-          https://unsubscribable.example.com
-        </code>
+        <code id="dynamicCodeBlock">https://unsubscribable.example.com</code>
       </div>
     </details>
 
-    <!-- JavaScript for internationalization and core functionality -->
     <script src="i18n.js"></script>
     <script src="popup.js"></script>
   </body>
