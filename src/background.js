@@ -28,10 +28,10 @@ function console_error() {
  */
 messenger.messageDisplay.onMessageDisplayed.addListener(
   async (tab, message) => {
-    console_log('Message displayed');
-    await messenger.messageDisplayAction.disable(); // Disable action button until processing is complete
-    if (message) {
-      try {
+    try {
+      console_log('Message displayed');
+      await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
+      if (message) {
         let value;
 
         if (funcCache.has(message.id)) {
@@ -45,11 +45,11 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
         }
 
         if (value !== null) {
-          await messenger.messageDisplayAction.enable(); // Enable action button if unsubscribe info is found
+          await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
         }
-      } catch (error) {
-        console_error(error);
       }
+    } catch (error) {
+      console_error(error);
     }
   }
 );
