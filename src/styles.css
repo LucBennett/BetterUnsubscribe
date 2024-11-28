@@ -94,18 +94,19 @@ p {
 /* Dropdown list styles including positioning, list reset, padding, and box-shadow. */
 .button-dropdown ul {
   position: absolute;
-  right: 80%;
-  left: auto;
-  max-width: 200%;
-  top: -150%;
   list-style: none;
+  margin-top: -1em;
   padding: 0;
   z-index: 100;
+  right: -3em;
+  width: 200%;
   border-radius: 4px;
   white-space: nowrap;
   transition:
     max-height 0.5s,
     padding 0.5s ease-in-out;
+  max-height: 35vh; /*make scrollable*/
+  overflow-y: auto;
   background-color: #ffffff; /* Light theme dropdown background */
   border: 1px solid #dcdcdc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -113,8 +114,7 @@ p {
 
 /* Styles for individual dropdown list items, including padding and border properties. */
 .button-dropdown ul li {
-  font-size: 14px;
-  padding: 0.6em 0.8em;
+  padding: 0.5em;
   color: #1a1a1a; /* Light theme dropdown text */
   border-top: 1px solid #dcdcdc;
   overflow-x: scroll;
