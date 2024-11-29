@@ -5,7 +5,8 @@
   "scripts": {
     "test": "jest",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "compile": "node compile.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
