@@ -26,12 +26,46 @@ You can download the latest version of BetterUnsubscribe [here](https://github.c
    - **Windows (with .NET)**: Run `compile.ps1` (requires PowerShell and .NET).
    - **Windows (with 7z/zip)**: Run `compile-z.ps1` (requires PowerShell and 7z or zip installed).
 
+You can also compile the project using:
+
+```bash
+npm run compile
+```
+
 ## Installation Instructions
 
 1. Open **Thunderbird**.
 2. Navigate to **Menu** (hamburger icon) -> **Add-ons and Themes**.
 3. Click **Tools for Add-ons** (gear icon) -> **Install Add-on From File**.
 4. Select the `BetterUnsubscribe.xpi` file to install it.
+
+## Development Workflow
+
+To ensure a consistent development workflow, use the following tools and commands:
+
+### Prettier (Code Formatter)
+
+To format the codebase, run:
+
+```bash
+npm run format
+```
+
+### ESLint (Code Linter)
+
+To lint the codebase for potential issues, run:
+
+```bash
+npm run lint
+```
+
+### Compiling
+
+To compile the project, run:
+
+```bash
+npm run compile
+```
 
 ## Warning
 
@@ -52,9 +86,11 @@ Automated tests are provided to ensure BetterUnsubscribe works as expected. To r
    This will install the necessary packages defined in `package.json`.
 
 2. **Run the tests**: Once the dependencies are installed, run the following command to execute the test suite:
+
    ```bash
-   npm test
+   npm run test
    ```
+
    This will test the functionality of BetterUnsubscribe and give feedback on any issues.
 
 Remember to run the tests after making changes to ensure everything functions as intended.
