@@ -87,16 +87,16 @@ p {
 }
 
 .button-dropdown ul {
+  top: 50%;
+  right: -50%;
+  max-height: 34vh;
+  width: 200%;
   position: absolute;
   list-style: none;
-  margin-top: -1em;
   padding: 0;
   z-index: 100;
-  right: -3em;
-  width: 200%;
   border-radius: 4px;
   white-space: nowrap;
-  max-height: 30vh;
   overflow-y: auto;
   background-color: #fff;
   border: 1px solid #dcdcdc;
