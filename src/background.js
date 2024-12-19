@@ -115,7 +115,7 @@ async function searchUnsub(selectedMessage) {
  * @returns {URL|null} - The extracted HTTPS link if found, otherwise null.
  */
 function extractHttpsLink(header) {
-  const httpsLinkMatch = header.match(/(https?:\/\/[^>]+)/);
+  const httpsLinkMatch = header.match(/<(https?:\/\/[^>]+)>/);
   return httpsLinkMatch ? new URL(httpsLinkMatch[1]) : null;
 }
 
@@ -126,7 +126,7 @@ function extractHttpsLink(header) {
  * @returns {URL|null} - The extracted mailto link if found, otherwise null.
  */
 function extractMailtoLink(header) {
-  const emailMatch = header.match(/<(mailto:[^>]+)/i);
+  const emailMatch = header.match(/<(mailto:[^>]+)>/i);
   if (emailMatch) {
     return new URL(emailMatch[1].replace(/^mailto:\/*/, 'mailto:'));
   }

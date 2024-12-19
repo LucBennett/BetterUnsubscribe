@@ -359,4 +359,40 @@ describe('searchUnsub', () => {
 
     expect(unsubMethod).toBeNull();
   });
+
+  test('should return UnsubPost when a valid list-unsubscribe-post header and mailto and HTTPS links are found', async () => {
+    // Mock the message with 'list-unsubscribe' and 'list-unsubscribe-post' headers containing valid data
+    const fullMessage = {
+      headers: {
+        'list-unsubscribe': [
+          "'<mailto:unsubscribe@send.reviewmgr.com?subject=http://track.reviewmgr.com/mt/u/PATH>,<https://u42156316.ct.sendgrid.net/lu/unsubscribe?oc=DATA>",
+        ],
+        'list-unsubscribe-post': ['One-Click'],
+      },
+    };
+
+    const messageHeader = {
+      id: 6,
+      subject: 'Test Subject',
+      recipients: ['user5@example.com'],
+      ccList: [],
+      bccList: [],
+      folder: { accountId: 'account5' },
+    };
+
+    // Mock the messenger methods to return the mocked fullMessage and messageHeader
+    messenger.messages.getFull.mockResolvedValue(fullMessage);
+    messenger.messages.get.mockResolvedValue(messageHeader);
+
+    const result = await searchUnsub(messageHeader);
+
+    const normalizeUrl = (url) => url.replace(/\/$/, '');
+
+    // Expect the result to be an instance of UnsubPost
+    expect(result).toBeInstanceOf(UnsubPost);
+    expect(normalizeUrl(result.weblink.href)).toBe(
+      'https://u42156316.ct.sendgrid.net/lu/unsubscribe?oc=DATA'
+    );
+    expect(result.command).toBe('One-Click');
+  });
 });
