@@ -95,6 +95,11 @@ Automated tests are provided to ensure BetterUnsubscribe works as expected. To r
 
 Remember to run the tests after making changes to ensure everything functions as intended.
 
+## Todo
+
+- [ ] Table view for unsubscribe links
+- [ ] Support for other languages when detecting embedded links
+
 ## Translations
 
 A Brazilian Portuguese translation was contributed by [dataserver](https://github.com/dataserver).
