@@ -107,3 +107,9 @@ A Brazilian Portuguese translation was contributed by [dataserver](https://githu
 ## Icon Credits
 
 The icon was created by [freepik](https://www.freepik.com) and is available on [FlatIcon](https://www.flaticon.com/free-icon/email_121931).
+
+## Support This Project ❤️
+
+If you find this project useful, consider donating to support development:
+
+[![Buy me a coffee!](https://img.shields.io/badge/Donate-PayPal-blue.svg)](https://paypal.me/LucBenn)
