@@ -1,4 +1,4 @@
-# BetterUnsubscribe
+# ![icon](src/icons/email_48x48_inverted.png) BetterUnsubscribe
 
 #### A Modern Rewrite of [Unsubscribe](https://addons.thunderbird.net/en-us/thunderbird/addon/unsub/) by NilsKr33, Eicke Godehardt, and Andrej Korinth, Now with Enhanced Features
 

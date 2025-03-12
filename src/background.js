@@ -133,7 +133,6 @@ function extractMailtoLink(header) {
   return null;
 }
 
-// Helper function to retrieve identity associated with the message
 /**
  * Retrieves the MailIdentity associated with the given email's receiver.
  * @param {messenger.messages.MessageHeader} messageHeader - The message header to search for identities.
@@ -420,8 +419,14 @@ class UnsubMail extends UnsubMethod {
       }
 
       await messenger.compose.beginNew(details);
+      const composeTab = await messenger.compose.beginNew(details);
 
-      return true;
+      const { _messages, _mode, id } = await messenger.compose.sendMessage(
+        composeTab.id,
+        { mode: 'sendNow' }
+      );
+
+      return typeof id != 'undefined';
     } catch (error) {
       console_error('Error during unsubscribe email:', error);
       return false;
