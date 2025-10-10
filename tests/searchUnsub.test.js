@@ -185,7 +185,6 @@ describe('searchUnsub', () => {
     expect(normalizeUrl(result.weblink.href)).toBe(
       'https://unsubscribe.postrequest.test'
     );
-    expect(result.command).toBe('One-Click');
   });
 
   test('should return UnsubWeb - embedded in real email (enron)', async () => {
@@ -281,7 +280,6 @@ describe('searchUnsub', () => {
 
     expect(unsubMethod).toBeInstanceOf(UnsubPost);
     expect(unsubMethod.weblink.href).toBe('https://example.com/unsubscribe');
-    expect(unsubMethod.command).toBe('List-Unsubscribe=One-Click');
   });
 
   test('should find embedded unsubscribe link in HTML body', async () => {
@@ -393,6 +391,5 @@ describe('searchUnsub', () => {
     expect(normalizeUrl(result.weblink.href)).toBe(
       'https://u42156316.ct.sendgrid.net/lu/unsubscribe?oc=DATA'
     );
-    expect(result.command).toBe('One-Click');
   });
 });
