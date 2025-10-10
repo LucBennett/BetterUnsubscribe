@@ -339,36 +339,40 @@ class UnsubPost extends UnsubMethod {
   }
 
   /**
-   * Executes the unsubscribe action via a POST request.
-   * This implementation follows RFC 8058 (Post request).
-   * @returns {Promise<boolean>} - True if the request is successful, otherwise false.
+   * Executes the unsubscribe action via an HTTP POST request.
+   *
+   * Implements the RFC 8058 "One-Click Unsubscribe" mechanism:
+   * sends a POST request to the provided URL with a form body of
+   * `List-Unsubscribe=One-Click`.
+   *
+   * If the request completes with a non-2xx status code or the fetch
+   * operation fails, this method throws an {@link Error} describing
+   * the reason.
+   *
+   * @async
+   * @throws {Error} If the network request fails or the server responds
+   *         with a non-OK status code.
+   * @returns {Promise<void>} Resolves when the unsubscribe request
+   *          succeeds (HTTP 2xx response).
    */
   async call() {
-    try {
-      console_log('Post to', this.weblink);
+    console_log('Post to', this.weblink);
 
-      const fetchOptions = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'List-Unsubscribe=One-Click',
-      };
+    const fetchOptions = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: 'List-Unsubscribe=One-Click',
+    };
 
-      console_log(fetchOptions);
+    console_log(fetchOptions);
 
-      const response = await fetch(this.weblink, fetchOptions);
-      if (!response.ok) {
-        console_error('Error during unsubscribe request:', response.status);
-        return false;
-      }
-
-      console_log(response);
-      return true;
-    } catch (error) {
-      console_error('Error during unsubscribe request:', error);
-      return false;
+    const response = await fetch(this.weblink, fetchOptions);
+    if (!response.ok) {
+      throw new Error(`Error during unsubscribe request: ${response.status}`);
     }
+    console_log(response);
   }
 
   /**
@@ -397,36 +401,46 @@ class UnsubMail extends UnsubMethod {
   }
 
   /**
-   * Executes the unsubscribe action via an email.
-   * Opens a new compose window with the unsubscribe message.
-   * @returns {Promise<boolean>} - True if the email is successfully composed, otherwise false.
+   * Executes the unsubscribe action by sending an email message.
+   *
+   * Opens a compose window using the Thunderbird Compose API,
+   * pre-filled with the standard "unsubscribe" subject and body,
+   * and sends the message immediately.
+   *
+   * The target address and optional subject line are extracted from
+   * the `mailto:` URL supplied in the `List-Unsubscribe` header.
+   *
+   * If message composition or sending fails, this method throws an
+   * {@link Error} describing the failure.
+   *
+   * @async
+   * @throws {Error} If the compose window cannot be created or the
+   *         message send operation fails.
+   * @returns {Promise<void>} Resolves once the unsubscribe email
+   *          has been successfully sent.
    */
   async call() {
-    try {
-      let details = {
-        to: this.email.pathname,
-        subject: this.email.searchParams.has('subject')
-          ? this.email.searchParams.get('subject')
-          : 'unsubscribe',
-        body: 'Please unsubscribe me from your mailing list. Thank you.',
-      };
+    let details = {
+      to: this.email.pathname,
+      subject: this.email.searchParams.has('subject')
+        ? this.email.searchParams.get('subject')
+        : 'unsubscribe',
+      body: 'Please unsubscribe me from your mailing list. Thank you.',
+    };
 
-      if (this.identity) {
-        details.identityId = this.identity.id;
-      }
+    if (this.identity) {
+      details.identityId = this.identity.id;
+    }
 
-      await messenger.compose.beginNew(details);
-      const composeTab = await messenger.compose.beginNew(details);
+    const composeTab = await messenger.compose.beginNew(details);
 
-      const { _messages, _mode, id } = await messenger.compose.sendMessage(
-        composeTab.id,
-        { mode: 'sendNow' }
-      );
+    const { _messages, _mode, id } = await messenger.compose.sendMessage(
+      composeTab.id,
+      { mode: 'sendNow' }
+    );
 
-      return typeof id != 'undefined';
-    } catch (error) {
-      console_error('Error during unsubscribe email:', error);
-      return false;
+    if (typeof id == 'undefined') {
+      throw new Error('Sent message is undefined');
     }
   }
 
@@ -454,21 +468,26 @@ class UnsubWeb extends UnsubMethod {
   }
 
   /**
-   * Executes the unsubscribe action by opening the web link in a popup window.
-   * @returns {Promise<boolean>} - True if the window is successfully opened, otherwise false.
+   * Executes the unsubscribe action by opening the sender’s
+   * unsubscribe web page in a popup browser window.
+   *
+   * This follows the RFC 2369 "List-Unsubscribe" web-link mechanism.
+   * No network request is made automatically; the user completes
+   * the process manually in the opened window.
+   *
+   * Throws an {@link Error} if the window cannot be created.
+   *
+   * @async
+   * @throws {Error} If the popup window cannot be opened (for example,
+   *         due to permissions or browser restrictions).
+   * @returns {Promise<void>} Resolves once the popup window has been
+   *          successfully opened.
    */
   async call() {
-    try {
-      await messenger.windows.create({
-        url: this.link.href,
-        type: 'popup',
-      });
-
-      return true;
-    } catch (error) {
-      console_error('Error during web unsubscribe:', error);
-      return false;
-    }
+    await messenger.windows.create({
+      url: this.link.href,
+      type: 'popup',
+    });
   }
 
   /**
@@ -569,8 +588,13 @@ function handleGetMethod(messageId) {
 async function handleUnsubscribe(messageId) {
   console_log('User chose to unsubscribe from the mailing list');
   const func = funcCache.get(messageId);
-  const out = await func.call();
-  return out ? { response: 'Unsubscribed' } : { response: 'Error' };
+  try {
+    await func.call();
+    return { response: 'Unsubscribed' };
+  } catch (err) {
+    console_error(err);
+    return { response: 'Failed', error: err.message };
+  }
 }
 
 /**
