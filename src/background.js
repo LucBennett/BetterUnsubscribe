@@ -82,7 +82,7 @@ async function searchUnsub(selectedMessage) {
     if (httpsLink && postCommand) {
       console_log('OneClick Link Found', httpsLink);
       console_log('post', postCommand);
-      return new UnsubPost(httpsLink, postCommand);
+      return new UnsubPost(httpsLink);
     }
 
     if (email) {
@@ -332,12 +332,10 @@ class UnsubPost extends UnsubMethod {
   /**
    * Constructor for UnsubPost.
    * @param {URL} weblink - The web link to send the POST request to.
-   * @param {string} command - The command to be sent in the POST request.
    */
-  constructor(weblink, command) {
+  constructor(weblink) {
     super();
     this.weblink = weblink;
-    this.command = command;
   }
 
   /**
@@ -353,7 +351,6 @@ class UnsubPost extends UnsubMethod {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          'List-Unsubscribe-Post': this.command,
         },
         body: 'List-Unsubscribe=One-Click',
       };
