@@ -54,6 +54,27 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
   }
 );
 
+//IEFE
+(async () => {
+  // 1. Initialize the experiment
+  await messenger.threadPaneButtons.initInjections().catch(e => console_error("mail list buttons init failed!"));
+
+  // 2. Listen for clicks on the injected buttons
+  messenger.threadPaneButtons.onButtonClicked.addListener(async (messageId, buttonId) => {
+    console.log(`Button ${buttonId} clicked for message ${messageId}`);
+
+    // Trigger a popup using the standard windows API
+    // Or fetch the message details using the messenger.messages API
+    let message = await messenger.messages.get(parseInt(messageId));
+    
+    messenger.windows.create({
+      url: `popup.html?subject=${encodeURIComponent(message.subject)}`,
+      type: "popup",
+      width: 300,
+      height: 200
+    });
+  });
+})();
 /**
  * Searches for unsubscribe links and information in the message headers and body.
  * This function scans for standard unsubscribe headers (RFC 2369) and embedded links.

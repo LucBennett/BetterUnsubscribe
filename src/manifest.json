@@ -15,6 +15,7 @@
     "messagesRead",
     "messagesDelete",
     "messagesMove",
+    "scripting",
     "theme",
     "https://*/*"
   ],
@@ -42,5 +43,16 @@
       }
     ]
   },
-  "manifest_version": 2
+  "manifest_version": 2,
+
+  "experiment_apis": {
+    "threadPaneButtons": {
+      "schema": "exxperimentHack/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "script": "exxperimentHack/implementation.js",
+        "paths": [["threadPaneButtons"]]
+      }
+    }
+  }
 }

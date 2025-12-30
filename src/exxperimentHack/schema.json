@@ -1,0 +1,23 @@
+[
+  {
+    "namespace": "threadPaneButtons",
+    "functions": [
+      {
+        "name": "initInjections",
+        "type": "function",
+        "async": true,
+        "parameters": []
+      }
+    ],
+    "events": [
+      {
+        "name": "onButtonClicked",
+        "type": "function",
+        "parameters": [
+          { "name": "messageId", "type": "string" },
+          { "name": "buttonId", "type": "string" }
+        ]
+      }
+    ]
+  }
+]
