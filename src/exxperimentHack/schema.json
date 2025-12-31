@@ -4,6 +4,7 @@
     "functions": [
       {
         "name": "initInjections",
+        "description": "injects the javascript that adds buttons to the messages in the 3pane view",
         "type": "function",
         "async": true,
         "parameters": []
@@ -12,10 +13,19 @@
     "events": [
       {
         "name": "onButtonClicked",
+        "description": "called when a button on a message in the 3pane view is clicked",
         "type": "function",
         "parameters": [
-          { "name": "messageId", "type": "string" },
-          { "name": "buttonId", "type": "string" }
+          {
+            "name": "messageId",
+            "description": "the id of the message correponding to this event (and button)",
+            "type": "integer"
+          },
+          {
+            "name": "buttonId",
+            "description": "the id of the html element of the button that emited this event",
+            "type": "string"
+          }
         ]
       }
     ]
