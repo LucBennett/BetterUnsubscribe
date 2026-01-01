@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   //if the id is passed via url, use it
   const urlParams = new URLSearchParams(document.location.search);
   const mId = urlParams.get('messageId');
-  if(mId){
+  if (mId) {
     message = await messenger.messages.get(parseInt(mId));
   }
   console_log('Message', message.id);

@@ -19,18 +19,18 @@ function console_error() {
   console.error('[BetterUnsubscribe][background.js]', ...arguments);
 }
 
-async function cacheUnsubMethod(message){
+async function cacheUnsubMethod(message) {
   let value = null;
-        if (funcCache.has(message.id)) {
-          // Message is in cache
-          value = funcCache.get(message.id);
-        } else {
-          // Message not in cache, call searchUnsub(message)
-          value = await searchUnsub(message);
-          // Store the result in cache
-          funcCache.set(message.id, value);
-        }
-        return value;
+  if (funcCache.has(message.id)) {
+    // Message is in cache
+    value = funcCache.get(message.id);
+  } else {
+    // Message not in cache, call searchUnsub(message)
+    value = await searchUnsub(message);
+    // Store the result in cache
+    funcCache.set(message.id, value);
+  }
+  return value;
 }
 
 /**
@@ -46,7 +46,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
       console_log('Message displayed');
       await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
       if (message) {
-        if (await cacheUnsubMethod(message) !== null) {
+        if ((await cacheUnsubMethod(message)) !== null) {
           await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
         }
       }
@@ -56,24 +56,26 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
   }
 );
 
-
 /**
  * listen for a button being clicked in the table view and search for the mail and open a popup
  * @param {integer} rowNo - the number of the row in the table view whose button was clicked
  */
-  messenger.threadPaneButtons.onButtonClicked.addListener(async (rowNo) => {
-    console_log(`Button in row ${rowNo} clicked`);
+messenger.threadPaneButtons.onButtonClicked.addListener(async (rowNo) => {
+  console_log(`Button in row ${rowNo} clicked`);
 
-    // Trigger a popup using the standard windows API
-    let message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
-    await cacheUnsubMethod(message);
-    messenger.windows.create({
-      url: `popup.html?messageId=${message.id}`,
-      type: "popup",
-      width: 500,
-      height: 300
-    });
+  // Trigger a popup using the standard windows API
+  let message = await getNthMessage(
+    messenger.mailTabs.getListedMessages(),
+    rowNo
+  );
+  await cacheUnsubMethod(message);
+  messenger.windows.create({
+    url: `popup.html?messageId=${message.id}`,
+    type: 'popup',
+    width: 500,
+    height: 300,
   });
+});
 
 /**
  * listen for a button being added to the table view. these buttons are disabled by default.
@@ -81,25 +83,30 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * do this before calling initInjections so currently visible mails are also handeled
  * @param {integer} rowNo - the number of the row in the table view whose button was added to the dom
  */
-  messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
-    (async function(){
-      // find message
-      const message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
-      //see if message has unsub method
-      if(await cacheUnsubMethod(message)){
+messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
+  (async function () {
+    // find message
+    const message = await getNthMessage(
+      messenger.mailTabs.getListedMessages(),
+      rowNo
+    );
+    //see if message has unsub method
+    if (await cacheUnsubMethod(message)) {
       //if yes, enable button
-        await messenger.threadPaneButtons.enableButton(rowNo);
-      }
-    })();
-  });
+      await messenger.threadPaneButtons.enableButton(rowNo);
+    }
+  })();
+});
 
-  /**
+/**
  * IEFE for injecting the js into the dom that adds buttons (hacky af)
  * init after adding listener to onButtonProduced so currently visible mails are also handeled
  */
 (async () => {
   // 1. Initialize the experiment
-  await messenger.threadPaneButtons.initInjections().catch(e => console_error("mail list buttons init failed!"));
+  await messenger.threadPaneButtons
+    .initInjections()
+    .catch((e) => console_error('mail list buttons init failed!'));
 })();
 
 /**
