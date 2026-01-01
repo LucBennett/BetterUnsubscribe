@@ -20,7 +20,7 @@ function console_error() {
 }
 
 async function cacheUnsubMethod(message){
-  let value;
+  let value = null;
         if (funcCache.has(message.id)) {
           // Message is in cache
           value = funcCache.get(message.id);
@@ -56,12 +56,17 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
   }
 );
 
-//IEFE
+/**
+ * IEFE for injecting the js into the dom that adds buttons (hacky af)
+ */
 (async () => {
   // 1. Initialize the experiment
   await messenger.threadPaneButtons.initInjections().catch(e => console_error("mail list buttons init failed!"));
+})();
 
-  // 2. Listen for clicks on the injected buttons
+/**
+ * listen for a button being clicked in the table view and search for the mail and open a popup
+ */
   messenger.threadPaneButtons.onButtonClicked.addListener(async (messageId, buttonId) => {
     console.log(`Button ${buttonId} clicked for message ${messageId}`);
 
@@ -75,7 +80,23 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
       height: 300
     });
   });
-})();
+
+/**
+ * listen for a button being added to the table view. these buttons are disabled by default.
+ * if the corr. email has an unsub method, enable the button
+ */
+  messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
+    console.log(`Button in row ${rowNo} added to dom`);
+
+    // find message
+    const message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
+    //see if message has unsub method
+    if(await cacheUnsubMethod(message)){
+    //if yes, enable button
+      await messenger.threadPaneButtons.enableButton(rowNo);
+    }
+  });
+
 /**
  * Searches for unsubscribe links and information in the message headers and body.
  * This function scans for standard unsubscribe headers (RFC 2369) and embedded links.

@@ -8,6 +8,19 @@
         "type": "function",
         "async": true,
         "parameters": []
+      },
+      {
+        "name": "enableButton",
+        "description": "enables the button in a specific row, should only be called if the corresponding mail has an unsub method.",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "rowNo",
+            "description": "the row for which the button should be enabled",
+            "type": "integer"
+          }
+        ]
       }
     ],
     "events": [
@@ -25,6 +38,18 @@
             "name": "buttonId",
             "description": "the id of the html element of the button that emited this event",
             "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "onButtonProduced",
+        "description": "fired whenever a button is added to the dom. Button is disabled and must be enabled by a call to enable button (if the mail has an unsub method)",
+        "type": "function",
+        "parameters": [
+          {
+            "name": "rowNo",
+            "description": "the number of the mail in the current list, meaning the number of the row to which this button was added.",
+            "type": "integer"
           }
         ]
       }

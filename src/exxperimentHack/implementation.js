@@ -1,4 +1,15 @@
 //core logic
+function get3panewindow(services){
+          let e = services.wm.getEnumerator("mail:3pane");
+          while (e.hasMoreElements()) {
+            let win = e.getNext();
+            // In Supernova, we might need to dig into the tab's chromeBrowser
+            for(let i = 0; i < win.length; i++){
+              if(win[i].location.href === "about:3pane") return win[i];
+            }
+          }
+}
+
 async function initInjectionsImpl(Services, eventPasser){
  // Monitor windows for about:3pane
           const observer = {
@@ -42,6 +53,7 @@ async function initInjectionsImpl(Services, eventPasser){
           const modifyRow = (row, win) => {
             // Get message key/ID from the row attribute
             const rowId = row.getAttribute("id");
+            const rowNo = parseInt(rowId.match(/\d+$/)[0]);
             
             // Find a cell to inject into (e.g., the subject cell)
             const subjectCell = row.querySelector(".thread-card-subject-container");
@@ -53,39 +65,50 @@ async function initInjectionsImpl(Services, eventPasser){
             let btnId = `${rowId}-btn`;
             btn.setAttribute("id", btnId);
             btn.style.marginLeft = "5px";
+            btn.style.display = "none";
             
             btn.onclick = (e) => {
               e.stopPropagation(); // Don't select the row
               // Fire the event back to background.js
-              eventPasser.pass(parseInt(rowId.match(/\d+$/)[0]), btnId);
+              eventPasser.pass(rowNo, btnId); //notify background.js about button click
             };
 
             subjectCell.appendChild(btn);
+            eventPasser.buttonPass(rowNo); //notify background.js about adding of new button
             subjectCell.style.display = "flex";
           };
 
           // Initialize for existing windows
-          let e = Services.wm.getEnumerator("mail:3pane");
-          while (e.hasMoreElements()) {
-            let win = e.getNext();
-            // In Supernova, we might need to dig into the tab's chromeBrowser
-            for(let i = 0; i < win.length; i++){
-              if(win[i].location.href === "about:3pane") injectLogic(win[i]);
-            }
-          }
+          injectLogic(get3panewindow(Services));
           
           Services.wm.addListener(observer);
+}
+
+async function enableButtonImpl(services, rowNo){
+  let win = get3panewindow(services);
+  let el = win.document.querySelector(`#threadTree-row${rowNo}-btn`);
+  if(el){
+    el.style.display = "block";
+  }
 }
 
 
 //generated boilerplate (https://darktrojan.github.io/generator/generator.html)
 var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
+    //hacky object for passing events from the dom to the background. Am pleasantly
+    //surprised that this works but there's probably a better way to do this tbh.
     const eventPasser = {
       callback: null,
+      buttonCallback: null,
       pass(){
         if(this.callback){
           this.callback(...arguments);
+        }
+      },
+      buttonPass(){
+        if(this.buttonCallback){
+          this.buttonCallback(...arguments);
         }
       }
     };
@@ -95,6 +118,9 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
       threadPaneButtons: {
         async initInjections() {
           await initInjectionsImpl(Services, eventPasser);
+        },
+        async enableButton(rowNo) {
+          await enableButtonImpl(Services, rowNo);
         },
         onButtonClicked: new ExtensionCommon.EventManager({
           context,
@@ -109,6 +135,22 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
            return () => {
              // Return a way to unregister the listener.
              eventPasser.callback = null;
+           };
+          },
+        }).api(),
+        onButtonProduced: new ExtensionCommon.EventManager({
+          context,
+          name: "threadPaneButtons.onButtonProduced",
+          register(fire) {
+            let listener = (rowNo) => { 
+              // Fire any listeners registered with addListener.
+              fire.async(rowNo);
+           };
+           // Register the listener.
+           eventPasser.buttonCallback = listener;
+           return () => {
+             // Return a way to unregister the listener.
+             eventPasser.buttonCallback = null;
            };
           },
         }).api()
