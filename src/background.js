@@ -19,6 +19,20 @@ function console_error() {
   console.error('[BetterUnsubscribe][background.js]', ...arguments);
 }
 
+async function cacheUnsubMethod(message){
+  let value;
+        if (funcCache.has(message.id)) {
+          // Message is in cache
+          value = funcCache.get(message.id);
+        } else {
+          // Message not in cache, call searchUnsub(message)
+          value = await searchUnsub(message);
+          // Store the result in cache
+          funcCache.set(message.id, value);
+        }
+        return value;
+}
+
 /**
  * Event listener for message display events.
  * Disables the action button initially and checks if unsubscribe information is available.
@@ -32,19 +46,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
       console_log('Message displayed');
       await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
       if (message) {
-        let value;
-
-        if (funcCache.has(message.id)) {
-          // Message is in cache
-          value = funcCache.get(message.id);
-        } else {
-          // Message not in cache, call searchUnsub(message)
-          value = await searchUnsub(message);
-          // Store the result in cache
-          funcCache.set(message.id, value);
-        }
-
-        if (value !== null) {
+        if (await cacheUnsubMethod(message) !== null) {
           await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
         }
       }
@@ -64,14 +66,13 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
     console.log(`Button ${buttonId} clicked for message ${messageId}`);
 
     // Trigger a popup using the standard windows API
-    // Or fetch the message details using the messenger.messages API
-    let message = await messenger.messages.get(parseInt(messageId));
-    
+    let message = await getNthMessage(messenger.mailTabs.getListedMessages(), messageId);
+    await cacheUnsubMethod(message);
     messenger.windows.create({
-      url: `popup.html?subject=${encodeURIComponent(message.subject)}`,
+      url: `popup.html?messageId=${message.id}`,
       type: "popup",
-      width: 300,
-      height: 200
+      width: 500,
+      height: 300
     });
   });
 })();
@@ -537,6 +538,23 @@ async function* getMessages(list) {
       yield message;
     }
   }
+}
+
+/**
+ * Retrieves the nth message (0-indexed) from the getMessages async generator.
+ * @param {Promise<object>} list - The initial paginated list promise.
+ * @param {number} n - The index of the message to retrieve.
+ * @returns {Promise<object|null>} - The nth message or null if not found.
+ */
+async function getNthMessage(list, n) {
+  let count = 0;
+  for await (const message of getMessages(list)) {
+    if (count === n) {
+      return message;
+    }
+    count++;
+  }
+  return null;
 }
 
 /**

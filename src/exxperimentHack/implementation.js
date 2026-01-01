@@ -33,6 +33,11 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
             const threadPane = win.document.querySelector('[is="tree-view-table-body"]');
             if (!threadPane) return;
 
+            //add button to every currently visible mail card
+            for(let c of threadPane.querySelectorAll(".card-layout")){
+              modifyRow(c, win);
+            }
+
             const rowObserver = new win.MutationObserver((mutations) => {
               
               for (let mutation of mutations) {
@@ -65,7 +70,7 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
             btn.onclick = (e) => {
               e.stopPropagation(); // Don't select the row
               // Fire the event back to background.js
-              eventPasser.pass(parseInt(rowId.match(/\d$/)[0]), btnId);
+              eventPasser.pass(parseInt(rowId.match(/\d+$/)[0]), btnId);
             };
 
             subjectCell.appendChild(btn);

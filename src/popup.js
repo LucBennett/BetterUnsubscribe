@@ -27,7 +27,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     active: true,
     currentWindow: true,
   });
-  const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+
+  let message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+  //if the id is passed via url, use it
+  const urlParams = new URLSearchParams(document.location.search);
+  const mId = urlParams.get('messageId');
+  if(mId){
+    message = await messenger.messages.get(parseInt(mId));
+  }
   console_log('Message', message.id);
 
   // Retrieve and cache references to various DOM elements for later use.
