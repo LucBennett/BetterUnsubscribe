@@ -15,7 +15,6 @@
     "messagesRead",
     "messagesDelete",
     "messagesMove",
-    "scripting",
     "theme",
     "https://*/*"
   ],
