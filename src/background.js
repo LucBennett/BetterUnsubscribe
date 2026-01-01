@@ -19,6 +19,20 @@ function console_error() {
   console.error('[BetterUnsubscribe][background.js]', ...arguments);
 }
 
+async function cacheUnsubMethod(message) {
+  let value = null;
+  if (funcCache.has(message.id)) {
+    // Message is in cache
+    value = funcCache.get(message.id);
+  } else {
+    // Message not in cache, call searchUnsub(message)
+    value = await searchUnsub(message);
+    // Store the result in cache
+    funcCache.set(message.id, value);
+  }
+  return value;
+}
+
 /**
  * Event listener for message display events.
  * Disables the action button initially and checks if unsubscribe information is available.
@@ -32,19 +46,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
       console_log('Message displayed');
       await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
       if (message) {
-        let value;
-
-        if (funcCache.has(message.id)) {
-          // Message is in cache
-          value = funcCache.get(message.id);
-        } else {
-          // Message not in cache, call searchUnsub(message)
-          value = await searchUnsub(message);
-          // Store the result in cache
-          funcCache.set(message.id, value);
-        }
-
-        if (value !== null) {
+        if ((await cacheUnsubMethod(message)) !== null) {
           await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
         }
       }
@@ -53,6 +55,67 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
     }
   }
 );
+
+/**
+ * cache the first mail tab for lookup later
+ * //TODO: can there be multiple mailtabs in multiple windows?
+ * //      then we need a way to pass the tab id back and forth between implementation.js and background.js,
+ * //      most likely by adjusting schea.json (the api)
+ */
+const thisMailTabPromise = messenger.mailTabs.query().then(a => a[0]);
+
+/**
+ * listen for a button being clicked in the table view and search for the mail and open a popup
+ * @param {integer} rowNo - the number of the row in the table view whose button was clicked
+ */
+messenger.threadPaneButtons.onButtonClicked.addListener(async (rowNo) => {
+  console_log(`Button in row ${rowNo} clicked`);
+
+  // Trigger a popup using the standard windows API
+  let message = await getNthMessage(
+    messenger.mailTabs.getListedMessages((await thisMailTabPromise).id),
+    rowNo
+  );
+  await cacheUnsubMethod(message);
+  messenger.windows.create({
+    url: `popup.html?messageId=${message.id}`,
+    type: 'popup',
+    width: 500,
+    height: 300,
+  });
+});
+
+/**
+ * listen for a button being added to the table view. these buttons are disabled by default.
+ * if the corr. email has an unsub method, enable the button
+ * do this before calling initInjections so currently visible mails are also handeled
+ * @param {integer} rowNo - the number of the row in the table view whose button was added to the dom
+ */
+messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
+  (async function () {
+    // find message
+    const message = await getNthMessage(
+      messenger.mailTabs.getListedMessages((await thisMailTabPromise).id),
+      rowNo
+    );
+    //see if message has unsub method
+    if (await cacheUnsubMethod(message)) {
+      //if yes, enable button
+      await messenger.threadPaneButtons.enableButton(rowNo);
+    }
+  })();
+});
+
+/**
+ * IEFE for injecting the js into the dom that adds buttons (hacky af)
+ * init after adding listener to onButtonProduced so currently visible mails are also handeled
+ */
+(async () => {
+  // 1. Initialize the experiment
+  await messenger.threadPaneButtons
+    .initInjections()
+    .catch((_) => console_error('mail list buttons init failed!'));
+})();
 
 /**
  * Searches for unsubscribe links and information in the message headers and body.
@@ -516,6 +579,23 @@ async function* getMessages(list) {
       yield message;
     }
   }
+}
+
+/**
+ * Retrieves the nth message (0-indexed) from the getMessages async generator.
+ * @param {Promise<object>} list - The initial paginated list promise.
+ * @param {number} n - The index of the message to retrieve.
+ * @returns {Promise<object|null>} - The nth message or null if not found.
+ */
+async function getNthMessage(list, n) {
+  let count = 0;
+  for await (const message of getMessages(list)) {
+    if (count === n) {
+      return message;
+    }
+    count++;
+  }
+  return null;
 }
 
 /**

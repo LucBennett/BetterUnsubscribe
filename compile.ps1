@@ -62,6 +62,7 @@ $files = @(
     "./src/popup.html",
     "./src/popup.js",
     "./src/i18n.js",
+    "./src/exxperimentHack",
     "./src/styles.css"
 )
 
