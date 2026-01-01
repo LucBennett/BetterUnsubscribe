@@ -8,10 +8,14 @@ function get3panewindow(services) {
       if (win[i].location.href === 'about:3pane') return win[i];
     }
   }
+  return null; //couldn't find the win... TODO: handle this better (error?)
 }
 
 async function initInjectionsImpl(Services, eventPasser, context) {
   // Monitor windows for about:3pane
+  //TODO:
+  //this code for observing newly opened windows is untested.
+  //is it even necessary if the main email tab cannot be closed?
   const observer = {
     onOpenWindow(xulWindow) {
       const domWindow = xulWindow

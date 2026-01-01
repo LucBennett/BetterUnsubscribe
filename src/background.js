@@ -106,7 +106,7 @@ messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
   // 1. Initialize the experiment
   await messenger.threadPaneButtons
     .initInjections()
-    .catch((e) => console_error('mail list buttons init failed!'));
+    .catch((_) => console_error('mail list buttons init failed!'));
 })();
 
 /**
