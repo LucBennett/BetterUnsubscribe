@@ -10,7 +10,7 @@ function get3panewindow(services){
           }
 }
 
-async function initInjectionsImpl(Services, eventPasser){
+async function initInjectionsImpl(Services, eventPasser, context){
  // Monitor windows for about:3pane
           const observer = {
             onOpenWindow(xulWindow) {
@@ -70,7 +70,7 @@ async function initInjectionsImpl(Services, eventPasser){
             btn.onclick = (e) => {
               e.stopPropagation(); // Don't select the row
               // Fire the event back to background.js
-              eventPasser.pass(rowNo, btnId); //notify background.js about button click
+              eventPasser.pass(rowNo); //notify background.js about button click
             };
 
             subjectCell.appendChild(btn);
@@ -79,9 +79,17 @@ async function initInjectionsImpl(Services, eventPasser){
           };
 
           // Initialize for existing windows
-          injectLogic(get3panewindow(Services));
+          const panewin = get3panewindow(Services);
+          injectLogic(panewin);
           
           Services.wm.addListener(observer);
+
+          //clean up all the stateful injections by reloading the window
+          context.callOnClose({
+            close() {
+              panewin.location.reload();
+            }
+          });
 }
 
 async function enableButtonImpl(services, rowNo){
@@ -117,7 +125,7 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
     return {
       threadPaneButtons: {
         async initInjections() {
-          await initInjectionsImpl(Services, eventPasser);
+          await initInjectionsImpl(Services, eventPasser, context);
         },
         async enableButton(rowNo) {
           await enableButtonImpl(Services, rowNo);
@@ -126,9 +134,9 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
           context,
           name: "threadPaneButtons.onButtonClicked",
           register(fire) {
-            let listener = (rowId, btnId) => { 
+            let listener = (rowNo) => { 
               // Fire any listeners registered with addListener.
-              fire.async(rowId, btnId);
+              fire.async(rowNo);
            };
            // Register the listener.
            eventPasser.callback = listener;

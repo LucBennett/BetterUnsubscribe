@@ -66,12 +66,13 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
 
 /**
  * listen for a button being clicked in the table view and search for the mail and open a popup
+ * @param {integer} rowNo - the number of the row in the table view whose button was clicked
  */
-  messenger.threadPaneButtons.onButtonClicked.addListener(async (messageId, buttonId) => {
-    console.log(`Button ${buttonId} clicked for message ${messageId}`);
+  messenger.threadPaneButtons.onButtonClicked.addListener(async (rowNo) => {
+    console.log(`Button in row ${rowNo} clicked for message`);
 
     // Trigger a popup using the standard windows API
-    let message = await getNthMessage(messenger.mailTabs.getListedMessages(), messageId);
+    let message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
     await cacheUnsubMethod(message);
     messenger.windows.create({
       url: `popup.html?messageId=${message.id}`,
@@ -84,6 +85,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
 /**
  * listen for a button being added to the table view. these buttons are disabled by default.
  * if the corr. email has an unsub method, enable the button
+ * @param {integer} rowNo - the number of the row in the table view whose button was added to the dom
  */
   messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
     console.log(`Button in row ${rowNo} added to dom`);

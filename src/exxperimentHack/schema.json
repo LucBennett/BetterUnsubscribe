@@ -30,14 +30,9 @@
         "type": "function",
         "parameters": [
           {
-            "name": "messageId",
-            "description": "the id of the message correponding to this event (and button)",
+            "name": "rowNo",
+            "description": "the row number of this button and message in the table view.",
             "type": "integer"
-          },
-          {
-            "name": "buttonId",
-            "description": "the id of the html element of the button that emited this event",
-            "type": "string"
           }
         ]
       },
