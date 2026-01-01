@@ -114,7 +114,7 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
           this.callback(...arguments);
         }
       },
-      buttonPass(){
+      async buttonPass(){
         if(this.buttonCallback){
           this.buttonCallback(...arguments);
         }
