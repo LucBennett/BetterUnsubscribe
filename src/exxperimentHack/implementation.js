@@ -1,19 +1,6 @@
-var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
-  getAPI(context) {
-    const eventPasser = {
-      callback: null,
-      pass(){
-        if(this.callback){
-          this.callback(...arguments);
-        }
-      }
-    };
-    const Services = globalThis.Services || 
-      ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
-    return {
-      threadPaneButtons: {
-        async initInjections() {
-          // Monitor windows for about:3pane
+//core logic
+async function initInjectionsImpl(Services, eventPasser){
+ // Monitor windows for about:3pane
           const observer = {
             onOpenWindow(xulWindow) {
               const domWindow = xulWindow.QueryInterface(Ci.nsIInterfaceRequestor)
@@ -88,6 +75,26 @@ var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
           }
           
           Services.wm.addListener(observer);
+}
+
+
+//generated boilerplate (https://darktrojan.github.io/generator/generator.html)
+var threadPaneButtons = class extends ExtensionCommon.ExtensionAPI {
+  getAPI(context) {
+    const eventPasser = {
+      callback: null,
+      pass(){
+        if(this.callback){
+          this.callback(...arguments);
+        }
+      }
+    };
+    const Services = globalThis.Services || 
+      ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
+    return {
+      threadPaneButtons: {
+        async initInjections() {
+          await initInjectionsImpl(Services, eventPasser);
         },
         onButtonClicked: new ExtensionCommon.EventManager({
           context,
