@@ -57,6 +57,14 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
 );
 
 /**
+ * cache the first mail tab for lookup later
+ * //TODO: can there be multiple mailtabs in multiple windows?
+ * //      then we need a way to pass the tab id back and forth between implementation.js and background.js,
+ * //      most likely by adjusting schea.json (the api)
+ */
+const thisMailTabPromise = messenger.mailTabs.query().then(a => a[0]);
+
+/**
  * listen for a button being clicked in the table view and search for the mail and open a popup
  * @param {integer} rowNo - the number of the row in the table view whose button was clicked
  */
@@ -65,7 +73,7 @@ messenger.threadPaneButtons.onButtonClicked.addListener(async (rowNo) => {
 
   // Trigger a popup using the standard windows API
   let message = await getNthMessage(
-    messenger.mailTabs.getListedMessages(),
+    messenger.mailTabs.getListedMessages((await thisMailTabPromise).id),
     rowNo
   );
   await cacheUnsubMethod(message);
@@ -87,7 +95,7 @@ messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
   (async function () {
     // find message
     const message = await getNthMessage(
-      messenger.mailTabs.getListedMessages(),
+      messenger.mailTabs.getListedMessages((await thisMailTabPromise).id),
       rowNo
     );
     //see if message has unsub method
