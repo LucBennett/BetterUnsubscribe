@@ -56,13 +56,6 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
   }
 );
 
-/**
- * IEFE for injecting the js into the dom that adds buttons (hacky af)
- */
-(async () => {
-  // 1. Initialize the experiment
-  await messenger.threadPaneButtons.initInjections().catch(e => console_error("mail list buttons init failed!"));
-})();
 
 /**
  * listen for a button being clicked in the table view and search for the mail and open a popup
@@ -85,6 +78,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
 /**
  * listen for a button being added to the table view. these buttons are disabled by default.
  * if the corr. email has an unsub method, enable the button
+ * do this before calling initInjections so currently visible mails are also handeled
  * @param {integer} rowNo - the number of the row in the table view whose button was added to the dom
  */
   messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
@@ -98,6 +92,15 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
       }
     })();
   });
+
+  /**
+ * IEFE for injecting the js into the dom that adds buttons (hacky af)
+ * init after adding listener to onButtonProduced so currently visible mails are also handeled
+ */
+(async () => {
+  // 1. Initialize the experiment
+  await messenger.threadPaneButtons.initInjections().catch(e => console_error("mail list buttons init failed!"));
+})();
 
 /**
  * Searches for unsubscribe links and information in the message headers and body.
