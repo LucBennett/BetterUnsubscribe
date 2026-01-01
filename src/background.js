@@ -88,13 +88,15 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * @param {integer} rowNo - the number of the row in the table view whose button was added to the dom
  */
   messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
-    // find message
-    const message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
-    //see if message has unsub method
-    if(await cacheUnsubMethod(message)){
-    //if yes, enable button
-      await messenger.threadPaneButtons.enableButton(rowNo);
-    }
+    (async function(){
+      // find message
+      const message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
+      //see if message has unsub method
+      if(await cacheUnsubMethod(message)){
+      //if yes, enable button
+        await messenger.threadPaneButtons.enableButton(rowNo);
+      }
+    })();
   });
 
 /**
