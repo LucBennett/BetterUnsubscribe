@@ -69,7 +69,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * @param {integer} rowNo - the number of the row in the table view whose button was clicked
  */
   messenger.threadPaneButtons.onButtonClicked.addListener(async (rowNo) => {
-    console.log(`Button in row ${rowNo} clicked for message`);
+    console_log(`Button in row ${rowNo} clicked`);
 
     // Trigger a popup using the standard windows API
     let message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
@@ -88,8 +88,6 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * @param {integer} rowNo - the number of the row in the table view whose button was added to the dom
  */
   messenger.threadPaneButtons.onButtonProduced.addListener(async (rowNo) => {
-    console.log(`Button in row ${rowNo} added to dom`);
-
     // find message
     const message = await getNthMessage(messenger.mailTabs.getListedMessages(), rowNo);
     //see if message has unsub method
