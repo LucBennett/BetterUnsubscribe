@@ -15,7 +15,7 @@
     "message": "Unsubscribe",
     "description": "Header of the unsubscribe page"
   },
-  "emailText": {
+  "unsubscribeQuestion": {
     "message": "Would you like to unsubscribe from this mailing list?",
     "description": "Text asking the user if they want to unsubscribe"
   },

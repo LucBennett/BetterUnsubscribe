@@ -6,11 +6,10 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h3 id="emailText" data-i18n="emailText">
+    <h3 data-i18n="unsubscribeQuestion">
       Would you like to unsubscribe from this mailing list?
-      <br />
-      "John Doe" &lt;John.Doe@example.com&gt;
     </h3>
+    <h4 id="nameAddress">"John Doe" &lt;John.Doe@example.com&gt;</h4>
 
     <button
       id="unsubscribeButton"
@@ -40,30 +39,38 @@
       </button>
       <div>
         <ul id="dropdownList">
-          <li id="deleteOneButton">
-            <span class="label" data-i18n="deleteOneButton"
-              >Delete just this</span
-            >
+          <li>
+            <button id="deleteOneButton">
+              <span class="label" data-i18n="deleteOneButton"
+                >Delete just this</span
+              >
+            </button>
           </li>
-          <li id="deleteAllNameAddrButton">
-            <span class="label" data-i18n="deleteAllNameAddrButton"
-              >Delete all from name-addr</span
-            >
-            <span class="scroll-x"
-              >"John Doe" &lt;John.Doe@exampleeeeeeeeeeeeeeeeeee.com&gt;</span
-            >
+          <li>
+            <button id="deleteAllNameAddrButton">
+              <span class="label" data-i18n="deleteAllNameAddrButton"
+                >Delete all from name-addr</span
+              >
+              <span class="scroll-x"
+                >"John Doe" &lt;John.Doe@exampleeeeeeeeeeeeeeeeeee.com&gt;</span
+              >
+            </button>
           </li>
-          <li id="deleteAllAddrButton">
-            <span class="label" data-i18n="deleteAllAddrButton"
-              >Delete all from addr-spec</span
-            >
-            <span class="scroll-x">John.Doe@example.com</span>
+          <li>
+            <button id="deleteAllAddrButton">
+              <span class="label" data-i18n="deleteAllAddrButton"
+                >Delete all from addr-spec</span
+              >
+              <span class="scroll-x">John.Doe@example.com</span>
+            </button>
           </li>
-          <li id="deleteAllDomainButton">
-            <span class="label" data-i18n="deleteAllDomainButton"
-              >Delete all from domain</span
-            >
-            <span class="scroll-x">example.com</span>
+          <li>
+            <button id="deleteAllDomainButton">
+              <span class="label" data-i18n="deleteAllDomainButton"
+                >Delete all from domain</span
+              >
+              <span class="scroll-x">example.com</span>
+            </button>
           </li>
         </ul>
       </div>

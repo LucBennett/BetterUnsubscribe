@@ -15,10 +15,6 @@
     "message": "Disiscriviti",
     "description": "Intestazione della pagina di disiscrizione"
   },
-  "emailText": {
-    "message": "Vuoi disiscriverti da questa mailing list?",
-    "description": "Testo che chiede all'utente se desidera disiscriversi"
-  },
   "unsubscribeButton": {
     "message": "Disiscriviti",
     "description": "Etichetta per il pulsante di disiscrizione"
@@ -28,7 +24,7 @@
     "description": "Etichetta per il pulsante di annullamento"
   },
   "deleteButton": {
-    "message": "Elimina ▼",
+    "message": "Elimina \u00e2\u2013\u00bc",
     "description": "Etichetta per il pulsante di eliminazione con un indicatore a discesa"
   },
   "deleteOneButton": {
@@ -76,15 +72,19 @@
     "description": "Menu a discesa per maggiori dettagli"
   },
   "detailsTextPost": {
-    "message": "Quando fai clic su \"Disiscriviti\", verrà inviata una richiesta POST al seguente URL:",
+    "message": "Quando fai clic su \"Disiscriviti\", verr\u00c3\u00a0 inviata una richiesta POST al seguente URL:",
     "description": "Dettagli per una richiesta POST"
   },
   "detailsTextEmail": {
-    "message": "Quando fai clic su \"Disiscriviti\", verrà redatta un'email al seguente indirizzo:",
+    "message": "Quando fai clic su \"Disiscriviti\", verr\u00c3\u00a0 redatta un'email al seguente indirizzo:",
     "description": "Dettagli per un'email"
   },
   "detailsTextWeb": {
-    "message": "Quando fai clic su \"Disiscriviti\", si aprirà una finestra del browser e verrà visitato il seguente URL:",
+    "message": "Quando fai clic su \"Disiscriviti\", si aprir\u00c3\u00a0 una finestra del browser e verr\u00c3\u00a0 visitato il seguente URL:",
     "description": "Dettagli per un collegamento web"
+  },
+  "unsubscribeQuestion": {
+    "message": "Vuoi disiscriverti da questa mailing list?",
+    "description": "Testo che chiede all'utente se desidera disiscriversi"
   }
 }

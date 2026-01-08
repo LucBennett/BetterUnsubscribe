@@ -1,51 +1,47 @@
 {
   "extensionName": {
     "message": "MejorDarse de baja",
-    "description": "El nombre de la Extensión de Thunderbird"
+    "description": "El nombre de la Extensi\u00c3\u00b3n de Thunderbird"
   },
   "extensionDescription": {
-    "message": "Esta extensión facilita la baja de listas de correo.",
-    "description": "La descripción de la Extensión de Thunderbird"
+    "message": "Esta extensi\u00c3\u00b3n facilita la baja de listas de correo.",
+    "description": "La descripci\u00c3\u00b3n de la Extensi\u00c3\u00b3n de Thunderbird"
   },
   "unsubscribeTitle": {
     "message": "Darse de baja",
-    "description": "Título de la página de baja"
+    "description": "T\u00c3\u00adtulo de la p\u00c3\u00a1gina de baja"
   },
   "unsubscribeHeader": {
     "message": "Darse de baja",
-    "description": "Encabezado de la página de baja"
-  },
-  "emailText": {
-    "message": "¿Te gustaría darte de baja de esta lista de correo?",
-    "description": "Texto preguntando al usuario si quiere darse de baja"
+    "description": "Encabezado de la p\u00c3\u00a1gina de baja"
   },
   "unsubscribeButton": {
     "message": "Darse de baja",
-    "description": "Etiqueta para el botón de darse de baja"
+    "description": "Etiqueta para el bot\u00c3\u00b3n de darse de baja"
   },
   "cancelButton": {
     "message": "Cancelar",
-    "description": "Etiqueta para el botón de cancelar"
+    "description": "Etiqueta para el bot\u00c3\u00b3n de cancelar"
   },
   "deleteButton": {
-    "message": "Eliminar ▼",
-    "description": "Etiqueta para el botón de eliminar con un indicador desplegable"
+    "message": "Eliminar \u00e2\u2013\u00bc",
+    "description": "Etiqueta para el bot\u00c3\u00b3n de eliminar con un indicador desplegable"
   },
   "deleteOneButton": {
     "message": "Solo este",
-    "description": "Etiqueta para el botón de eliminar solo el correo actual"
+    "description": "Etiqueta para el bot\u00c3\u00b3n de eliminar solo el correo actual"
   },
   "deleteAllNameAddrButton": {
     "message": "Todos del remitente:",
-    "description": "Botón para eliminar todos los correos electrónicos de un remitente específico"
+    "description": "Bot\u00c3\u00b3n para eliminar todos los correos electr\u00c3\u00b3nicos de un remitente espec\u00c3\u00adfico"
   },
   "deleteAllAddrButton": {
-    "message": "Todos de la dirección:",
-    "description": "Botón para eliminar todos los correos electrónicos de una dirección"
+    "message": "Todos de la direcci\u00c3\u00b3n:",
+    "description": "Bot\u00c3\u00b3n para eliminar todos los correos electr\u00c3\u00b3nicos de una direcci\u00c3\u00b3n"
   },
   "deleteAllDomainButton": {
     "message": "Todos del dominio:",
-    "description": "Botón para eliminar todos los correos electrónicos de un dominio"
+    "description": "Bot\u00c3\u00b3n para eliminar todos los correos electr\u00c3\u00b3nicos de un dominio"
   },
   "statusTextWorking": {
     "message": "Trabajando...",
@@ -64,27 +60,31 @@
     "description": "Texto de estado mientras se eliminan los correos"
   },
   "statusTextDeleteSuccess": {
-    "message": "Correo(s) eliminados con éxito.",
-    "description": "Texto de estado para la eliminación exitosa de correos"
+    "message": "Correo(s) eliminados con \u00c3\u00a9xito.",
+    "description": "Texto de estado para la eliminaci\u00c3\u00b3n exitosa de correos"
   },
   "statusTextDeleteError": {
     "message": "Error al eliminar el(los) correo(s).",
-    "description": "Texto de estado cuando la eliminación de correos falla"
+    "description": "Texto de estado cuando la eliminaci\u00c3\u00b3n de correos falla"
   },
   "detailsSummary": {
-    "message": "Más detalles",
-    "description": "Desplegable de más detalles"
+    "message": "M\u00c3\u00a1s detalles",
+    "description": "Desplegable de m\u00c3\u00a1s detalles"
   },
   "detailsTextPost": {
-    "message": "Cuando haces clic en \"Darse de baja\", se enviará una solicitud POST a la siguiente URL:",
+    "message": "Cuando haces clic en \"Darse de baja\", se enviar\u00c3\u00a1 una solicitud POST a la siguiente URL:",
     "description": "Detalles para una solicitud POST"
   },
   "detailsTextEmail": {
-    "message": "Cuando haces clic en \"Darse de baja\", se redactará un correo electrónico a la siguiente dirección:",
-    "description": "Detalles para un correo electrónico"
+    "message": "Cuando haces clic en \"Darse de baja\", se redactar\u00c3\u00a1 un correo electr\u00c3\u00b3nico a la siguiente direcci\u00c3\u00b3n:",
+    "description": "Detalles para un correo electr\u00c3\u00b3nico"
   },
   "detailsTextWeb": {
-    "message": "Cuando haces clic en \"Darse de baja\", se abrirá una ventana del navegador y visitará la siguiente URL:",
+    "message": "Cuando haces clic en \"Darse de baja\", se abrir\u00c3\u00a1 una ventana del navegador y visitar\u00c3\u00a1 la siguiente URL:",
     "description": "Detalles para un enlace web"
+  },
+  "unsubscribeQuestion": {
+    "message": "\u00c2\u00bfTe gustar\u00c3\u00ada darte de baja de esta lista de correo?",
+    "description": "Texto preguntando al usuario si quiere darse de baja"
   }
 }

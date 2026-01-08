@@ -31,7 +31,7 @@ async function resize_dropdown() {
  */
 document.addEventListener('DOMContentLoaded', async () => {
   // Retrieve and cache references to various DOM elements for later use.
-  const emailText = document.getElementById('emailText');
+  const nameAddress = document.getElementById('nameAddress');
   const unsubscribeButton = document.getElementById('unsubscribeButton');
   const cancelButton = document.getElementById('cancelButton');
   const statusText = document.getElementById('statusText');
@@ -83,9 +83,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // Display the author's email in the UI.
-  emailText.textContent = messenger.i18n.getMessage('emailText');
-  emailText.appendChild(document.createElement('br')); // Add a line break manually.
-  emailText.appendChild(document.createTextNode(author)); // Add the author's email after the break.
+  nameAddress.textContent = author;
 
   // Update "Delete All" button text based on extracted author information.
   if (author) {
