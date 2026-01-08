@@ -40,26 +40,38 @@
       </button>
       <div>
         <ul id="dropdownList">
-          <li id="deleteOneButton" data-i18n="deleteOneButton">
-            Delete just this
+          <li id="deleteOneButton">
+            <span class="label" data-i18n="deleteOneButton"
+              >Delete just this</span
+            >
           </li>
-          <li id="deleteAllNameAddrButton" data-i18n="deleteAllNameAddrButton">
-            Delete all from name-addr
+          <li id="deleteAllNameAddrButton">
+            <span class="label" data-i18n="deleteAllNameAddrButton"
+              >Delete all from name-addr</span
+            >
+            <span class="scroll-x"
+              >"John Doe" &lt;John.Doe@exampleeeeeeeeeeeeeeeeeee.com&gt;</span
+            >
           </li>
-          <li id="deleteAllAddrButton" data-i18n="deleteAllAddrButton">
-            Delete all from addr-spec
+          <li id="deleteAllAddrButton">
+            <span class="label" data-i18n="deleteAllAddrButton"
+              >Delete all from addr-spec</span
+            >
+            <span class="scroll-x">John.Doe@example.com</span>
           </li>
-          <li id="deleteAllDomainButton" data-i18n="deleteAllDomainButton">
-            Delete all from domain
+          <li id="deleteAllDomainButton">
+            <span class="label" data-i18n="deleteAllDomainButton"
+              >Delete all from domain</span
+            >
+            <span class="scroll-x">example.com</span>
           </li>
         </ul>
       </div>
     </div>
 
-    <h4 id="statusText" role="status"></h4>
+    <h4 id="statusText" hidden role="status">abc</h4>
 
-    <details id="detailsDropDown">
-      <summary data-i18n="detailsSummary">More details</summary>
+    <div class="details">
       <p id="detailsText">
         When you click "Unsubscribe", a browser window will open and will visit
         the following URL:
@@ -67,7 +79,7 @@
       <div class="code-container">
         <code id="dynamicCodeBlock">https://unsubscribable.example.com</code>
       </div>
-    </details>
+    </div>
 
     <script src="i18n.js"></script>
     <script src="popup.js"></script>

@@ -16,20 +16,20 @@ function console_error(...args) {
   console.error('[BetterUnsubscribe][popup.js]', ...args);
 }
 
+async function resize_dropdown() {
+  const el = document.getElementById('deleteButton');
+  const dropdownList = document.getElementById('dropdownList');
+  const rect = el.getBoundingClientRect();
+  const available = window.innerHeight - rect.bottom;
+  dropdownList.style.maxHeight = `${available}px`;
+}
+
 /**
  * Main event listener for the DOMContentLoaded event.
  * Responsible for retrieving the active tab and displayed message,
  * setting up button event listeners, and managing the unsubscribe logic.
  */
 document.addEventListener('DOMContentLoaded', async () => {
-  // Retrieve the currently active tab in the current window and get displayed message details.
-  const [tab] = await messenger.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
-  const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-  console_log('Message', message.id);
-
   // Retrieve and cache references to various DOM elements for later use.
   const emailText = document.getElementById('emailText');
   const unsubscribeButton = document.getElementById('unsubscribeButton');
@@ -48,6 +48,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const deleteAllDomainButton = document.getElementById(
     'deleteAllDomainButton'
   );
+
+  deleteDiv.addEventListener('mouseenter', resize_dropdown);
+  window.addEventListener('resize', resize_dropdown);
+
+  // Retrieve the currently active tab in the current window and get displayed message details.
+  const [tab] = await messenger.tabs.query({
+    active: true,
+    currentWindow: true,
+  });
+  const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+  console_log('Message', message.id);
 
   // Retrieve the message's author and parse it to extract name, sender, and domain information.
   const author = message.author;
@@ -78,18 +89,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Update "Delete All" button text based on extracted author information.
   if (author) {
-    deleteAllNameAddrButton.appendChild(document.createElement('br'));
-    deleteAllNameAddrButton.appendChild(document.createTextNode(author));
+    const span = deleteAllNameAddrButton.querySelector('.scroll-x');
+    span.textContent = author;
   }
   if (sender && domain) {
-    deleteAllAddrButton.appendChild(document.createElement('br'));
-    deleteAllAddrButton.appendChild(
-      document.createTextNode(`${sender}@${domain}`)
-    );
+    const span = deleteAllAddrButton.querySelector('.scroll-x');
+    span.textContent = `${sender}@${domain}`;
   }
   if (domain) {
-    deleteAllDomainButton.appendChild(document.createElement('br'));
-    deleteAllDomainButton.appendChild(document.createTextNode(domain));
+    const span = deleteAllDomainButton.querySelector('.scroll-x');
+    span.textContent = domain;
   }
 
   // Request the unsubscribe method details from the background script.
@@ -129,6 +138,7 @@ document.addEventListener('DOMContentLoaded', async () => {
    */
   unsubscribeButton.addEventListener('click', async () => {
     unsubscribeButton.disabled = true;
+    statusText.removeAttribute('hidden');
     statusText.textContent = messenger.i18n.getMessage('statusTextWorking');
 
     // Send unsubscribe request to the background script.
@@ -272,6 +282,7 @@ function getDeleteFunc(
           message_obj.messageId = message.id;
       }
 
+      statusText.removeAttribute('hidden');
       statusText.textContent = messenger.i18n.getMessage('statusTextDeleting');
 
       // Send a delete request to the background script.
