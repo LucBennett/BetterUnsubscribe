@@ -1,90 +1,90 @@
 {
-  "extensionName": {
-    "message": "BetterUnsubscribe",
-    "description": "Nazwa rozszerzenia Thunderbird MailExtension"
-  },
-  "extensionDescription": {
-    "message": "U\u00c5\u201aatwia rezygnacj\u00c4\u2122 z subskrypcji list mailingowych.",
-    "description": "Opis rozszerzenia Thunderbird MailExtension"
-  },
-  "unsubscribeTitle": {
-    "message": "Rezygnacja z subskrypcji",
-    "description": "Tytu\u00c5\u201a strony rezygnacji z subskrypcji"
-  },
-  "unsubscribeHeader": {
-    "message": "Rezygnacja z subskrypcji",
-    "description": "Nag\u00c5\u201a\u00c3\u00b3wek strony rezygnacji z subskrypcji"
-  },
-  "unsubscribeButton": {
-    "message": "Zrezygnuj",
-    "description": "Etykieta przycisku rezygnacji z subskrypcji"
-  },
   "cancelButton": {
-    "message": "Anuluj",
-    "description": "Etykieta przycisku anulowania"
-  },
-  "deleteButton": {
-    "message": "Usu\u00c5\u201e \u00e2\u2013\u00bc",
-    "description": "Etykieta przycisku usuwania z wska\u00c5\u00banikiem rozwijanym"
-  },
-  "deleteOneButton": {
-    "message": "Tylko ten",
-    "description": "Etykieta przycisku do usuni\u00c4\u2122cia tylko bie\u00c5\u00bc\u00c4\u2026cego e-maila"
-  },
-  "deleteAllNameAddrButton": {
-    "message": "Wszystkie od nadawcy:",
-    "description": "Przycisk do usuni\u00c4\u2122cia wszystkich e-maili od konkretnego nadawcy"
+    "description": "Etykieta przycisku anulowania",
+    "message": "Anuluj"
   },
   "deleteAllAddrButton": {
-    "message": "Wszystkie z adresu:",
-    "description": "Przycisk do usuni\u00c4\u2122cia wszystkich e-maili z okre\u00c5\u203alonego adresu"
+    "description": "Przycisk do usuni\u00c4\u2122cia wszystkich e-maili z okre\u00c5\u203alonego adresu",
+    "message": "Wszystkie z adresu:"
   },
   "deleteAllDomainButton": {
-    "message": "Wszystkie z domeny:",
-    "description": "Przycisk do usuni\u00c4\u2122cia wszystkich e-maili z domeny"
+    "description": "Przycisk do usuni\u00c4\u2122cia wszystkich e-maili z domeny",
+    "message": "Wszystkie z domeny:"
   },
-  "statusTextWorking": {
-    "message": "Pracuj\u00c4\u2122...",
-    "description": "Tekst statusu dla stanu pracy"
+  "deleteAllNameAddrButton": {
+    "description": "Przycisk do usuni\u00c4\u2122cia wszystkich e-maili od konkretnego nadawcy",
+    "message": "Wszystkie od nadawcy:"
   },
-  "statusTextDone": {
-    "message": "Gotowe",
-    "description": "Tekst statusu dla stanu uko\u00c5\u201eczonego"
+  "deleteButton": {
+    "description": "Etykieta przycisku usuwania z wska\u00c5\u00banikiem rozwijanym",
+    "message": "Usu\u00c5\u201e \u00e2\u2013\u00bc"
   },
-  "statusTextError": {
-    "message": "B\u00c5\u201a\u00c4\u2026d",
-    "description": "Tekst statusu dla stanu b\u00c5\u201a\u00c4\u2122du"
-  },
-  "statusTextDeleting": {
-    "message": "Usuwanie e-maila(\u00c3\u00b3w)...",
-    "description": "Tekst statusu podczas usuwania e-maila(\u00c3\u00b3w)"
-  },
-  "statusTextDeleteSuccess": {
-    "message": "E-mail(e) pomy\u00c5\u203alnie usuni\u00c4\u2122ty(e).",
-    "description": "Tekst statusu dla pomy\u00c5\u203alnego usuni\u00c4\u2122cia e-maila"
-  },
-  "statusTextDeleteError": {
-    "message": "Nie uda\u00c5\u201ao si\u00c4\u2122 usun\u00c4\u2026\u00c4\u2021 e-maila(\u00c3\u00b3w).",
-    "description": "Tekst statusu, gdy usuni\u00c4\u2122cie e-maila nie powiod\u00c5\u201ao si\u00c4\u2122"
+  "deleteOneButton": {
+    "description": "Etykieta przycisku do usuni\u00c4\u2122cia tylko bie\u00c5\u00bc\u00c4\u2026cego e-maila",
+    "message": "Tylko ten"
   },
   "detailsSummary": {
-    "message": "Wi\u00c4\u2122cej szczeg\u00c3\u00b3\u00c5\u201a\u00c3\u00b3w",
-    "description": "Rozwijane Wi\u00c4\u2122cej szczeg\u00c3\u00b3\u00c5\u201a\u00c3\u00b3w"
-  },
-  "detailsTextPost": {
-    "message": "Po klikni\u00c4\u2122ciu \"Zrezygnuj\" zostanie wys\u00c5\u201aane \u00c5\u00bc\u00c4\u2026danie POST na poni\u00c5\u00bcszy adres URL:",
-    "description": "Szczeg\u00c3\u00b3\u00c5\u201ay dla \u00c5\u00bc\u00c4\u2026dania POST"
+    "description": "Rozwijane Wi\u00c4\u2122cej szczeg\u00c3\u00b3\u00c5\u201a\u00c3\u00b3w",
+    "message": "Wi\u00c4\u2122cej szczeg\u00c3\u00b3\u00c5\u201a\u00c3\u00b3w"
   },
   "detailsTextEmail": {
-    "message": "Po klikni\u00c4\u2122ciu \"Zrezygnuj\" zostanie utworzona wiadomo\u00c5\u203a\u00c4\u2021 e-mail na poni\u00c5\u00bcszy adres:",
-    "description": "Szczeg\u00c3\u00b3\u00c5\u201ay dla wiadomo\u00c5\u203aci e-mail"
+    "description": "Szczeg\u00c3\u00b3\u00c5\u201ay dla wiadomo\u00c5\u203aci e-mail",
+    "message": "Po klikni\u00c4\u2122ciu \"Zrezygnuj\" zostanie utworzona wiadomo\u00c5\u203a\u00c4\u2021 e-mail na poni\u00c5\u00bcszy adres:"
+  },
+  "detailsTextPost": {
+    "description": "Szczeg\u00c3\u00b3\u00c5\u201ay dla \u00c5\u00bc\u00c4\u2026dania POST",
+    "message": "Po klikni\u00c4\u2122ciu \"Zrezygnuj\" zostanie wys\u00c5\u201aane \u00c5\u00bc\u00c4\u2026danie POST na poni\u00c5\u00bcszy adres URL:"
   },
   "detailsTextWeb": {
-    "message": "Po klikni\u00c4\u2122ciu \"Zrezygnuj\" zostanie otwarte okno przegl\u00c4\u2026darki, kt\u00c3\u00b3re przejdzie do poni\u00c5\u00bcszego adresu URL:",
-    "description": "Szczeg\u00c3\u00b3\u00c5\u201ay dla linku internetowego"
+    "description": "Szczeg\u00c3\u00b3\u00c5\u201ay dla linku internetowego",
+    "message": "Po klikni\u00c4\u2122ciu \"Zrezygnuj\" zostanie otwarte okno przegl\u00c4\u2026darki, kt\u00c3\u00b3re przejdzie do poni\u00c5\u00bcszego adresu URL:"
+  },
+  "extensionDescription": {
+    "description": "Opis rozszerzenia Thunderbird MailExtension",
+    "message": "U\u00c5\u201aatwia rezygnacj\u00c4\u2122 z subskrypcji list mailingowych."
+  },
+  "extensionName": {
+    "description": "Nazwa rozszerzenia Thunderbird MailExtension",
+    "message": "BetterUnsubscribe"
+  },
+  "statusTextDeleteError": {
+    "description": "Tekst statusu, gdy usuni\u00c4\u2122cie e-maila nie powiod\u00c5\u201ao si\u00c4\u2122",
+    "message": "Nie uda\u00c5\u201ao si\u00c4\u2122 usun\u00c4\u2026\u00c4\u2021 e-maila(\u00c3\u00b3w)."
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Tekst statusu dla pomy\u00c5\u203alnego usuni\u00c4\u2122cia e-maila",
+    "message": "E-mail(e) pomy\u00c5\u203alnie usuni\u00c4\u2122ty(e)."
+  },
+  "statusTextDeleting": {
+    "description": "Tekst statusu podczas usuwania e-maila(\u00c3\u00b3w)",
+    "message": "Usuwanie e-maila(\u00c3\u00b3w)..."
+  },
+  "statusTextDone": {
+    "description": "Tekst statusu dla stanu uko\u00c5\u201eczonego",
+    "message": "Gotowe"
+  },
+  "statusTextError": {
+    "description": "Tekst statusu dla stanu b\u00c5\u201a\u00c4\u2122du",
+    "message": "B\u00c5\u201a\u00c4\u2026d"
+  },
+  "statusTextWorking": {
+    "description": "Tekst statusu dla stanu pracy",
+    "message": "Pracuj\u00c4\u2122..."
+  },
+  "unsubscribeButton": {
+    "description": "Etykieta przycisku rezygnacji z subskrypcji",
+    "message": "Zrezygnuj"
+  },
+  "unsubscribeHeader": {
+    "description": "Nag\u00c5\u201a\u00c3\u00b3wek strony rezygnacji z subskrypcji",
+    "message": "Rezygnacja z subskrypcji"
   },
   "unsubscribeQuestion": {
-    "message": "Czy chcesz zrezygnowa\u00c4\u2021 z subskrypcji tej listy mailingowej?",
-    "description": "Tekst pytaj\u00c4\u2026cy u\u00c5\u00bcytkownika, czy chce zrezygnowa\u00c4\u2021 z subskrypcji"
+    "description": "Tekst pytaj\u00c4\u2026cy u\u00c5\u00bcytkownika, czy chce zrezygnowa\u00c4\u2021 z subskrypcji",
+    "message": "Czy chcesz zrezygnowa\u00c4\u2021 z subskrypcji tej listy mailingowej?"
+  },
+  "unsubscribeTitle": {
+    "description": "Tytu\u00c5\u201a strony rezygnacji z subskrypcji",
+    "message": "Rezygnacja z subskrypcji"
   }
 }

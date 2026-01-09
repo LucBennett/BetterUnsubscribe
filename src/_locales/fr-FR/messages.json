@@ -1,90 +1,90 @@
 {
-  "extensionName": {
-    "message": "MeilleurD\u00c3\u00a9sabonnement",
-    "description": "Le nom de l'extension Thunderbird"
-  },
-  "extensionDescription": {
-    "message": "Cette extension facilite le d\u00c3\u00a9sabonnement des listes de diffusion.",
-    "description": "La description de l'extension Thunderbird"
-  },
-  "unsubscribeTitle": {
-    "message": "Se d\u00c3\u00a9sabonner",
-    "description": "Titre de la page de d\u00c3\u00a9sabonnement"
-  },
-  "unsubscribeHeader": {
-    "message": "Se d\u00c3\u00a9sabonner",
-    "description": "En-t\u00c3\u00aate de la page de d\u00c3\u00a9sabonnement"
-  },
-  "unsubscribeButton": {
-    "message": "Se d\u00c3\u00a9sabonner",
-    "description": "Libell\u00c3\u00a9 pour le bouton de d\u00c3\u00a9sabonnement"
-  },
   "cancelButton": {
-    "message": "Annuler",
-    "description": "Libell\u00c3\u00a9 pour le bouton d'annulation"
-  },
-  "deleteButton": {
-    "message": "Supprimer \u00e2\u2013\u00bc",
-    "description": "Libell\u00c3\u00a9 pour le bouton de suppression avec un indicateur d\u00c3\u00a9roulant"
-  },
-  "deleteOneButton": {
-    "message": "Seulement celui-ci",
-    "description": "Libell\u00c3\u00a9 pour le bouton de suppression du courriel actuel"
-  },
-  "deleteAllNameAddrButton": {
-    "message": "Tous de l'exp\u00c3\u00a9diteur :",
-    "description": "Bouton pour supprimer tous les courriels d'un exp\u00c3\u00a9diteur sp\u00c3\u00a9cifique"
+    "description": "Libell\u00c3\u00a9 pour le bouton d'annulation",
+    "message": "Annuler"
   },
   "deleteAllAddrButton": {
-    "message": "Tous de l'adresse :",
-    "description": "Bouton pour supprimer tous les courriels d'une adresse"
+    "description": "Bouton pour supprimer tous les courriels d'une adresse",
+    "message": "Tous de l'adresse :"
   },
   "deleteAllDomainButton": {
-    "message": "Tous du domaine :",
-    "description": "Bouton pour supprimer tous les courriels d'un domaine"
+    "description": "Bouton pour supprimer tous les courriels d'un domaine",
+    "message": "Tous du domaine :"
   },
-  "statusTextWorking": {
-    "message": "En cours...",
-    "description": "Texte de statut pour l'\u00c3\u00a9tat en cours"
+  "deleteAllNameAddrButton": {
+    "description": "Bouton pour supprimer tous les courriels d'un exp\u00c3\u00a9diteur sp\u00c3\u00a9cifique",
+    "message": "Tous de l'exp\u00c3\u00a9diteur :"
   },
-  "statusTextDone": {
-    "message": "Termin\u00c3\u00a9",
-    "description": "Texte de statut pour l'\u00c3\u00a9tat termin\u00c3\u00a9"
+  "deleteButton": {
+    "description": "Libell\u00c3\u00a9 pour le bouton de suppression avec un indicateur d\u00c3\u00a9roulant",
+    "message": "Supprimer \u00e2\u2013\u00bc"
   },
-  "statusTextError": {
-    "message": "Erreur",
-    "description": "Texte de statut pour l'\u00c3\u00a9tat d'erreur"
-  },
-  "statusTextDeleting": {
-    "message": "Suppression des courriels en cours...",
-    "description": "Texte de statut pendant la suppression des courriels"
-  },
-  "statusTextDeleteSuccess": {
-    "message": "Courriel(s) supprim\u00c3\u00a9(s) avec succ\u00c3\u00a8s.",
-    "description": "Texte de statut pour une suppression r\u00c3\u00a9ussie des courriels"
-  },
-  "statusTextDeleteError": {
-    "message": "\u00c3\u2030chec de la suppression du/des courriel(s).",
-    "description": "Texte de statut en cas d'\u00c3\u00a9chec de suppression des courriels"
+  "deleteOneButton": {
+    "description": "Libell\u00c3\u00a9 pour le bouton de suppression du courriel actuel",
+    "message": "Seulement celui-ci"
   },
   "detailsSummary": {
-    "message": "Plus de d\u00c3\u00a9tails",
-    "description": "Menu d\u00c3\u00a9roulant pour plus de d\u00c3\u00a9tails"
-  },
-  "detailsTextPost": {
-    "message": "Lorsque vous cliquez sur \"Se d\u00c3\u00a9sabonner\", une requ\u00c3\u00aate POST sera envoy\u00c3\u00a9e \u00c3\u00a0 l'URL suivante :",
-    "description": "D\u00c3\u00a9tails pour une requ\u00c3\u00aate POST"
+    "description": "Menu d\u00c3\u00a9roulant pour plus de d\u00c3\u00a9tails",
+    "message": "Plus de d\u00c3\u00a9tails"
   },
   "detailsTextEmail": {
-    "message": "Lorsque vous cliquez sur \"Se d\u00c3\u00a9sabonner\", un courriel sera r\u00c3\u00a9dig\u00c3\u00a9 \u00c3\u00a0 l'adresse suivante :",
-    "description": "D\u00c3\u00a9tails pour un courriel"
+    "description": "D\u00c3\u00a9tails pour un courriel",
+    "message": "Lorsque vous cliquez sur \"Se d\u00c3\u00a9sabonner\", un courriel sera r\u00c3\u00a9dig\u00c3\u00a9 \u00c3\u00a0 l'adresse suivante :"
+  },
+  "detailsTextPost": {
+    "description": "D\u00c3\u00a9tails pour une requ\u00c3\u00aate POST",
+    "message": "Lorsque vous cliquez sur \"Se d\u00c3\u00a9sabonner\", une requ\u00c3\u00aate POST sera envoy\u00c3\u00a9e \u00c3\u00a0 l'URL suivante :"
   },
   "detailsTextWeb": {
-    "message": "Lorsque vous cliquez sur \"Se d\u00c3\u00a9sabonner\", une fen\u00c3\u00aatre du navigateur s'ouvrira et visitera l'URL suivante :",
-    "description": "D\u00c3\u00a9tails pour un lien web"
+    "description": "D\u00c3\u00a9tails pour un lien web",
+    "message": "Lorsque vous cliquez sur \"Se d\u00c3\u00a9sabonner\", une fen\u00c3\u00aatre du navigateur s'ouvrira et visitera l'URL suivante :"
+  },
+  "extensionDescription": {
+    "description": "La description de l'extension Thunderbird",
+    "message": "Cette extension facilite le d\u00c3\u00a9sabonnement des listes de diffusion."
+  },
+  "extensionName": {
+    "description": "Le nom de l'extension Thunderbird",
+    "message": "MeilleurD\u00c3\u00a9sabonnement"
+  },
+  "statusTextDeleteError": {
+    "description": "Texte de statut en cas d'\u00c3\u00a9chec de suppression des courriels",
+    "message": "\u00c3\u2030chec de la suppression du/des courriel(s)."
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Texte de statut pour une suppression r\u00c3\u00a9ussie des courriels",
+    "message": "Courriel(s) supprim\u00c3\u00a9(s) avec succ\u00c3\u00a8s."
+  },
+  "statusTextDeleting": {
+    "description": "Texte de statut pendant la suppression des courriels",
+    "message": "Suppression des courriels en cours..."
+  },
+  "statusTextDone": {
+    "description": "Texte de statut pour l'\u00c3\u00a9tat termin\u00c3\u00a9",
+    "message": "Termin\u00c3\u00a9"
+  },
+  "statusTextError": {
+    "description": "Texte de statut pour l'\u00c3\u00a9tat d'erreur",
+    "message": "Erreur"
+  },
+  "statusTextWorking": {
+    "description": "Texte de statut pour l'\u00c3\u00a9tat en cours",
+    "message": "En cours..."
+  },
+  "unsubscribeButton": {
+    "description": "Libell\u00c3\u00a9 pour le bouton de d\u00c3\u00a9sabonnement",
+    "message": "Se d\u00c3\u00a9sabonner"
+  },
+  "unsubscribeHeader": {
+    "description": "En-t\u00c3\u00aate de la page de d\u00c3\u00a9sabonnement",
+    "message": "Se d\u00c3\u00a9sabonner"
   },
   "unsubscribeQuestion": {
-    "message": "Souhaitez-vous vous d\u00c3\u00a9sabonner de cette liste de diffusion ?",
-    "description": "Texte demandant \u00c3\u00a0 l'utilisateur s'il souhaite se d\u00c3\u00a9sabonner"
+    "description": "Texte demandant \u00c3\u00a0 l'utilisateur s'il souhaite se d\u00c3\u00a9sabonner",
+    "message": "Souhaitez-vous vous d\u00c3\u00a9sabonner de cette liste de diffusion ?"
+  },
+  "unsubscribeTitle": {
+    "description": "Titre de la page de d\u00c3\u00a9sabonnement",
+    "message": "Se d\u00c3\u00a9sabonner"
   }
 }

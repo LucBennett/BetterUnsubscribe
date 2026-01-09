@@ -1,90 +1,90 @@
 {
-  "extensionName": {
-    "message": "BetterUnsubscribe",
-    "description": "Der Name der Thunderbird MailExtension"
-  },
-  "extensionDescription": {
-    "message": "Erleichtert das Abbestellen von Mailinglisten.",
-    "description": "Die Beschreibung der Thunderbird MailExtension"
-  },
-  "unsubscribeTitle": {
-    "message": "Abbestellen",
-    "description": "Titel der Abbestellseite"
-  },
-  "unsubscribeHeader": {
-    "message": "Abbestellen",
-    "description": "\u00c3\u0153berschrift der Abbestellseite"
-  },
-  "unsubscribeButton": {
-    "message": "Abbestellen",
-    "description": "Bezeichnung f\u00c3\u00bcr den Abbestell-Button"
-  },
   "cancelButton": {
-    "message": "Abbrechen",
-    "description": "Bezeichnung f\u00c3\u00bcr den Abbrechen-Button"
-  },
-  "deleteButton": {
-    "message": "L\u00c3\u00b6schen \u00e2\u2013\u00bc",
-    "description": "Bezeichnung f\u00c3\u00bcr den L\u00c3\u00b6schen-Button mit Dropdown-Indikator"
-  },
-  "deleteOneButton": {
-    "message": "Nur diese",
-    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen nur der aktuellen E-Mail"
-  },
-  "deleteAllNameAddrButton": {
-    "message": "Alle von Absender:",
-    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen aller E-Mails von einem bestimmten Absender"
+    "description": "Bezeichnung f\u00c3\u00bcr den Abbrechen-Button",
+    "message": "Abbrechen"
   },
   "deleteAllAddrButton": {
-    "message": "Alle von Adresse:",
-    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen aller E-Mails von einer Adresse"
+    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen aller E-Mails von einer Adresse",
+    "message": "Alle von Adresse:"
   },
   "deleteAllDomainButton": {
-    "message": "Alle von Domain:",
-    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen aller E-Mails von einer Domain"
+    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen aller E-Mails von einer Domain",
+    "message": "Alle von Domain:"
   },
-  "statusTextWorking": {
-    "message": "Arbeitet...",
-    "description": "Status-Text f\u00c3\u00bcr den Arbeitszustand"
+  "deleteAllNameAddrButton": {
+    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen aller E-Mails von einem bestimmten Absender",
+    "message": "Alle von Absender:"
   },
-  "statusTextDone": {
-    "message": "Fertig",
-    "description": "Status-Text f\u00c3\u00bcr den abgeschlossenen Zustand"
+  "deleteButton": {
+    "description": "Bezeichnung f\u00c3\u00bcr den L\u00c3\u00b6schen-Button mit Dropdown-Indikator",
+    "message": "L\u00c3\u00b6schen \u00e2\u2013\u00bc"
   },
-  "statusTextError": {
-    "message": "Fehler",
-    "description": "Status-Text f\u00c3\u00bcr den Fehlerzustand"
-  },
-  "statusTextDeleting": {
-    "message": "E-Mails werden gel\u00c3\u00b6scht...",
-    "description": "Status-Text w\u00c3\u00a4hrend E-Mails gel\u00c3\u00b6scht werden"
-  },
-  "statusTextDeleteSuccess": {
-    "message": "E-Mail(s) erfolgreich gel\u00c3\u00b6scht.",
-    "description": "Status-Text f\u00c3\u00bcr erfolgreiches L\u00c3\u00b6schen von E-Mails"
-  },
-  "statusTextDeleteError": {
-    "message": "L\u00c3\u00b6schen der E-Mail(s) fehlgeschlagen.",
-    "description": "Status-Text, wenn das L\u00c3\u00b6schen der E-Mail(s) fehlschl\u00c3\u00a4gt"
+  "deleteOneButton": {
+    "description": "Bezeichnung f\u00c3\u00bcr den Button zum L\u00c3\u00b6schen nur der aktuellen E-Mail",
+    "message": "Nur diese"
   },
   "detailsSummary": {
-    "message": "Weitere Details",
-    "description": "Mehr Details im Drop-Down"
-  },
-  "detailsTextPost": {
-    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine POST-Anfrage an die folgende URL gesendet:",
-    "description": "Details f\u00c3\u00bcr eine POST-Anfrage"
+    "description": "Mehr Details im Drop-Down",
+    "message": "Weitere Details"
   },
   "detailsTextEmail": {
-    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine E-Mail an die folgende Adresse erstellt:",
-    "description": "Details f\u00c3\u00bcr eine E-Mail"
+    "description": "Details f\u00c3\u00bcr eine E-Mail",
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine E-Mail an die folgende Adresse erstellt:"
+  },
+  "detailsTextPost": {
+    "description": "Details f\u00c3\u00bcr eine POST-Anfrage",
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine POST-Anfrage an die folgende URL gesendet:"
   },
   "detailsTextWeb": {
-    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird ein Browserfenster ge\u00c3\u00b6ffnet und die folgende URL besucht:",
-    "description": "Details f\u00c3\u00bcr einen Web-Link"
+    "description": "Details f\u00c3\u00bcr einen Web-Link",
+    "message": "Wenn Sie auf \"Abbestellen\" klicken, wird ein Browserfenster ge\u00c3\u00b6ffnet und die folgende URL besucht:"
+  },
+  "extensionDescription": {
+    "description": "Die Beschreibung der Thunderbird MailExtension",
+    "message": "Erleichtert das Abbestellen von Mailinglisten."
+  },
+  "extensionName": {
+    "description": "Der Name der Thunderbird MailExtension",
+    "message": "BetterUnsubscribe"
+  },
+  "statusTextDeleteError": {
+    "description": "Status-Text, wenn das L\u00c3\u00b6schen der E-Mail(s) fehlschl\u00c3\u00a4gt",
+    "message": "L\u00c3\u00b6schen der E-Mail(s) fehlgeschlagen."
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Status-Text f\u00c3\u00bcr erfolgreiches L\u00c3\u00b6schen von E-Mails",
+    "message": "E-Mail(s) erfolgreich gel\u00c3\u00b6scht."
+  },
+  "statusTextDeleting": {
+    "description": "Status-Text w\u00c3\u00a4hrend E-Mails gel\u00c3\u00b6scht werden",
+    "message": "E-Mails werden gel\u00c3\u00b6scht..."
+  },
+  "statusTextDone": {
+    "description": "Status-Text f\u00c3\u00bcr den abgeschlossenen Zustand",
+    "message": "Fertig"
+  },
+  "statusTextError": {
+    "description": "Status-Text f\u00c3\u00bcr den Fehlerzustand",
+    "message": "Fehler"
+  },
+  "statusTextWorking": {
+    "description": "Status-Text f\u00c3\u00bcr den Arbeitszustand",
+    "message": "Arbeitet..."
+  },
+  "unsubscribeButton": {
+    "description": "Bezeichnung f\u00c3\u00bcr den Abbestell-Button",
+    "message": "Abbestellen"
+  },
+  "unsubscribeHeader": {
+    "description": "\u00c3\u0153berschrift der Abbestellseite",
+    "message": "Abbestellen"
   },
   "unsubscribeQuestion": {
-    "message": "M\u00c3\u00b6chten Sie diese Mailingliste abbestellen?",
-    "description": "Text, der den Benutzer fragt, ob er die Liste abbestellen m\u00c3\u00b6chte"
+    "description": "Text, der den Benutzer fragt, ob er die Liste abbestellen m\u00c3\u00b6chte",
+    "message": "M\u00c3\u00b6chten Sie diese Mailingliste abbestellen?"
+  },
+  "unsubscribeTitle": {
+    "description": "Titel der Abbestellseite",
+    "message": "Abbestellen"
   }
 }

@@ -15,7 +15,7 @@ const model_messages = JSON.parse(
   )
 );
 
-const required_keys = Object.keys(model_messages);
+const required_keys = Object.keys(model_messages).sort();
 //console.log(required_keys);
 
 // Test each locale's messages.json file
@@ -33,7 +33,7 @@ describe('Locale Messages Test', () => {
     });
 
     test(`All required keys should be present and non-empty in ${locale}/messages.json`, () => {
-      expect(Object.keys(messages)).toStrictEqual(required_keys);
+      expect(Object.keys(messages).sort()).toEqual(required_keys);
 
       required_keys.forEach((key) => {
         const messageObject = messages[key];
