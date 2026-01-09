@@ -67,10 +67,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   let name = undefined;
   let sender = undefined;
   let domain = undefined;
-
+  // Todo: Replace regex parsing with parseMailboxString
+  //  https://webextension-api.thunderbird.net/en/latest/messengerUtilities.html
   // Regex to match and parse email addresses with optional name prefix.
   const addressRegex = new RegExp(
-    '^("?([^"]+)"?\\s+)?<?([\\w._%+-]+)@([\\w.-]+\\.[a-zA-Z]{2,})>?$'
+    '^("?([^"\\n]*)"?[\\t ]+)?<?("[^"\\n]*"|[^@\\s]+)@(\\S+\\.[a-zA-Z]{2,})>?$'
   );
   const match = author.match(addressRegex);
   if (match) {
@@ -299,7 +300,7 @@ function getDeleteFunc(
         }
         setTimeout(() => {
           window.close();
-        }, 500);
+        }, 1000);
       } else {
         statusText.textContent = messenger.i18n.getMessage(
           'statusTextDeleteError'
