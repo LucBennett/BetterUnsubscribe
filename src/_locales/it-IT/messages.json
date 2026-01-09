@@ -17,7 +17,7 @@
   },
   "deleteButton": {
     "description": "Etichetta per il pulsante di eliminazione con un indicatore a discesa",
-    "message": "Elimina \u00e2\u2013\u00bc"
+    "message": "Elimina ▼"
   },
   "deleteOneButton": {
     "description": "Etichetta per il pulsante per eliminare solo l'email corrente",
@@ -29,15 +29,15 @@
   },
   "detailsTextEmail": {
     "description": "Dettagli per un'email",
-    "message": "Quando fai clic su \"Disiscriviti\", verr\u00c3\u00a0 redatta un'email al seguente indirizzo:"
+    "message": "Quando fai clic su \"Disiscriviti\", verrà redatta un'email al seguente indirizzo:"
   },
   "detailsTextPost": {
     "description": "Dettagli per una richiesta POST",
-    "message": "Quando fai clic su \"Disiscriviti\", verr\u00c3\u00a0 inviata una richiesta POST al seguente URL:"
+    "message": "Quando fai clic su \"Disiscriviti\", verrà inviata una richiesta POST al seguente URL:"
   },
   "detailsTextWeb": {
     "description": "Dettagli per un collegamento web",
-    "message": "Quando fai clic su \"Disiscriviti\", si aprir\u00c3\u00a0 una finestra del browser e verr\u00c3\u00a0 visitato il seguente URL:"
+    "message": "Quando fai clic su \"Disiscriviti\", si aprirà una finestra del browser e verrà visitato il seguente URL:"
   },
   "extensionDescription": {
     "description": "La descrizione dell'estensione Thunderbird",
