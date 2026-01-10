@@ -85,6 +85,10 @@ p {
   display: block;
 }
 
+.button-dropdown.dropdown-closing div {
+  display: none !important;
+}
+
 .button-dropdown ul {
   top: 50%;
   right: -50%;

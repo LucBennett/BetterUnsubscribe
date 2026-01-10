@@ -255,12 +255,12 @@ function getDeleteFunc(
   return async () => {
     try {
       console_log('hide dropdown');
-      dropdownList.style.pointerEvents = 'none';
+      // Force close the dropdown
+      deleteDiv.classList.add('dropdown-closing');
 
-      // Enable pointer events after a short delay for responsiveness.
       setTimeout(() => {
-        dropdownList.style.pointerEvents = 'auto';
-      }, 1);
+        deleteDiv.classList.remove('dropdown-closing');
+      }, 100);
 
       // Create a message object based on the type of delete operation.
       let message_obj = {};
