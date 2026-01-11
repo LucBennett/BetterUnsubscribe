@@ -20,39 +20,109 @@ function console_error() {
 }
 
 /**
- * Event listener for message display events.
- * Disables the action button initially and checks if unsubscribe information is available.
- * If unsubscribe info is found, the action button is enabled.
- * @param {object} tab - The browser tab where the message is displayed.
- * @param {messenger.messages.MessageHeader} message - The message being displayed.
+ * Tab activation listener.
+ *
+ * Triggered when the user switches tabs or a tab becomes active.
+ * In Thunderbird, message content is often shown in a `messageDisplay` tab.
+ *
+ * Behavior:
+ * - Fetches the activated tab details.
+ * - If the tab is a `messageDisplay` tab, retrieves the currently displayed message.
+ * - Delegates to {@link check_message} to:
+ *   - disable the action while processing,
+ *   - look up/calculate the unsubscribe method (cached by message id),
+ *   - enable the action if an unsubscribe method was found.
+ *
+ * Notes:
+ * - The tab activation event can fire even when no message is displayed; `check_message`
+ *   safely handles a null/undefined message.
+ * - This exists alongside `onMessageDisplayed` because tab focus changes don’t always
+ *   imply a new message display event, and vice versa.
+ *
+ * @param {object} activeInfo - Activation details from `messenger.tabs.onActivated`.
+ * @param {integer} activeInfo.tabId - The ID of the tab that has become active
+ * @param {integer} activeInfo.windowId - The ID of the window the active tab changed inside of.
+ * @param {integer} activeInfo.previousTabId - The ID of the tab that was previously active, if that tab is still open.
+ * @returns {Promise<void>}
+ */
+messenger.tabs.onActivated.addListener(async (activeInfo) => {
+  console_log('onActivated');
+  const tab = await messenger.tabs.get(activeInfo.tabId);
+  if (tab.type === 'messageDisplay') {
+    const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+    await check_message(tab, message);
+  }
+});
+
+/**
+ * Message display listener.
+ *
+ * Triggered when a message is displayed in a message display tab (e.g. selecting a
+ * different message in the message list).
+ *
+ * Behavior:
+ * - Runs whenever Thunderbird reports a newly displayed message for a tab.
+ * - Delegates to {@link check_message} to update the messageDisplayAction state
+ *   (disable during processing, enable if unsubscribe info exists).
+ *
+ * @param {messenger.tabs.Tab} tab - The tab where the message is displayed.
+ * @param {messenger.messages.MessageHeader} message - The message now displayed in the tab.
+ * @returns {Promise<void>}
  */
 messenger.messageDisplay.onMessageDisplayed.addListener(
   async (tab, message) => {
-    try {
-      console_log('Message displayed');
-      await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
-      if (message) {
-        let value;
-
-        if (funcCache.has(message.id)) {
-          // Message is in cache
-          value = funcCache.get(message.id);
-        } else {
-          // Message not in cache, call searchUnsub(message)
-          value = await searchUnsub(message);
-          // Store the result in cache
-          funcCache.set(message.id, value);
-        }
-
-        if (value !== null) {
-          await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
-        }
-      }
-    } catch (error) {
-      console_error(error);
-    }
+    console_log('onMessageDisplayed');
+    await check_message(tab, message);
   }
 );
+
+/**
+ * Evaluates the currently displayed message and updates the messageDisplayAction state.
+ *
+ * This is the central "gatekeeper" for enabling/disabling the extension’s action button.
+ *
+ * Flow:
+ * 1) Immediately disables the action button for the current tab to prevent the user
+ *    from clicking while unsubscribe detection is still running.
+ * 2) If a message is present:
+ *    - checks `funcCache` for a previously computed {@link UnsubMethod} (or null result)
+ *      keyed by `message.id`.
+ *    - if not cached, calls {@link searchUnsub} to detect an unsubscribe mechanism and
+ *      caches the result (including null to avoid repeated work).
+ * 3) Re-enables the action button only when an unsubscribe method was found (i.e. result
+ *    is not null).
+ *
+ * Error handling:
+ * - Any errors are caught and logged; the action remains disabled in that case.
+ *
+ * @param {messenger.tabs.Tab} tab - The tab in which the message is displayed.
+ * @param {messenger.messages.MessageHeader|null|undefined} message - The displayed message.
+ * @returns {Promise<void>}
+ */
+async function check_message(tab, message) {
+  try {
+    await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
+    if (message) {
+      let value;
+
+      if (funcCache.has(message.id)) {
+        // Message is in cache
+        value = funcCache.get(message.id);
+      } else {
+        // Message not in cache, call searchUnsub(message)
+        value = await searchUnsub(message);
+        // Store the result in cache
+        funcCache.set(message.id, value);
+      }
+
+      if (value !== null) {
+        await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
+      }
+    }
+  } catch (error) {
+    console_error(error);
+  }
+}
 
 /**
  * Searches for unsubscribe links and information in the message headers and body.
@@ -546,6 +616,7 @@ async function* getAllMessages() {
  * Processes different actions such as fetching unsubscribe methods, executing unsubscribe operations,
  * or deleting specific messages based on input data.
  * @param {object} messageFromPopup - The message received from the popup.
+ * @returns {Promise<void>}
  */
 messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
   if (!messageFromPopup.messageId) {
