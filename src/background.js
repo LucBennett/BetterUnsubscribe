@@ -356,19 +356,21 @@ async function getIdentityReceiver(messageHeader) {
  * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
  */
 async function getIdentityForMessage(messageHeader) {
-  if (messageHeader.folder) {
-    const folder = messageHeader.folder;
-    const accounts = await messenger.accounts.list();
-
-    for (const account of accounts) {
-      for (const identity of account.identities) {
-        if (folder.accountId === account.id) {
-          return identity;
-        }
-      }
-    }
+  // Early return if no folder is present
+  if (!messageHeader.folder) {
+    return null;
   }
-  return null; // No matching identity found
+
+  const folder = messageHeader.folder;
+  const accounts = await messenger.accounts.list();
+
+  // Find the account that matches the folder's accountId
+  const matchingAccount = accounts.find(
+    (account) => account.id === folder.accountId
+  );
+
+  // Return the first identity of the matching account, or null if no match
+  return matchingAccount?.identities?.[0] ?? null;
 }
 
 /**
