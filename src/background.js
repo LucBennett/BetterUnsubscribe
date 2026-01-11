@@ -167,12 +167,16 @@ async function searchUnsub(selectedMessage) {
     }
   }
 
-  const embeddedLink =
-    findEmbeddedUnsubLinkHTML(fullMessage) ||
-    findEmbeddedUnsubLinkRegex(fullMessage);
+  let embeddedLink = findEmbeddedUnsubLinkHTML(fullMessage);
+  let method = "HTML";
+  if (!embeddedLink) {
+    embeddedLink = findEmbeddedUnsubLinkRegex(fullMessage);
+    method = "REGEX";
+  }
+
   if (embeddedLink) {
-    console_log('Embedded HTML Unsubscribe WebLink Found', embeddedLink);
-    return new UnsubWeb(embeddedLink); // Return unsubscribe embedded web link method
+    console_log(`Embedded ${method} Unsubscribe WebLink Found`, embeddedLink);
+    return new UnsubWeb(embeddedLink);
   }
 
   return null; // No unsubscribe information found
