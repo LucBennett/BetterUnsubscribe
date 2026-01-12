@@ -28,13 +28,13 @@ function console_error() {
  * Behavior:
  * - Fetches the activated tab details.
  * - If the tab is a `messageDisplay` tab, retrieves the currently displayed message.
- * - Delegates to {@link check_message} to:
+ * - Delegates to {@link checkMessage} to:
  *   - disable the action while processing,
  *   - look up/calculate the unsubscribe method (cached by message id),
  *   - enable the action if an unsubscribe method was found.
  *
  * Notes:
- * - The tab activation event can fire even when no message is displayed; `check_message`
+ * - The tab activation event can fire even when no message is displayed; `checkMessage`
  *   safely handles a null/undefined message.
  * - This exists alongside `onMessageDisplayed` because tab focus changes don’t always
  *   imply a new message display event, and vice versa.
@@ -50,7 +50,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await messenger.tabs.get(activeInfo.tabId);
   if (tab.type === 'messageDisplay') {
     const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-    await check_message(tab, message);
+    await checkMessage(tab, message);
   }
 });
 
@@ -62,7 +62,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
  *
  * Behavior:
  * - Runs whenever Thunderbird reports a newly displayed message for a tab.
- * - Delegates to {@link check_message} to update the messageDisplayAction state
+ * - Delegates to {@link checkMessage} to update the messageDisplayAction state
  *   (disable during processing, enable if unsubscribe info exists).
  *
  * @param {messenger.tabs.Tab} tab - The tab where the message is displayed.
@@ -72,7 +72,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
 messenger.messageDisplay.onMessageDisplayed.addListener(
   async (tab, message) => {
     console_log('onMessageDisplayed');
-    await check_message(tab, message);
+    await checkMessage(tab, message);
   }
 );
 
@@ -99,7 +99,7 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * @param {messenger.messages.MessageHeader|null|undefined} message - The displayed message.
  * @returns {Promise<void>}
  */
-async function check_message(tab, message) {
+async function checkMessage(tab, message) {
   try {
     await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
     if (message) {
@@ -167,16 +167,28 @@ async function searchUnsub(selectedMessage) {
     }
   }
 
-  let embeddedLink = findEmbeddedUnsubLinkHTML(fullMessage);
-  let method = "HTML";
-  if (!embeddedLink) {
-    embeddedLink = findEmbeddedUnsubLinkRegex(fullMessage);
-    method = "REGEX";
+  const directMatch = findEmbeddedUnsubLinkHTML(fullMessage);
+  if (directMatch) {
+    console_log(
+      `Embedded Unsubscribe WebLink Found using basic anchor search`,
+      directMatch
+    );
+    return new UnsubWeb(directMatch);
   }
 
-  if (embeddedLink) {
-    console_log(`Embedded ${method} Unsubscribe WebLink Found`, embeddedLink);
-    return new UnsubWeb(embeddedLink);
+  const proximityMatch = findEmbeddedUnsubLinkHTMLByProximity(fullMessage);
+  if (proximityMatch) {
+    console_log(
+      `Embedded Unsubscribe WebLink Found using proximity-based search`,
+      proximityMatch
+    );
+    return new UnsubWeb(proximityMatch);
+  }
+
+  const regexMatch = findEmbeddedUnsubLinkRegex(fullMessage);
+  if (regexMatch) {
+    console_log(`Embedded Unsubscribe WebLink Found using Regex`, regexMatch);
+    return new UnsubWeb(regexMatch);
   }
 
   return null; // No unsubscribe information found
@@ -261,6 +273,94 @@ const embeddedUnsubRegex = new RegExp(
     ')',
   'i'
 );
+
+/**
+ * Finds embedded unsubscribe links within the message body using HTML parsing and ancestor search.
+ * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
+ * @returns {URL|null} - The embedded link if found, otherwise null.
+ */
+function findEmbeddedUnsubLinkHTMLByProximity(messagePart) {
+  // Parse the HTML string
+  if (messagePart && messagePart.contentType === 'text/html') {
+    const parser = new DOMParser();
+    const document = parser.parseFromString(messagePart.body, 'text/html');
+
+    const order = createNodeIndexMap(document.body);
+    const results = findTextNodesMatchingRegex(document.body, unsubscribeRegex);
+
+    for (const result of results) {
+      const obj = searchAncestorForLinks(result.parentElement);
+      if (obj) {
+        const t = order.get(result);
+        let best = null;
+        let bestDist = Infinity;
+
+        for (const a of obj.links) {
+          const d = Math.abs(order.get(a) - t);
+          if (d < bestDist) {
+            bestDist = d;
+            best = a;
+          }
+        }
+        return new URL(best.href);
+      }
+    }
+  }
+
+  if (messagePart && messagePart.parts) {
+    for (const part of messagePart.parts) {
+      const embeddedLink = findEmbeddedUnsubLinkHTMLByProximity(part);
+      if (embeddedLink) {
+        return embeddedLink;
+      }
+    }
+  }
+
+  return null;
+}
+
+const TEXT_NODE = (typeof Node !== 'undefined' && Node.TEXT_NODE) || 3;
+const ELEMENT_NODE = (typeof Node !== 'undefined' && Node.ELEMENT_NODE) || 1;
+
+function findTextNodesMatchingRegex(element, regex, results = []) {
+  for (const node of element.childNodes) {
+    if (node.nodeType === TEXT_NODE && regex.test(node.textContent)) {
+      results.push(node);
+    } else if (node.nodeType === ELEMENT_NODE) {
+      findTextNodesMatchingRegex(node, regex, results);
+    }
+  }
+
+  return results;
+}
+
+function createNodeIndexMap(root) {
+  let i = 0;
+  const map = new WeakMap();
+
+  // Manual tree traversal instead of createTreeWalker
+  function traverse(node) {
+    map.set(node, i++);
+    for (const child of node.childNodes) {
+      traverse(child);
+    }
+  }
+
+  traverse(root);
+  return map;
+}
+
+function searchAncestorForLinks(element, maxDepth = 5) {
+  if (maxDepth < 0 || !element) {
+    return null;
+  }
+  const links = element.querySelectorAll('a[href]');
+  if (links.length > 0) {
+    return { ancestor: element, links: links };
+  } else {
+    return searchAncestorForLinks(element.parentElement, maxDepth - 1);
+  }
+}
 
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing.
