@@ -241,7 +241,7 @@ async function retrieveIdentity(messageHeader) {
     console_log('No identity found for', messageHeader);
   }
 
-  return identity || null; // Return undefined if no identity is found
+  return identity || null; // Return null if no identity is found
 }
 
 // Regular expression to match 'unsubscribe' in different forms for embedded links
@@ -275,7 +275,16 @@ const embeddedUnsubRegex = new RegExp(
 );
 
 /**
- * Finds embedded unsubscribe links within the message body using HTML parsing and ancestor search.
+ * Finds embedded unsubscribe links within the message body using HTML parsing and proximity-based ancestor search.
+ *
+ * Strategy:
+ * - Parse HTML bodies and locate text nodes that match {@link unsubscribeRegex}.
+ * - For each matching text node, walk up the DOM a few levels looking for nearby <a> tags.
+ * - If multiple links exist in the ancestor, choose the one closest (in DOM order) to the text node.
+ *
+ * This tends to find links where the visible word "unsubscribe" is adjacent to an anchor tag,
+ * even if the anchor’s own text doesn't contain "unsubscribe".
+ *
  * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
  * @returns {URL|null} - The embedded link if found, otherwise null.
  */
@@ -322,6 +331,14 @@ function findEmbeddedUnsubLinkHTMLByProximity(messagePart) {
 const TEXT_NODE = (typeof Node !== 'undefined' && Node.TEXT_NODE) || 3;
 const ELEMENT_NODE = (typeof Node !== 'undefined' && Node.ELEMENT_NODE) || 1;
 
+/**
+ * Recursively collects text nodes under an element whose text matches a regex.
+ *
+ * @param {Node} element - Root element/node to search under.
+ * @param {RegExp} regex - Pattern to test against text node content.
+ * @param {Node[]} [results=[]] - Accumulator for matches (used for recursion).
+ * @returns {Node[]} Array of matching text nodes.
+ */
 function findTextNodesMatchingRegex(element, regex, results = []) {
   for (const node of element.childNodes) {
     if (node.nodeType === TEXT_NODE && regex.test(node.textContent)) {
@@ -334,6 +351,15 @@ function findTextNodesMatchingRegex(element, regex, results = []) {
   return results;
 }
 
+/**
+ * Builds a DOM-order index for all nodes under a given root.
+ *
+ * This is used to compute "closeness" between a text node containing "unsubscribe"
+ * and nearby anchors when multiple candidate links exist.
+ *
+ * @param {Node} root - Root node to traverse.
+ * @returns {WeakMap<Node, number>} A WeakMap from node -> traversal index.
+ */
 function createNodeIndexMap(root) {
   let i = 0;
   const map = new WeakMap();
@@ -350,6 +376,14 @@ function createNodeIndexMap(root) {
   return map;
 }
 
+/**
+ * Walks up the DOM tree looking for an ancestor that contains one or more anchor tags.
+ *
+ * @param {Element|null} element - Starting element (typically the parent of a matching text node).
+ * @param {number} [maxDepth=5] - Maximum number of parent hops before giving up.
+ * @returns {{ancestor: Element, links: NodeListOf<Element>}|null}
+ *          Object containing the ancestor and its links, or null if none found.
+ */
 function searchAncestorForLinks(element, maxDepth = 5) {
   if (maxDepth < 0 || !element) {
     return null;
@@ -357,9 +391,9 @@ function searchAncestorForLinks(element, maxDepth = 5) {
   const links = element.querySelectorAll('a[href]');
   if (links.length > 0) {
     return { ancestor: element, links: links };
-  } else {
-    return searchAncestorForLinks(element.parentElement, maxDepth - 1);
   }
+
+  return searchAncestorForLinks(element.parentElement, maxDepth - 1);
 }
 
 /**
@@ -677,8 +711,8 @@ class UnsubWeb extends UnsubMethod {
 
 /**
  * Generator function to yield messages from a paginated list.
- * @param {Promise<object>} list - The paginated list of messages.
- * @returns {AsyncGenerator<object>} - An async generator that yields messages.
+ * @param {Promise<messenger.messages.MessageList>} list
+ * @returns {AsyncGenerator<messenger.messages.MessageHeader>} - An async generator that yields messages.
  */
 async function* getMessages(list) {
   let page = await list;
@@ -697,7 +731,7 @@ async function* getMessages(list) {
 /**
  * Generator function to yield messages from all inbox folders across all accounts.
  * This function finds and processes messages from each inbox folder.
- * @returns {AsyncGenerator<object>} - An async generator that yields messages from all inboxes.
+ * @returns {AsyncGenerator<messenger.messages.MessageHeader>} - An async generator that yields messages from all inboxes.
  */
 async function* getAllMessages() {
   // Step 1: Get all accounts
@@ -722,7 +756,7 @@ async function* getAllMessages() {
  * Processes different actions such as fetching unsubscribe methods, executing unsubscribe operations,
  * or deleting specific messages based on input data.
  * @param {object} messageFromPopup - The message received from the popup.
- * @returns {Promise<void>}
+ * @returns {Promise<object|boolean>} Response object for known actions, otherwise false.
  */
 messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
   if (!messageFromPopup.messageId) {
@@ -765,6 +799,9 @@ function handleGetMethod(messageId) {
 async function handleUnsubscribe(messageId) {
   console_log('User chose to unsubscribe from the mailing list');
   const func = funcCache.get(messageId);
+  if (!func) {
+    return { response: 'Failed', error: 'No unsubscribe method cached' };
+  }
   try {
     await func.call();
     return { response: 'Unsubscribed' };
