@@ -5,12 +5,21 @@ const messenger = {
     delete: jest.fn(),
     query: jest.fn(),
   },
+  tabs: {
+    onActivated: {
+      addListener: jest.fn((callback) => {
+        messenger.tabs.onActivated.triggerListener = callback;
+      }),
+    },
+    get: jest.fn(),
+  },
   messageDisplay: {
     onMessageDisplayed: {
       addListener: jest.fn((callback) => {
         messenger.messageDisplay.onMessageDisplayed.triggerListener = callback;
       }),
     },
+    getDisplayedMessage: jest.fn(),
   },
   messageDisplayAction: {
     enable: jest.fn(() => Promise.resolve()),
@@ -29,7 +38,6 @@ const messenger = {
   identities: {
     list: jest.fn(() =>
       Promise.resolve([
-        // Mock returning a list of identities
         { id: 'identity1', email: 'user1@example.com' },
         { id: 'identity2', email: 'user2@example.com' },
       ])
@@ -38,7 +46,6 @@ const messenger = {
   accounts: {
     list: jest.fn(() =>
       Promise.resolve([
-        // Mock returning a list of accounts
         {
           id: 'account1',
           identities: [{ id: 'identity1', email: 'user1@example.com' }],
