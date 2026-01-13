@@ -245,34 +245,9 @@ async function retrieveIdentity(messageHeader) {
 }
 
 // Regular expression to match 'unsubscribe' in different forms for embedded links
-const unsubscribeRegexString = '\\bun\\W?(?:subscri(?:be|bing|ption))\\b';
+const unsubscribeRegex = /\bun\W?(?:subscri(?:be|bing|ption))\b/gi;
 
-// More precise URL pattern with length limits and exclusion of common URL-ending characters
-const urlPattern = 'https?:\\/\\/[^\\s"\'<>]{1,1000}';
-
-const unsubscribeRegex = new RegExp(unsubscribeRegexString, 'i');
-
-// Improved regex for detecting embedded unsubscribe links within the message body
-const embeddedUnsubRegex = new RegExp(
-  '(?:' +
-    '(' +
-    urlPattern +
-    '[^\\s"\'<>]*' +
-    unsubscribeRegexString +
-    '[^\\s"\'<>]*)' + // URL containing 'unsubscribe'
-    ')|(?:' +
-    '(' +
-    urlPattern +
-    ')[\\s\\S]{0,300}' +
-    unsubscribeRegexString + // URL followed by 'unsubscribe' within 300 chars
-    ')|(?:' +
-    unsubscribeRegexString +
-    '[\\s\\S]{0,300}(' +
-    urlPattern +
-    ')' + // 'unsubscribe' followed by URL within 300 chars
-    ')',
-  'i'
-);
+const urlRegex = /https?:\/\/[^\s"'<>]{1,1000}/g;
 
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing and proximity-based ancestor search.
@@ -434,33 +409,80 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
 }
 
 /**
- * Finds embedded unsubscribe links within the message body using a regular expression.
- * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
- * @returns {URL|null} - The embedded link if found, otherwise null.
+ * Finds the URL closest to any occurrence of "unsubscribe" text in the message.
+ * @param {messenger.messages.MessagePart} messagePart - The message part to search.
+ * @returns {URL|null} - The closest unsubscribe link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkRegex(messagePart) {
-  if (messagePart && messagePart.body) {
-    const match = messagePart.body.match(embeddedUnsubRegex);
-    if (match) {
-      // Return the first non-null captured group
-      const link = match[1] || match[2] || match[3] || null;
-      if (link) {
-        return new URL(link);
+  const body = extractBody(messagePart);
+  if (!body) return null;
+
+  // Find all occurrences of "unsubscribe" (case-insensitive)
+  const unsubscribeMatches = [...body.matchAll(unsubscribeRegex)];
+  const urlMatches = [...body.matchAll(urlRegex)];
+
+  if (unsubscribeMatches.length === 0 || urlMatches.length === 0) {
+    return null;
+  }
+
+  let closestUrl = null;
+  let minDistance = Infinity;
+
+  // For each unsubscribe occurrence, find the closest URL
+  for (const unsubMatch of unsubscribeMatches) {
+    const unsubPos = unsubMatch.index;
+    const unsubEnd = unsubPos + unsubMatch[0].length;
+    console_log('unsub', unsubMatch);
+
+    for (const urlMatch of urlMatches) {
+      const urlPos = urlMatch.index;
+      const urlEnd = urlPos + urlMatch[0].length;
+
+      console_log('urlmatch', urlMatch);
+
+      // Calculate distance (from either end of the URL to the unsubscribe text)
+      let distance;
+      if (urlPos > unsubPos) {
+        distance = urlPos - unsubEnd;
+      } else {
+        distance = unsubPos - urlEnd;
+        // Note: distance can be negative if 'unsubscribe' is in url
       }
-      return null;
+
+      console_log(distance);
+
+      if (distance < minDistance && distance < 300) {
+        minDistance = distance;
+        closestUrl = urlMatch[0];
+      }
     }
+  }
+
+  return closestUrl ? new URL(closestUrl) : null;
+}
+
+/**
+ * Recursively extracts and concatenates all body text from message parts.
+ * @param {messenger.messages.MessagePart} messagePart - The message part.
+ * @returns {string|null} - Combined body text.
+ */
+function extractBody(messagePart) {
+  let bodyText = '';
+
+  if (messagePart && messagePart.body) {
+    bodyText += messagePart.body;
   }
 
   if (messagePart && messagePart.parts) {
     for (const part of messagePart.parts) {
-      const embeddedLink = findEmbeddedUnsubLinkRegex(part);
-      if (embeddedLink) {
-        return embeddedLink;
+      const partBody = extractBody(part);
+      if (partBody) {
+        bodyText += ' ' + partBody;
       }
     }
   }
 
-  return null; // No embedded link found
+  return bodyText || null;
 }
 
 /**

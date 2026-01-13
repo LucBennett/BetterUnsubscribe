@@ -448,7 +448,7 @@ describe('searchUnsub', () => {
       test('should handle multiple URLs and select the one near unsubscribe keyword', async () => {
         const fullMessage = createMockFullMessage({
           contentType: 'text/plain',
-          body: 'Visit our site: https://example.com/home\nTo unsubscribe: https://example.com/unsubscribe',
+          body: 'Visit our site: https://example.com/home. To unsubscribe: https://example.com/remove_user_from_mailing_list?userid=123',
         });
 
         const messageHeader = createMockMessageHeader(20);
@@ -459,7 +459,9 @@ describe('searchUnsub', () => {
         const result = await searchUnsub(messageHeader);
 
         expect(result).toBeInstanceOf(UnsubWeb);
-        expect(result.link.href).toBe('https://example.com/unsubscribe');
+        expect(result.link.href).toBe(
+          'https://example.com/remove_user_from_mailing_list?userid=123'
+        );
       });
     });
   });
