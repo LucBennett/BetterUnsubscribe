@@ -432,13 +432,10 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
   for (const unsubMatch of unsubscribeMatches) {
     const unsubPos = unsubMatch.index;
     const unsubEnd = unsubPos + unsubMatch[0].length;
-    console_log('unsub', unsubMatch);
 
     for (const urlMatch of urlMatches) {
       const urlPos = urlMatch.index;
       const urlEnd = urlPos + urlMatch[0].length;
-
-      console_log('urlmatch', urlMatch);
 
       // Calculate distance (from either end of the URL to the unsubscribe text)
       let distance;
@@ -448,8 +445,6 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
         distance = unsubPos - urlEnd;
         // Note: distance can be negative if 'unsubscribe' is in url
       }
-
-      console_log(distance);
 
       if (distance < minDistance && distance < 300) {
         minDistance = distance;
@@ -588,8 +583,6 @@ class UnsubPost extends UnsubMethod {
    *          succeeds (HTTP 2xx response).
    */
   async call() {
-    console_log('Post to', this.weblink);
-
     const fetchOptions = {
       method: 'POST',
       headers: {
@@ -598,13 +591,13 @@ class UnsubPost extends UnsubMethod {
       body: 'List-Unsubscribe=One-Click',
     };
 
-    console_log(fetchOptions);
+    console_log('Fetch Options', fetchOptions);
 
     const response = await fetch(this.weblink, fetchOptions);
     if (!response.ok) {
       throw new Error(`Error during unsubscribe request: ${response.status}`);
     }
-    console_log(response);
+    console_log('Response', response);
   }
 
   /**
@@ -782,7 +775,7 @@ async function* getAllMessages() {
  */
 messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
   if (!messageFromPopup.messageId) {
-    console_log('Unknown action', messageFromPopup);
+    console_log('No Message Id', messageFromPopup);
     return false;
   }
 
@@ -848,7 +841,7 @@ function handleCancel() {
  * @returns {Promise<object>} - Response indicating the result of the deletion operation.
  */
 async function handleDelete(messageFromPopup) {
-  console_log(messageFromPopup);
+  console_log('User chose to delete emails from the mailing list');
   try {
     const messageIds = await collectMessageIdsToDelete(messageFromPopup);
 
