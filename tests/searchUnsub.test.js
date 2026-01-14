@@ -306,7 +306,7 @@ describe('searchUnsub', () => {
       test('should find embedded unsubscribe link in HTML body', async () => {
         const fullMessage = createMockFullMessage({
           contentType: 'text/html',
-          body: '<a href="https://unsubscribe.example.com">Unsubscribe</a>',
+          body: '<html><a href="https://example.com/prefs?id=123">Unsubscribe</a></html>',
         });
 
         const messageHeader = createMockMessageHeader(12);
@@ -318,7 +318,7 @@ describe('searchUnsub', () => {
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(normalizeUrl(result.link.href)).toBe(
-          'https://unsubscribe.example.com'
+          'https://example.com/prefs?id=123'
         );
       });
 

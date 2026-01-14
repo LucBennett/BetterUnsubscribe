@@ -170,19 +170,10 @@ async function searchUnsub(selectedMessage) {
   const directMatch = findEmbeddedUnsubLinkHTML(fullMessage);
   if (directMatch) {
     console_log(
-      `Embedded Unsubscribe WebLink Found using basic anchor search`,
+      `Embedded Unsubscribe WebLink Found using HTML parsing`,
       directMatch
     );
     return new UnsubWeb(directMatch);
-  }
-
-  const proximityMatch = findEmbeddedUnsubLinkHTMLByProximity(fullMessage);
-  if (proximityMatch) {
-    console_log(
-      `Embedded Unsubscribe WebLink Found using proximity-based search`,
-      proximityMatch
-    );
-    return new UnsubWeb(proximityMatch);
   }
 
   const regexMatch = findEmbeddedUnsubLinkRegex(fullMessage);
@@ -245,81 +236,35 @@ async function retrieveIdentity(messageHeader) {
 }
 
 // Regular expression to match 'unsubscribe' in different forms for embedded links
-const unsubscribeRegex = /\bun\W?(?:subscri(?:be|bing|ption))\b/gi;
+const unsubscribeRegexString = '\\bun\\W?(?:subscri(?:be|bing|ption))\\b';
+const unsubscribeRegex = RegExp(unsubscribeRegexString, 'gi');
+const unsubscribeRegexTest = RegExp(unsubscribeRegexString, 'i');
 
-const urlRegex = /https?:\/\/[^\s"'<>]{1,1000}/g;
-
-/**
- * Finds embedded unsubscribe links within the message body using HTML parsing and proximity-based ancestor search.
- *
- * Strategy:
- * - Parse HTML bodies and locate text nodes that match {@link unsubscribeRegex}.
- * - For each matching text node, walk up the DOM a few levels looking for nearby <a> tags.
- * - If multiple links exist in the ancestor, choose the one closest (in DOM order) to the text node.
- *
- * This tends to find links where the visible word "unsubscribe" is adjacent to an anchor tag,
- * even if the anchor’s own text doesn't contain "unsubscribe".
- *
- * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
- * @returns {URL|null} - The embedded link if found, otherwise null.
- */
-function findEmbeddedUnsubLinkHTMLByProximity(messagePart) {
-  // Parse the HTML string
-  if (messagePart && messagePart.contentType === 'text/html') {
-    const parser = new DOMParser();
-    const document = parser.parseFromString(messagePart.body, 'text/html');
-
-    const order = createNodeIndexMap(document.body);
-    const results = findTextNodesMatchingRegex(document.body, unsubscribeRegex);
-
-    for (const result of results) {
-      const obj = searchAncestorForLinks(result.parentElement);
-      if (obj) {
-        const t = order.get(result);
-        let best = null;
-        let bestDist = Infinity;
-
-        for (const a of obj.links) {
-          const d = Math.abs(order.get(a) - t);
-          if (d < bestDist) {
-            bestDist = d;
-            best = a;
-          }
-        }
-        return new URL(best.href);
-      }
-    }
-  }
-
-  if (messagePart && messagePart.parts) {
-    for (const part of messagePart.parts) {
-      const embeddedLink = findEmbeddedUnsubLinkHTMLByProximity(part);
-      if (embeddedLink) {
-        return embeddedLink;
-      }
-    }
-  }
-
-  return null;
-}
+const urlRegexString = 'https?:\\/\\/[^\\s"\'<>]{1,1000}';
+const urlRegex = RegExp(urlRegexString, 'gi');
+const urlRegexTest = RegExp(urlRegexString, 'i');
 
 const TEXT_NODE = (typeof Node !== 'undefined' && Node.TEXT_NODE) || 3;
 const ELEMENT_NODE = (typeof Node !== 'undefined' && Node.ELEMENT_NODE) || 1;
 
 /**
- * Recursively collects text nodes under an element whose text matches a regex.
+ * Recursively collects text nodes and anchor elements whose content matches a regex.
  *
  * @param {Node} element - Root element/node to search under.
- * @param {RegExp} regex - Pattern to test against text node content.
+ * @param {RegExp} regex - Pattern to test against text node content and anchor hrefs.
  * @param {Node[]} [results=[]] - Accumulator for matches (used for recursion).
- * @returns {Node[]} Array of matching text nodes.
+ * @returns {Node[]} Array of matching text nodes and anchor elements.
  */
-function findTextNodesMatchingRegex(element, regex, results = []) {
+function findNodesMatchingRegex(element, regex, results = []) {
   for (const node of element.childNodes) {
     if (node.nodeType === TEXT_NODE && regex.test(node.textContent)) {
       results.push(node);
     } else if (node.nodeType === ELEMENT_NODE) {
-      findTextNodesMatchingRegex(node, regex, results);
+      // Check if it's an anchor with matching href
+      if (node.tagName === 'A' && node.href && regex.test(node.href)) {
+        results.push(node);
+      }
+      findNodesMatchingRegex(node, regex, results);
     }
   }
 
@@ -372,26 +317,46 @@ function searchAncestorForLinks(element, maxDepth = 5) {
 }
 
 /**
- * Finds embedded unsubscribe links within the message body using HTML parsing.
+ * Finds embedded unsubscribe links within the message body using HTML parsing and proximity-based ancestor search.
+ *
+ * Strategy:
+ * - Parse HTML bodies
+ * - locate anchor tags that match {@link unsubscribeRegexTest}.
+ * - locate text nodes that match {@link unsubscribeRegexTest}.
+ *   - For each matching text node, walk up the DOM a few levels looking for nearby <a> tags.
+ *   - If multiple links exist in the ancestor, choose the one closest (in DOM order) to the text node.
  * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
  * @returns {URL|null} - The embedded link if found, otherwise null.
  */
 function findEmbeddedUnsubLinkHTML(messagePart) {
   if (messagePart && messagePart.contentType === 'text/html') {
-    // Parse the HTML content using DOMParser
     const parser = new DOMParser();
-    const doc = parser.parseFromString(messagePart.body, 'text/html');
+    const document = parser.parseFromString(messagePart.body, 'text/html');
 
-    // Search for all <a> elements
-    const links = doc.querySelectorAll('a');
-    for (const link of links) {
-      // Check if the link text contains "unsubscribe"
-      if (
-        link.textContent.match(unsubscribeRegex) ||
-        link.href.match(unsubscribeRegex)
-      ) {
-        // Return the href attribute of the matching <a> tag
-        return new URL(link.href);
+    const order = createNodeIndexMap(document.body);
+    const results = findNodesMatchingRegex(document.body, unsubscribeRegexTest);
+
+    for (const result of results) {
+      // If it's already an anchor element with matching href, return it directly
+      if (result.nodeType === ELEMENT_NODE && result.tagName === 'A') {
+        return new URL(result.href);
+      }
+
+      // Otherwise, it's a text node - search for nearby links
+      const obj = searchAncestorForLinks(result.parentElement);
+      if (obj) {
+        const t = order.get(result);
+        let best = null;
+        let bestDist = Infinity;
+
+        for (const a of obj.links) {
+          const d = Math.abs(order.get(a) - t);
+          if (d < bestDist) {
+            bestDist = d;
+            best = a;
+          }
+        }
+        return new URL(best.href);
       }
     }
   }
