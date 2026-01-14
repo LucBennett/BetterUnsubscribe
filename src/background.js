@@ -167,13 +167,13 @@ async function searchUnsub(selectedMessage) {
     }
   }
 
-  const directMatch = findEmbeddedUnsubLinkHTML(fullMessage);
-  if (directMatch) {
+  const htmlMatch = findEmbeddedUnsubLinkHTML(fullMessage);
+  if (htmlMatch) {
     console_log(
       `Embedded Unsubscribe WebLink Found using HTML parsing`,
-      directMatch
+      htmlMatch
     );
-    return new UnsubWeb(directMatch);
+    return new UnsubWeb(htmlMatch);
   }
 
   const regexMatch = findEmbeddedUnsubLinkRegex(fullMessage);
@@ -316,6 +316,9 @@ function searchAncestorForLinks(element, maxDepth = 5) {
   return searchAncestorForLinks(element.parentElement, maxDepth - 1);
 }
 
+// Max dom traversal distance allowed between text match and anchor
+const MAX_DOM_DISTANCE = 10;
+
 /**
  * Finds embedded unsubscribe links within the message body using HTML parsing and proximity-based ancestor search.
  *
@@ -356,6 +359,12 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
             best = a;
           }
         }
+        console_log('Best Distance', bestDist);
+
+        if (bestDist > MAX_DOM_DISTANCE) {
+          continue; // Skip this result, it's too far away
+        }
+
         return new URL(best.href);
       }
     }
@@ -372,6 +381,9 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
 
   return null; // No embedded link found
 }
+
+// Max character distance allowed between text match and url
+const MAX_CHARACTER_DISTANCE = 300;
 
 /**
  * Finds the URL closest to any occurrence of "unsubscribe" text in the message.
@@ -411,7 +423,7 @@ function findEmbeddedUnsubLinkRegex(messagePart) {
         // Note: distance can be negative if 'unsubscribe' is in url
       }
 
-      if (distance < minDistance && distance < 300) {
+      if (distance < minDistance && distance <= MAX_CHARACTER_DISTANCE) {
         minDistance = distance;
         closestUrl = urlMatch[0];
       }
