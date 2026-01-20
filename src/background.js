@@ -109,8 +109,8 @@ async function checkMessage(tab, message) {
         // Message is in cache
         value = funcCache.get(message.id);
       } else {
-        // Message not in cache, call searchUnsub(message)
-        value = await searchUnsub(message);
+        // Message not in cache, call searchUnsub
+        value = await searchUnsub(message.id);
         // Store the result in cache
         funcCache.set(message.id, value);
       }
@@ -127,12 +127,12 @@ async function checkMessage(tab, message) {
 /**
  * Searches for unsubscribe links and information in the message headers and body.
  * This function scans for standard unsubscribe headers (RFC 2369) and embedded links.
- * @param {messenger.messages.MessageHeader} selectedMessage - The selected message to search for unsubscribe information.
+ * @param {messenger.messages.MessageId} selectedMessageId - The selected message id to search for unsubscribe information.
  * @returns {Promise<UnsubMethod|null>} - Unsubscribe Method if found, otherwise null.
  */
-async function searchUnsub(selectedMessage) {
-  const fullMessage = await messenger.messages.getFull(selectedMessage.id);
-  const messageHeader = await messenger.messages.get(selectedMessage.id);
+async function searchUnsub(selectedMessageId) {
+  const fullMessage = await messenger.messages.getFull(selectedMessageId);
+  const messageHeader = await messenger.messages.get(selectedMessageId);
   const { headers } = fullMessage;
 
   // Check for standard unsubscribe headers (RFC 2369)
@@ -515,7 +515,7 @@ class UnsubMethod {
    * @throws {Error} - If the method is not implemented by a subclass.
    */
   async call() {
-    throw new Error('Method call() must be implemented.');
+    throw new Error('Method call() must be implemented by subclasses');
   }
 
   /**
@@ -524,7 +524,9 @@ class UnsubMethod {
    * @throws {Error} - If the method is not implemented by a subclass.
    */
   getMethodDetails() {
-    throw new Error('This method must be implemented by subclasses');
+    throw new Error(
+      'Method getMethodDetails() must be implemented by subclasses'
+    );
   }
 }
 
@@ -572,7 +574,7 @@ class UnsubPost extends UnsubMethod {
 
     const response = await fetch(this.weblink, fetchOptions);
     if (!response.ok) {
-      throw new Error(`Error during unsubscribe request: ${response.status}`);
+      throw new Error(`Response not ok. Status: ${response.status}`);
     }
     console_log('Response', response);
   }
@@ -759,11 +761,11 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
   const messageId = parseInt(messageFromPopup.messageId);
 
   if (messageFromPopup.getMethod === true) {
-    return handleGetMethod(messageId);
+    return await handleGetMethod(messageId);
   } else if (messageFromPopup.unsubscribe === true) {
     return await handleUnsubscribe(messageId);
   } else if (messageFromPopup.cancel === true) {
-    return handleCancel();
+    return await handleCancel();
   } else if (messageFromPopup.delete === true) {
     return await handleDelete(messageFromPopup);
   }
@@ -776,11 +778,21 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
  * @param {number} messageId - The ID of the message.
  * @returns {object} - Unsubscribe method details.
  */
-function handleGetMethod(messageId) {
+async function handleGetMethod(messageId) {
   console_log('Method Requested');
-  const func = funcCache.get(messageId);
+  let func;
+
+  if (funcCache.has(messageId)) {
+    // Message is in cache
+    func = funcCache.get(messageId);
+  } else {
+    // Message not in cache, call searchUnsub
+    func = await searchUnsub(messageId);
+    // Store the result in cache
+    funcCache.set(messageId, func);
+  }
   console_log('Method', func);
-  return func ? func.getMethodDetails() : { method: 'NONE' };
+  return func ? func.getMethodDetails() : { method: 'None' };
 }
 
 /**
@@ -790,10 +802,25 @@ function handleGetMethod(messageId) {
  */
 async function handleUnsubscribe(messageId) {
   console_log('User chose to unsubscribe from the mailing list');
-  const func = funcCache.get(messageId);
-  if (!func) {
-    return { response: 'Failed', error: 'No unsubscribe method cached' };
+  let func;
+
+  if (funcCache.has(messageId)) {
+    // Message is in cache
+    func = funcCache.get(messageId);
+  } else {
+    // Message not in cache, call searchUnsub
+    func = await searchUnsub(messageId);
+    // Store the result in cache
+    funcCache.set(messageId, func);
   }
+
+  if (!func) {
+    return {
+      response: 'Failed',
+      error: 'No unsubscribe method found for this message.',
+    };
+  }
+
   try {
     await func.call();
     return { response: 'Unsubscribed' };
@@ -807,7 +834,7 @@ async function handleUnsubscribe(messageId) {
  * Handles the cancellation of the unsubscribe action.
  * @returns {object} - Response indicating that the action was canceled.
  */
-function handleCancel() {
+async function handleCancel() {
   console_log('User canceled the unsubscribe action.');
   return { response: 'Canceled' };
 }

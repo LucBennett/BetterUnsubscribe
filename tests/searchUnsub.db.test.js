@@ -228,7 +228,7 @@ describe('searchUnsub - Data-Driven Tests Against SpamAssassin Corpus', () => {
       const expectedType = getExpectedUnsubscribeType(annotation);
 
       // Act: Search for unsubscribe method
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       // Assert: Verify result matches annotation
       if (expectedType) {

@@ -31,6 +31,10 @@
     "description": "Détails pour un courriel",
     "message": "Lorsque vous cliquez sur \"Se désabonner\", un courriel sera rédigé à l'adresse suivante :"
   },
+  "detailsTextNone": {
+    "description": "Details text for when no method is found",
+    "message": "Aucune méthode de désabonnement trouvée."
+  },
   "detailsTextPost": {
     "description": "Détails pour une requête POST",
     "message": "Lorsque vous cliquez sur \"Se désabonner\", une requête POST sera envoyée à l'URL suivante :"

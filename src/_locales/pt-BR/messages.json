@@ -31,6 +31,10 @@
     "description": "Detalhes para um e-mail",
     "message": "Quando você clicar em \"Cancelar Inscrição\", um e-mail será redigido para o seguinte endereço:"
   },
+  "detailsTextNone": {
+    "description": "Details text for when no method is found",
+    "message": "Nenhum método de cancelamento de inscrição encontrado."
+  },
   "detailsTextPost": {
     "description": "Detalhes para uma solicitação POST",
     "message": "Quando você clicar em \"Cancelar Inscrição\", uma solicitação POST será enviada para o seguinte URL:"

@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const statusText = document.getElementById('statusText');
   const detailsText = document.getElementById('detailsText');
   const detailsCode = document.getElementById('dynamicCodeBlock');
+  const detailsCodeContainer = document.getElementById('dynamicCodeContainer');
 
   const deleteDiv = document.getElementById('deleteDiv');
   const dropdownList = document.getElementById('dropdownList');
@@ -110,18 +111,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       switch (r.method) {
         case 'Post':
           detailsText.textContent =
-            messenger.i18n.getMessage('detailsTextPost') + ' ';
+            messenger.i18n.getMessage('detailsTextPost');
           detailsCode.textContent = r.address;
+          detailsCodeContainer.hidden = false;
           break;
         case 'Email':
           detailsText.textContent =
-            messenger.i18n.getMessage('detailsTextEmail') + ' ';
+            messenger.i18n.getMessage('detailsTextEmail');
           detailsCode.textContent = r.address;
+          detailsCodeContainer.hidden = false;
           break;
         case 'Browser':
-          detailsText.textContent =
-            messenger.i18n.getMessage('detailsTextWeb') + ' ';
+          detailsText.textContent = messenger.i18n.getMessage('detailsTextWeb');
           detailsCode.textContent = r.address;
+          detailsCodeContainer.hidden = false;
+          break;
+        case 'None':
+          detailsText.textContent =
+            messenger.i18n.getMessage('detailsTextNone');
           break;
         default:
         // No action required if no method is provided.
@@ -147,9 +154,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         console_log('Response from background:', r);
         if (r.response === 'Unsubscribed') {
           statusText.textContent = messenger.i18n.getMessage('statusTextDone');
-        } else {
+        } else if (r.response === 'Failed') {
           unsubscribeButton.disabled = false;
-          statusText.textContent = messenger.i18n.getMessage('statusTextError');
+          statusText.textContent =
+            messenger.i18n.getMessage('statusTextError') +
+            (r.error ? ': ' + r.error : '');
+          statusText.title = r.error; // Full error on hover
         }
       })
       .catch((error) => {

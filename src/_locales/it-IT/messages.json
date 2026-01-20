@@ -31,6 +31,10 @@
     "description": "Dettagli per un'email",
     "message": "Quando fai clic su \"Disiscriviti\", verrà redatta un'email al seguente indirizzo:"
   },
+  "detailsTextNone": {
+    "description": "Details text for when no method is found",
+    "message": "Nessun metodo di annullamento dell'iscrizione trovato."
+  },
   "detailsTextPost": {
     "description": "Dettagli per una richiesta POST",
     "message": "Quando fai clic su \"Disiscriviti\", verrà inviata una richiesta POST al seguente URL:"

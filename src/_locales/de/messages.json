@@ -31,6 +31,10 @@
     "description": "Details für eine E-Mail",
     "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine E-Mail an die folgende Adresse erstellt:"
   },
+  "detailsTextNone": {
+    "description": "Details text for when no method is found",
+    "message": "Keine Abmeldemethode gefunden."
+  },
   "detailsTextPost": {
     "description": "Details für eine POST-Anfrage",
     "message": "Wenn Sie auf \"Abbestellen\" klicken, wird eine POST-Anfrage an die folgende URL gesendet:"

@@ -39,6 +39,10 @@
     "description": "Details for a Web Link",
     "message": "When you click \"Unsubscribe\", a browser window will open and will visit the following URL:"
   },
+  "detailsTextNone": {
+    "description": "Details for a when no method is available",
+    "message": "No unsubscribe method found."
+  },
   "extensionDescription": {
     "description": "The description of the Thunderbird MailExtension",
     "message": "Makes it easier to unsubscribe from mailing lists."

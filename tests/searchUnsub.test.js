@@ -82,7 +82,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe('https://unsubscribe.link/test');
@@ -100,7 +100,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe('https://example.com/unsubscribe');
@@ -120,7 +120,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         // Should prefer mail-based unsubscribe when multiple options exist
         expect(result).toBeInstanceOf(UnsubMail);
@@ -141,7 +141,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe(
@@ -163,7 +163,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubMail);
         expect(result.email.pathname).toBe('unsubscribe@test.com');
@@ -187,7 +187,7 @@ describe('searchUnsub', () => {
         messenger.messages.get.mockResolvedValue(messageHeader);
         messenger.identities.list.mockResolvedValue(identities);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubMail);
         expect(result.email.pathname).toBe('unsubscribe@example.com');
@@ -207,7 +207,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubMail);
         expect(result.email.pathname).toBe('unsubscribe@example.com');
@@ -230,7 +230,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeInstanceOf(UnsubPost);
       expect(normalizeUrl(result.weblink.href)).toBe(
@@ -252,7 +252,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeInstanceOf(UnsubPost);
       expect(result.weblink.href).toBe('https://example.com/unsubscribe');
@@ -273,7 +273,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeInstanceOf(UnsubPost);
       expect(normalizeUrl(result.weblink.href)).toBe(
@@ -294,7 +294,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       // Should still attempt to process or fallback appropriately
       expect(result).toBeDefined();
@@ -314,7 +314,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(normalizeUrl(result.link.href)).toBe(
@@ -338,7 +338,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe('https://example.com/unsubscribe');
@@ -360,7 +360,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe(
@@ -384,7 +384,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe(
@@ -403,7 +403,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe('https://example.com/unsub');
@@ -422,7 +422,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe('https://example.com/unsubscribe');
@@ -439,7 +439,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe('https://example.com/remove?id=456');
@@ -456,7 +456,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         expect(result).toBeInstanceOf(UnsubWeb);
         expect(result.link.href).toBe(
@@ -475,7 +475,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeInstanceOf(UnsubWeb);
       expect(result.link.href).toBe(
@@ -497,7 +497,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeNull();
     });
@@ -513,7 +513,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeNull();
     });
@@ -525,7 +525,7 @@ describe('searchUnsub', () => {
         new Error('Failed to retrieve message')
       );
 
-      await expect(searchUnsub(messageHeader)).rejects.toThrow(
+      await expect(searchUnsub(messageHeader.id)).rejects.toThrow(
         'Failed to retrieve message'
       );
     });
@@ -542,7 +542,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeNull();
     });
@@ -559,7 +559,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       // Should handle gracefully without throwing
       expect(result).toBeDefined();
@@ -576,7 +576,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       // Should not crash
       expect(result).toBeDefined();
@@ -593,7 +593,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeNull();
     });
@@ -615,7 +615,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       // Should return UnsubPost, not UnsubWeb from embedded link
       expect(result).toBeInstanceOf(UnsubPost);
@@ -635,7 +635,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeInstanceOf(UnsubWeb);
       expect(result.link.href).toBe('https://header.example.com/unsubscribe');
@@ -658,7 +658,7 @@ describe('searchUnsub', () => {
         messenger.messages.getFull.mockResolvedValue(fullMessage);
         messenger.messages.get.mockResolvedValue(messageHeader);
 
-        const result = await searchUnsub(messageHeader);
+        const result = await searchUnsub(messageHeader.id);
 
         // Should not accept non-http(s) protocols
         if (result instanceof UnsubWeb) {
@@ -688,7 +688,7 @@ describe('searchUnsub', () => {
       messenger.messages.get.mockResolvedValue(messageHeader);
 
       const startTime = Date.now();
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
       const endTime = Date.now();
 
       expect(result).toBeInstanceOf(UnsubWeb);
@@ -717,7 +717,7 @@ describe('searchUnsub', () => {
       messenger.messages.getFull.mockResolvedValue(fullMessage);
       messenger.messages.get.mockResolvedValue(messageHeader);
 
-      const result = await searchUnsub(messageHeader);
+      const result = await searchUnsub(messageHeader.id);
 
       expect(result).toBeInstanceOf(UnsubWeb);
       expect(result.link.href).toBe('https://example.com/unsubscribe');

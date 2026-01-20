@@ -31,6 +31,10 @@
     "description": "Szczegóły dla wiadomości e-mail",
     "message": "Po kliknięciu \"Zrezygnuj\" zostanie utworzona wiadomość e-mail na poniższy adres:"
   },
+  "detailsTextNone": {
+    "description": "Details text for when no method is found",
+    "message": "Nie znaleziono metody rezygnacji z subskrypcji."
+  },
   "detailsTextPost": {
     "description": "Szczegóły dla żądania POST",
     "message": "Po kliknięciu \"Zrezygnuj\" zostanie wysłane żądanie POST na poniższy adres URL:"

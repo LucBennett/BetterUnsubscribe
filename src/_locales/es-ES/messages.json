@@ -31,6 +31,10 @@
     "description": "Detalles para un correo electrónico",
     "message": "Cuando haces clic en \"Darse de baja\", se redactará un correo electrónico a la siguiente dirección:"
   },
+  "detailsTextNone": {
+    "description": "Details text for when no method is found",
+    "message": "No se encontró ningún método para darse de baja."
+  },
   "detailsTextPost": {
     "description": "Detalles para una solicitud POST",
     "message": "Cuando haces clic en \"Darse de baja\", se enviará una solicitud POST a la siguiente URL:"
