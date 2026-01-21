@@ -1,5 +1,7 @@
-// Map to store functions for different unsubscribe actions associated with message IDs
-const funcCache = new Map(); // MessageId:UnsubMethod
+/**
+ * Map to store functions for different unsubscribe actions associated with message IDs
+ * @type {Map<messenger.messages.MessageId,UnsubMethod|null>} */
+const funcCache = new Map();
 
 /**
  * Logs messages to the console with a specific prefix.
@@ -28,13 +30,13 @@ function console_error() {
  * Behavior:
  * - Fetches the activated tab details.
  * - If the tab is a `messageDisplay` tab, retrieves the currently displayed message.
- * - Delegates to {@link checkMessage} to:
+ * - Delegates to {@link updateAction} to:
  *   - disable the action while processing,
  *   - look up/calculate the unsubscribe method (cached by message id),
  *   - enable the action if an unsubscribe method was found.
  *
  * Notes:
- * - The tab activation event can fire even when no message is displayed; `checkMessage`
+ * - The tab activation event can fire even when no message is displayed; `updateAction`
  *   safely handles a null/undefined message.
  * - This exists alongside `onMessageDisplayed` because tab focus changes don’t always
  *   imply a new message display event, and vice versa.
@@ -50,7 +52,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await messenger.tabs.get(activeInfo.tabId);
   if (tab.type === 'messageDisplay') {
     const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
-    await checkMessage(tab, message);
+    await updateAction(tab, message);
   }
 });
 
@@ -62,7 +64,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
  *
  * Behavior:
  * - Runs whenever Thunderbird reports a newly displayed message for a tab.
- * - Delegates to {@link checkMessage} to update the messageDisplayAction state
+ * - Delegates to {@link updateAction} to update the messageDisplayAction state
  *   (disable during processing, enable if unsubscribe info exists).
  *
  * @param {messenger.tabs.Tab} tab - The tab where the message is displayed.
@@ -72,7 +74,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
 messenger.messageDisplay.onMessageDisplayed.addListener(
   async (tab, message) => {
     console_log('onMessageDisplayed');
-    await checkMessage(tab, message);
+    await updateAction(tab, message);
   }
 );
 
@@ -84,12 +86,8 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * Flow:
  * 1) Immediately disables the action button for the current tab to prevent the user
  *    from clicking while unsubscribe detection is still running.
- * 2) If a message is present:
- *    - checks `funcCache` for a previously computed {@link UnsubMethod} (or null result)
- *      keyed by `message.id`.
- *    - if not cached, calls {@link searchUnsub} to detect an unsubscribe mechanism and
- *      caches the result (including null to avoid repeated work).
- * 3) Re-enables the action button only when an unsubscribe method was found (i.e. result
+ *
+ * 2) Re-enables the action button only when an unsubscribe method was found (i.e. result
  *    is not null).
  *
  * Error handling:
@@ -99,29 +97,35 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * @param {messenger.messages.MessageHeader|null|undefined} message - The displayed message.
  * @returns {Promise<void>}
  */
-async function checkMessage(tab, message) {
+async function updateAction(tab, message) {
   try {
     await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
     if (message) {
-      let value;
-
-      if (funcCache.has(message.id)) {
-        // Message is in cache
-        value = funcCache.get(message.id);
-      } else {
-        // Message not in cache, call searchUnsub
-        value = await searchUnsub(message.id);
-        // Store the result in cache
-        funcCache.set(message.id, value);
-      }
-
-      if (value !== null) {
+      const func = await getUnsubscribeMethod(message.id);
+      if (func !== null) {
         await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
       }
     }
   } catch (error) {
     console_error(error);
   }
+}
+
+/**
+ * Returns the cached unsubscribe method for a message.
+ *
+ * On a cache miss, runs {@link searchUnsub} to detect an unsubscribe mechanism and
+ * stores the result (including `null`) so subsequent calls do not repeat the scan.
+ *
+ * @param {messenger.messages.MessageId} messageId - The message id to inspect.
+ * @returns {Promise<UnsubMethod|null>} The unsubscribe method, or `null` if none exists.
+ */
+async function getUnsubscribeMethod(messageId) {
+  if (!funcCache.has(messageId)) {
+    // Message not in cache, call searchUnsub and store the result in cache
+    funcCache.set(messageId, await searchUnsub(messageId));
+  }
+  return funcCache.get(messageId);
 }
 
 /**
@@ -185,7 +189,6 @@ async function searchUnsub(selectedMessageId) {
   return null; // No unsubscribe information found
 }
 
-// Helper function to extract HTTPS link from the header
 /**
  * Extracts an HTTPS link from the unsubscribe header.
  * @param {string} header - The unsubscribe header containing the URL.
@@ -196,7 +199,6 @@ function extractHttpsLink(header) {
   return httpsLinkMatch ? new URL(httpsLinkMatch[1]) : null;
 }
 
-// Helper function to extract mailto link from the header
 /**
  * Extracts a mailto link from the unsubscribe header.
  * @param {string} header - The unsubscribe header containing the mailto link.
@@ -235,14 +237,63 @@ async function retrieveIdentity(messageHeader) {
   return identity || null; // Return null if no identity is found
 }
 
-// Regular expression to match 'unsubscribe' in different forms for embedded links
+/**
+ * Source pattern for matching "unsubscribe" in common variants.
+ *
+ * Used to detect unsubscribe text both in visible message content and in link URLs.
+ * Kept as a string so we can compile multiple RegExp instances with different flags.
+ *
+ * Pattern notes:
+ * - `\\b` word boundaries reduce false positives inside longer words.
+ * - `\\W?` allows a single separator (e.g., "un-subscribe", "un subscribe").
+ * - Matches "unsubscribe", "unsubscribing", and "unsubscription".
+ *
+ * @type {string}
+ */
 const unsubscribeRegexString = '\\bun\\W?(?:subscri(?:be|bing|ption))\\b';
-const unsubscribeRegex = RegExp(unsubscribeRegexString, 'gi');
-const unsubscribeRegexTest = RegExp(unsubscribeRegexString, 'i');
 
+/**
+ * Global, case-insensitive matcher for locating *all* occurrences of unsubscribe text.
+ * Used with `String.prototype.matchAll()` to compute proximity to URLs.
+ *
+ * @type {RegExp}
+ */
+const unsubscribeRegex = new RegExp(unsubscribeRegexString, 'gi');
+
+/**
+ * Case-insensitive *test* matcher for identifying nodes/links that mention unsubscribe.
+ * Intentionally non-global to avoid statefulness issues when calling `.test()` repeatedly.
+ *
+ * @type {RegExp}
+ */
+const unsubscribeRegexTest = new RegExp(unsubscribeRegexString, 'i');
+
+/**
+ * Source pattern for matching HTTP(S) URLs in message text.
+ *
+ * This is intentionally conservative:
+ * - avoids whitespace and common HTML delimiters
+ * - caps length to avoid pathological matches
+ *
+ * @type {string}
+ */
 const urlRegexString = 'https?:\\/\\/[^\\s"\'<>]{1,1000}';
-const urlRegex = RegExp(urlRegexString, 'gi');
-const urlRegexTest = RegExp(urlRegexString, 'i');
+
+/**
+ * Global, case-insensitive matcher for extracting *all* URLs from message text.
+ * Used with `String.prototype.matchAll()` when computing the closest URL to "unsubscribe".
+ *
+ * @type {RegExp}
+ */
+const urlRegex = new RegExp(urlRegexString, 'gi');
+
+/**
+ * Case-insensitive *test* matcher for quickly checking whether a message contains any URL.
+ * Intentionally non-global to avoid statefulness issues when calling `.test()` repeatedly.
+ *
+ * @type {RegExp}
+ */
+const urlRegexTest = new RegExp(urlRegexString, 'i');
 
 const TEXT_NODE = (typeof Node !== 'undefined' && Node.TEXT_NODE) || 3;
 const ELEMENT_NODE = (typeof Node !== 'undefined' && Node.ELEMENT_NODE) || 1;
@@ -316,7 +367,7 @@ function searchAncestorForLinks(element, maxDepth = 5) {
   return searchAncestorForLinks(element.parentElement, maxDepth - 1);
 }
 
-// Max dom traversal distance allowed between text match and anchor
+/** Max dom traversal distance allowed between text match and anchor */
 const MAX_DOM_DISTANCE = 10;
 
 /**
@@ -382,7 +433,7 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
   return null; // No embedded link found
 }
 
-// Max character distance allowed between text match and url
+/** Max character distance allowed between text match and url */
 const MAX_CHARACTER_DISTANCE = 300;
 
 /**
@@ -638,12 +689,12 @@ class UnsubMail extends UnsubMethod {
 
     const composeTab = await messenger.compose.beginNew(details);
 
-    const { _messages, _mode, id } = await messenger.compose.sendMessage(
+    const sendMessageResult = await messenger.compose.sendMessage(
       composeTab.id,
       { mode: 'sendNow' }
     );
 
-    if (typeof id == 'undefined') {
+    if (typeof sendMessageResult.headerMessageId == 'undefined') {
       throw new Error('Sent message is undefined');
     }
   }
@@ -780,19 +831,10 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
  */
 async function handleGetMethod(messageId) {
   console_log('Method Requested');
-  let func;
+  const func = await getUnsubscribeMethod(messageId);
 
-  if (funcCache.has(messageId)) {
-    // Message is in cache
-    func = funcCache.get(messageId);
-  } else {
-    // Message not in cache, call searchUnsub
-    func = await searchUnsub(messageId);
-    // Store the result in cache
-    funcCache.set(messageId, func);
-  }
   console_log('Method', func);
-  return func ? func.getMethodDetails() : { method: 'None' };
+  return func === null ? { method: 'None' } : func.getMethodDetails();
 }
 
 /**
@@ -802,19 +844,9 @@ async function handleGetMethod(messageId) {
  */
 async function handleUnsubscribe(messageId) {
   console_log('User chose to unsubscribe from the mailing list');
-  let func;
+  const func = await getUnsubscribeMethod(messageId);
 
-  if (funcCache.has(messageId)) {
-    // Message is in cache
-    func = funcCache.get(messageId);
-  } else {
-    // Message not in cache, call searchUnsub
-    func = await searchUnsub(messageId);
-    // Store the result in cache
-    funcCache.set(messageId, func);
-  }
-
-  if (!func) {
+  if (func === null) {
     return {
       response: 'Failed',
       error: 'No unsubscribe method found for this message.',
