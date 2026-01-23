@@ -94,15 +94,15 @@ messenger.messageDisplay.onMessageDisplayed.addListener(
  * - Any errors are caught and logged; the action remains disabled in that case.
  *
  * @param {messenger.tabs.Tab} tab - The tab in which the message is displayed.
- * @param {messenger.messages.MessageHeader|null|undefined} message - The displayed message.
+ * @param {messenger.messages.MessageHeader} message - The displayed message.
  * @returns {Promise<void>}
  */
 async function updateAction(tab, message) {
   try {
     await messenger.messageDisplayAction.disable(tab.id); // Disable action button until processing is complete
     if (message) {
-      const func = await getUnsubscribeMethod(message.id);
-      if (func !== null) {
+      const unsubMethod = await getUnsubscribeMethod(message.id);
+      if (unsubMethod !== null) {
         await messenger.messageDisplayAction.enable(tab.id); // Enable action button if unsubscribe info is found
       }
     }
@@ -136,7 +136,6 @@ async function getUnsubscribeMethod(messageId) {
  */
 async function searchUnsub(selectedMessageId) {
   const fullMessage = await messenger.messages.getFull(selectedMessageId);
-  const messageHeader = await messenger.messages.get(selectedMessageId);
   const { headers } = fullMessage;
 
   // Check for standard unsubscribe headers (RFC 2369)
@@ -161,6 +160,7 @@ async function searchUnsub(selectedMessageId) {
 
     if (email) {
       console_log('Unsubscribe Email Found', email);
+      const messageHeader = await messenger.messages.get(selectedMessageId);
       const identity = await retrieveIdentity(messageHeader);
       return new UnsubMail(identity, email);
     }
@@ -831,10 +831,12 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
  */
 async function handleGetMethod(messageId) {
   console_log('Method Requested');
-  const func = await getUnsubscribeMethod(messageId);
+  const unsubMethod = await getUnsubscribeMethod(messageId);
 
-  console_log('Method', func);
-  return func === null ? { method: 'None' } : func.getMethodDetails();
+  console_log('Method', unsubMethod);
+  return unsubMethod === null
+    ? { method: 'None' }
+    : unsubMethod.getMethodDetails();
 }
 
 /**
@@ -844,9 +846,9 @@ async function handleGetMethod(messageId) {
  */
 async function handleUnsubscribe(messageId) {
   console_log('User chose to unsubscribe from the mailing list');
-  const func = await getUnsubscribeMethod(messageId);
+  const unsubMethod = await getUnsubscribeMethod(messageId);
 
-  if (func === null) {
+  if (unsubMethod === null) {
     return {
       response: 'Failed',
       error: 'No unsubscribe method found for this message.',
@@ -854,7 +856,7 @@ async function handleUnsubscribe(messageId) {
   }
 
   try {
-    await func.call();
+    await unsubMethod.call();
     return { response: 'Unsubscribed' };
   } catch (err) {
     console_error(err);
