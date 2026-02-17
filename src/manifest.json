@@ -1,7 +1,7 @@
 {
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "default_locale": "en",
   "author": "Luc Bennett",
   "browser_specific_settings": {
@@ -18,7 +18,8 @@
     "compose",
     "compose.send",
     "theme",
-    "https://*/*"
+    "https://*/*",
+    "http://*/*"
   ],
   "icons": {
     "48": "icons/email_48x48.png",
