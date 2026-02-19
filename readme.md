@@ -4,6 +4,8 @@
 
 BetterUnsubscribe improves your email experience by streamlining the unsubscribe process. This extension adds a button to your navigation bar, which appears whenever an unsubscribe option is detected within an email.
 
+![screenshot](./assets/screenshot.png)
+
 ## Features
 
 BetterUnsubscribe offers several unsubscription methods based on what is available in the email:
