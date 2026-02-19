@@ -1,4 +1,7 @@
-# ![icon](src/icons/email_48x48_inverted.png) BetterUnsubscribe
+# <img src="src/icons/email_48x48_inverted.png" width="24"> BetterUnsubscribe
+
+<!-- prettier-ignore -->
+[![Install](https://img.shields.io/badge/Thunderbird%20Add--ons-Install-blue)](https://addons.thunderbird.net/en-US/thunderbird/addon/betterunsubscribe/) [![Version](https://img.shields.io/github/v/release/LucBennett/BetterUnsubscribe?color=lightgrey)](https://github.com/LucBennett/BetterUnsubscribe/releases/latest) [![Dynamic Regex Badge](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Faddons.thunderbird.net%2Fen-US%2Fthunderbird%2Faddon%2Fbetterunsubscribe%2F&search=%3Cdiv%20id%3D%22daily-users%22%3E%5Cs%2B(%5B%5Cd%2C%5D%2B%20users)%5Cs%2B%3C&replace=%241&label=Daily%20Users&color=brightgreen)](https://addons.thunderbird.net/en-US/thunderbird/addon/betterunsubscribe/) [![Dynamic Regex Badge](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Faddons.thunderbird.net%2Fen-US%2Fthunderbird%2Faddon%2Fbetterunsubscribe%2F&search=%3Cmeta%20content%3D%22(%5B%5Cd%5C.%5D%2B)%22%20itemprop%3D%22ratingValue%22%3E&replace=%241%2F5&label=User%20Rating&color=yellow)](https://addons.thunderbird.net/en-US/thunderbird/addon/betterunsubscribe/)
 
 #### A Modern Rewrite of [Unsubscribe](https://addons.thunderbird.net/en-us/thunderbird/addon/unsub/) by NilsKr33, Eicke Godehardt, and Andrej Korinth, Now with Enhanced Features
 
