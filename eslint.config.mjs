@@ -9,6 +9,7 @@ import jest from 'eslint-plugin-jest';
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
+  ...mozilla.configs['flat/recommended'],
   {
     files: ['**/*.js'],
     languageOptions: {
@@ -22,11 +23,9 @@ export default [
     },
     plugins: {
       prettier,
-      mozilla,
       'no-unsanitized': noUnsanitized,
     },
     rules: {
-      ...mozilla.configs.recommended.rules,
       ...prettierConfig.rules,
       'prettier/prettier': 'error',
     },
