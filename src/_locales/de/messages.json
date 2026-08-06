@@ -17,7 +17,7 @@
   },
   "confirmRulesDescription": {
     "description": "Beschreibung für den Bereich der Bestätigungsregeln",
-    "message": "Zeigt einen Bestätigungsdialog vor dem Abbestellen an, wenn die Ziel-URL oder der Absender einem Muster entspricht. Die hier eingegebene Warnmeldung erscheint in diesem Dialog."
+    "message": "Zeigt einen Bestätigungsdialog vor dem Abbestellen an, wenn die Ziel-URL oder der Absender einem Muster entspricht. Die hier eingegebene Warnmeldung erscheint in diesem Dialog. Sie erinnert Sie daran, warum Sie bei dieser Kategorie vorsichtig sein wollten."
   },
   "confirmRulesEmpty": {
     "description": "Text, wenn keine Regeln vorhanden sind",
@@ -41,7 +41,7 @@
   },
   "confirmUnsubscribeMessage": {
     "description": "Text im Bestätigungsdialog",
-    "message": "Sie sind dabei, sich abzumelden von:"
+    "message": "Sie sind dabei, sich von Folgendem abzumelden:"
   },
   "confirmUnsubscribeTitle": {
     "description": "Titel des Bestätigungsdialogs",

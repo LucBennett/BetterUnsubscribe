@@ -17,7 +17,7 @@
   },
   "confirmRulesDescription": {
     "description": "Descripción de la sección de reglas de confirmación",
-    "message": "Muestra un cuadro de confirmación antes de darse de baja cuando la URL de destino o el remitente coinciden con un patrón. El mensaje de advertencia que introduzcas aquí aparecerá en ese cuadro, recordándote por qué querías tener cuidado con esta categoría."
+    "message": "Muestra un cuadro de confirmación antes de que te des de baja si la URL de destino o el remitente coincide con un patrón. El mensaje de advertencia que introduzcas aquí aparecerá en ese cuadro, recordándote por qué querías tener cuidado con esta categoría."
   },
   "confirmRulesEmpty": {
     "description": "Texto que se muestra cuando no hay reglas de confirmación configuradas",

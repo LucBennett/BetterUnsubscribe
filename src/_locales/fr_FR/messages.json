@@ -85,7 +85,7 @@
   },
   "detailsTextWeb": {
     "description": "Détails pour un lien web",
-    "message": "Lorsque vous cliquez sur \"Se désabonner\", une fenêtre du navigateur s'ouvrira et visitera l'URL suivante :"
+    "message": "Lorsque vous cliquez sur \"Se désabonner\", une fenêtre du navigateur s'ouvrira et affichera l'URL suivante :"
   },
   "emailBehaviorTitle": {
     "description": "Titre de la section sur le comportement des courriels",

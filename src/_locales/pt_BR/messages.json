@@ -41,7 +41,7 @@
   },
   "confirmUnsubscribeMessage": {
     "description": "Mensagem para caixa de diálogo de confirmação",
-    "message": "Você está prestes a cancelar a inscrição de:"
+    "message": "Você está prestes a cancelar a inscrição em:"
   },
   "confirmUnsubscribeTitle": {
     "description": "Título da caixa de diálogo de confirmação",
