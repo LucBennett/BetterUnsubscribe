@@ -1,4 +1,10 @@
 /**
+ * Shared helpers used across the extension's background, popup, and options
+ * scripts: a namespaced console logger and message-resolution logic for
+ * finding "the message the user currently has open".
+ */
+
+/**
  * Creates a pair of console logging functions namespaced with a
  * module-specific prefix, so log output can be traced back to the file
  * that produced it.

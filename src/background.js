@@ -1,3 +1,11 @@
+/**
+ * Extension background script. Watches for a displayed or selected message,
+ * detects an available unsubscribe method via unsubExtraction.js and
+ * unsubMethods.js, and enables the message-display action / popup
+ * accordingly. Also handles the popup's runtime messages for executing
+ * unsubscribe, canceling, and deleting messages from a sender or domain.
+ */
+
 /* global createLogger, resolveCurrentMessage
    provided by common.js
 

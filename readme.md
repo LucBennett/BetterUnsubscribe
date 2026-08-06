@@ -18,6 +18,17 @@ BetterUnsubscribe offers several unsubscription methods based on what is availab
 3. **Unsubscribe via Web** _(RFC 2369)_: If a `List-Unsubscribe` web link (`https://`) is provided in the header, the site is opened in your browser.
 4. **Unsubscribe Link in Email Content**: If an unsubscribe link (`https://`) is embedded in the email content, the site is opened in your browser.
 
+## Architecture
+
+The extension's background scripts are split by responsibility:
+
+- **`common.js`** - shared helpers: a namespaced console logger and message-resolution logic for finding "the message the user currently has open".
+- **`unsubExtraction.js`** - detects unsubscribe links and the message's recipient identity, by parsing the `List-Unsubscribe` header or scanning the message body for an embedded link.
+- **`unsubMethods.js`** - defines the `UnsubMethod` strategies (`UnsubPost`, `UnsubMail`, `UnsubWeb`) that carry out each of the four unsubscribe methods listed above.
+- **`background.js`** - ties it together: watches for a displayed/selected message, uses `unsubExtraction.js` and `unsubMethods.js` to detect and cache an unsubscribe method per message, drives the message-display action's enabled state, and handles the popup's runtime messages (unsubscribe, cancel, delete).
+
+`popup.js` and `options.js` are independent UI scripts for the toolbar popup and the settings page, respectively; both also depend on `common.js`.
+
 ## Permissions
 
 When installing BetterUnsubscribe, Thunderbird will ask you to grant the following
@@ -63,7 +74,7 @@ You can download the latest version of BetterUnsubscribe [here](https://github.c
 
 ## Development Workflow
 
-To ensure a consistent development workflow, use the following tools and commands:
+To ensure a consistent development workflow, use the following tools and commands. See [CONTRIBUTING.md](./CONTRIBUTING.md) for contribution guidelines, including translations.
 
 ### Prettier (Code Formatter)
 

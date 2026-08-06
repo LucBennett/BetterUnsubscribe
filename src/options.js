@@ -1,3 +1,9 @@
+/**
+ * Logic for the extension's Options page: loads and saves settings (the
+ * auto-send-email toggle and the list of confirmation regex rules) to
+ * `messenger.storage.local`, and renders the rules editor UI.
+ */
+
 /* global createLogger --
    provided by common.js, loaded earlier in options.html */
 

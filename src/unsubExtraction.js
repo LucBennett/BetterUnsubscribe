@@ -1,3 +1,10 @@
+/**
+ * Extracts unsubscribe links and sender identities from a Thunderbird
+ * message: parsing the `List-Unsubscribe` header, and - when no header is
+ * present - scanning the HTML or plain-text body for an embedded
+ * unsubscribe link near the word "unsubscribe".
+ */
+
 /* global createLogger --
    provided by common.js, loaded earlier in manifest.json's background scripts */
 

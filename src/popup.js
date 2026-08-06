@@ -1,3 +1,9 @@
+/**
+ * Logic for the extension's toolbar/context-menu popup: resolves the
+ * message to act on, requests its unsubscribe method details from
+ * background.js, and wires up the unsubscribe/cancel/delete buttons.
+ */
+
 /* global createLogger, resolveCurrentMessage --
    provided by common.js, loaded earlier in popup.html */
 
@@ -11,6 +17,10 @@ const DEFAULT_SETTINGS = {
   confirmRules: [], // No confirmation rules by default
 };
 
+/**
+ * Resizes the delete-options dropdown so it fits within the visible
+ * viewport below the delete button, instead of overflowing the popup.
+ */
 async function resize_dropdown() {
   const el = document.getElementById('deleteButton');
   const dropdownList = document.getElementById('dropdownList');

@@ -1,3 +1,10 @@
+/**
+ * Defines the `UnsubMethod` strategies background.js dispatches to once an
+ * unsubscribe mechanism has been detected: a one-click POST request
+ * (`UnsubPost`), a mailto compose-and-send (`UnsubMail`), or opening a web
+ * page (`UnsubWeb`).
+ */
+
 /* global createLogger --
    provided by common.js, loaded earlier in manifest.json's background scripts */
 
