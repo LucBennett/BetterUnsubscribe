@@ -1,0 +1,162 @@
+{
+  "addRuleButton": {
+    "description": "Button to add a new confirmation rule",
+    "message": "+ Добавить правило"
+  },
+  "autoSendEmailHelp": {
+    "description": "Help text for auto-send email option",
+    "message": "Если отключено (по умолчанию), перед отправкой откроется окно создания письма для проверки. Если включено, письмо об отписке будет отправлено автоматически без проверки."
+  },
+  "autoSendEmailLabel": {
+    "description": "Label for auto-send email checkbox",
+    "message": "Автоматически отправлять письма об отписке"
+  },
+  "cancelButton": {
+    "description": "Label for the cancel button",
+    "message": "Отмена"
+  },
+  "confirmRulesDescription": {
+    "description": "Description for confirmation rules section",
+    "message": "Показывать диалог подтверждения перед отпиской, если целевой URL или отправитель соответствует шаблону. Введённое здесь предупреждение будет отображаться в этом диалоге, напоминая, почему вы хотели быть осторожны с этой категорией."
+  },
+  "confirmRulesEmpty": {
+    "description": "Text shown when no confirmation rules are configured",
+    "message": "Нет правил. Диалоги подтверждения отключены."
+  },
+  "confirmRulesHelp": {
+    "description": "Help text below the confirmation rules list",
+    "message": "Шаблоны сопоставляются с URL отписки и/или адресом отправителя."
+  },
+  "confirmRulesPatternCol": {
+    "description": "Column header for the regex pattern column in the rules list",
+    "message": "Шаблон (регулярное выражение, без учёта регистра)"
+  },
+  "confirmRulesTitle": {
+    "description": "Title for confirmation rules section",
+    "message": "Правила подтверждения"
+  },
+  "confirmRulesWarningCol": {
+    "description": "Column header for the warning message column in the rules list",
+    "message": "Предупреждающее сообщение (необязательно)"
+  },
+  "confirmUnsubscribeMessage": {
+    "description": "Message for confirmation dialog",
+    "message": "Вы собираетесь отписаться от:"
+  },
+  "confirmUnsubscribeTitle": {
+    "description": "Title for confirmation dialog",
+    "message": "Подтвердите отписку"
+  },
+  "confirmUnsubscribeWarning": {
+    "description": "Fallback warning in confirmation dialog when no custom message was set for the matched rule",
+    "message": "Этот адрес соответствует одному из ваших правил подтверждения. Вы уверены, что хотите продолжить?"
+  },
+  "deleteAllAddrButton": {
+    "description": "Button to delete all emails from an address",
+    "message": "Все с адреса:"
+  },
+  "deleteAllDomainButton": {
+    "description": "Button to delete all emails from a domain",
+    "message": "Все с домена:"
+  },
+  "deleteAllNameAddrButton": {
+    "description": "Button to delete all emails from a specific sender",
+    "message": "Все от отправителя:"
+  },
+  "deleteButton": {
+    "description": "Label for the delete button with a dropdown indicator",
+    "message": "Удалить ▼"
+  },
+  "deleteOneButton": {
+    "description": "Button to delete only the current email",
+    "message": "Только это"
+  },
+  "detailsTextEmail": {
+    "description": "Details for a Email",
+    "message": "При нажатии «Отписаться» будет создано письмо на следующий адрес:"
+  },
+  "detailsTextNone": {
+    "description": "Details for a when no method is available",
+    "message": "Способ отписки не найден."
+  },
+  "detailsTextPost": {
+    "description": "Details for a Post request",
+    "message": "При нажатии «Отписаться» POST-запрос будет отправлен на следующий URL:"
+  },
+  "detailsTextWeb": {
+    "description": "Details for a Web Link",
+    "message": "При нажатии «Отписаться» откроется окно браузера и будет открыт следующий URL:"
+  },
+  "emailBehaviorTitle": {
+    "description": "Title for email behavior section",
+    "message": "Поведение отписки по электронной почте"
+  },
+  "extensionDescription": {
+    "description": "The description of the Thunderbird MailExtension",
+    "message": "Упрощает отписку от рассылок."
+  },
+  "extensionName": {
+    "description": "The name of the Thunderbird MailExtension",
+    "message": "BetterUnsubscribe"
+  },
+  "noMessageSelected": {
+    "description": "Text shown when no message is displayed or selected for the popup to act on",
+    "message": "Сообщение не выбрано. Выберите письмо в списке или откройте его, чтобы отписаться."
+  },
+  "optionsTitle": {
+    "description": "Title of the options page",
+    "message": "Настройки BetterUnsubscribe"
+  },
+  "resetButton": {
+    "description": "Label for reset button",
+    "message": "Сбросить настройки"
+  },
+  "saveButton": {
+    "description": "Label for save button",
+    "message": "Сохранить"
+  },
+  "settingsReset": {
+    "description": "Message shown when settings are reset",
+    "message": "Настройки сброшены до значений по умолчанию"
+  },
+  "settingsSaved": {
+    "description": "Message shown when settings are saved",
+    "message": "Настройки успешно сохранены!"
+  },
+  "statusTextDeleteError": {
+    "description": "Status text when email deletion fails",
+    "message": "Не удалось удалить письмо(а)."
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Status text for successful email deletion",
+    "message": "Письмо(а) успешно удалено(ы)."
+  },
+  "statusTextDeleting": {
+    "description": "Status text while email(s) are being deleted",
+    "message": "Удаление письма(а)…"
+  },
+  "statusTextDone": {
+    "description": "Status text for done state",
+    "message": "Готово"
+  },
+  "statusTextError": {
+    "description": "Status text for error state",
+    "message": "Ошибка"
+  },
+  "statusTextWorking": {
+    "description": "Status text for working state",
+    "message": "Выполняется…"
+  },
+  "unsubscribeButton": {
+    "description": "Label for the unsubscribe button",
+    "message": "Отписаться"
+  },
+  "unsubscribeQuestion": {
+    "description": "Text asking the user if they want to unsubscribe",
+    "message": "Хотите отписаться от этой рассылки?"
+  },
+  "unsubscribeTitle": {
+    "description": "Title of the unsubscribe page",
+    "message": "Отписка"
+  }
+}

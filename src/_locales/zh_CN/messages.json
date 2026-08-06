@@ -1,0 +1,162 @@
+{
+  "addRuleButton": {
+    "description": "Button to add a new confirmation rule",
+    "message": "+ 添加规则"
+  },
+  "autoSendEmailHelp": {
+    "description": "Help text for auto-send email option",
+    "message": "禁用时（默认），将打开撰写窗口供您在发送前查看。启用后，退订邮件将自动发送，无需查看。"
+  },
+  "autoSendEmailLabel": {
+    "description": "Label for auto-send email checkbox",
+    "message": "自动发送退订邮件"
+  },
+  "cancelButton": {
+    "description": "Label for the cancel button",
+    "message": "取消"
+  },
+  "confirmRulesDescription": {
+    "description": "Description for confirmation rules section",
+    "message": "当目标网址或发件人匹配某个模式时，在退订前显示确认对话框。您在此处输入的警告信息将显示在该对话框中，提醒您为何要对此类别保持谨慎。"
+  },
+  "confirmRulesEmpty": {
+    "description": "Text shown when no confirmation rules are configured",
+    "message": "没有规则。确认对话框已禁用。"
+  },
+  "confirmRulesHelp": {
+    "description": "Help text below the confirmation rules list",
+    "message": "模式将与退订网址和/或发件人地址进行匹配。"
+  },
+  "confirmRulesPatternCol": {
+    "description": "Column header for the regex pattern column in the rules list",
+    "message": "模式（正则表达式，不区分大小写）"
+  },
+  "confirmRulesTitle": {
+    "description": "Title for confirmation rules section",
+    "message": "确认规则"
+  },
+  "confirmRulesWarningCol": {
+    "description": "Column header for the warning message column in the rules list",
+    "message": "警告信息（可选）"
+  },
+  "confirmUnsubscribeMessage": {
+    "description": "Message for confirmation dialog",
+    "message": "您即将退订："
+  },
+  "confirmUnsubscribeTitle": {
+    "description": "Title for confirmation dialog",
+    "message": "确认退订"
+  },
+  "confirmUnsubscribeWarning": {
+    "description": "Fallback warning in confirmation dialog when no custom message was set for the matched rule",
+    "message": "此地址匹配您的某条确认规则。确定要继续吗？"
+  },
+  "deleteAllAddrButton": {
+    "description": "Button to delete all emails from an address",
+    "message": "该地址的所有邮件："
+  },
+  "deleteAllDomainButton": {
+    "description": "Button to delete all emails from a domain",
+    "message": "该域名的所有邮件："
+  },
+  "deleteAllNameAddrButton": {
+    "description": "Button to delete all emails from a specific sender",
+    "message": "该发件人的所有邮件："
+  },
+  "deleteButton": {
+    "description": "Label for the delete button with a dropdown indicator",
+    "message": "删除 ▼"
+  },
+  "deleteOneButton": {
+    "description": "Button to delete only the current email",
+    "message": "仅此一封"
+  },
+  "detailsTextEmail": {
+    "description": "Details for a Email",
+    "message": "点击“退订”后，将起草一封发送至以下地址的邮件："
+  },
+  "detailsTextNone": {
+    "description": "Details for a when no method is available",
+    "message": "未找到退订方式。"
+  },
+  "detailsTextPost": {
+    "description": "Details for a Post request",
+    "message": "点击“退订”后，将向以下网址发送 POST 请求："
+  },
+  "detailsTextWeb": {
+    "description": "Details for a Web Link",
+    "message": "点击“退订”后，将打开浏览器窗口并访问以下网址："
+  },
+  "emailBehaviorTitle": {
+    "description": "Title for email behavior section",
+    "message": "邮件退订行为"
+  },
+  "extensionDescription": {
+    "description": "The description of the Thunderbird MailExtension",
+    "message": "让退订邮件列表变得更简单。"
+  },
+  "extensionName": {
+    "description": "The name of the Thunderbird MailExtension",
+    "message": "BetterUnsubscribe"
+  },
+  "noMessageSelected": {
+    "description": "Text shown when no message is displayed or selected for the popup to act on",
+    "message": "未选择邮件。请在列表中选择一封邮件，或打开一封邮件以进行退订。"
+  },
+  "optionsTitle": {
+    "description": "Title of the options page",
+    "message": "BetterUnsubscribe 选项"
+  },
+  "resetButton": {
+    "description": "Label for reset button",
+    "message": "恢复默认设置"
+  },
+  "saveButton": {
+    "description": "Label for save button",
+    "message": "保存"
+  },
+  "settingsReset": {
+    "description": "Message shown when settings are reset",
+    "message": "设置已恢复为默认值"
+  },
+  "settingsSaved": {
+    "description": "Message shown when settings are saved",
+    "message": "设置已成功保存！"
+  },
+  "statusTextDeleteError": {
+    "description": "Status text when email deletion fails",
+    "message": "删除邮件失败。"
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Status text for successful email deletion",
+    "message": "邮件已成功删除。"
+  },
+  "statusTextDeleting": {
+    "description": "Status text while email(s) are being deleted",
+    "message": "正在删除邮件……"
+  },
+  "statusTextDone": {
+    "description": "Status text for done state",
+    "message": "完成"
+  },
+  "statusTextError": {
+    "description": "Status text for error state",
+    "message": "错误"
+  },
+  "statusTextWorking": {
+    "description": "Status text for working state",
+    "message": "处理中……"
+  },
+  "unsubscribeButton": {
+    "description": "Label for the unsubscribe button",
+    "message": "退订"
+  },
+  "unsubscribeQuestion": {
+    "description": "Text asking the user if they want to unsubscribe",
+    "message": "您想退订此邮件列表吗？"
+  },
+  "unsubscribeTitle": {
+    "description": "Title of the unsubscribe page",
+    "message": "退订"
+  }
+}

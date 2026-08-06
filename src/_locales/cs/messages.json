@@ -1,0 +1,162 @@
+{
+  "addRuleButton": {
+    "description": "Button to add a new confirmation rule",
+    "message": "+ Přidat pravidlo"
+  },
+  "autoSendEmailHelp": {
+    "description": "Help text for auto-send email option",
+    "message": "Pokud je zakázáno (výchozí), před odesláním se otevře okno pro napsání e-mailu ke kontrole. Pokud je povoleno, e-mail pro odhlášení se odešle automaticky bez kontroly."
+  },
+  "autoSendEmailLabel": {
+    "description": "Label for auto-send email checkbox",
+    "message": "Automaticky odesílat e-maily pro odhlášení"
+  },
+  "cancelButton": {
+    "description": "Label for the cancel button",
+    "message": "Zrušit"
+  },
+  "confirmRulesDescription": {
+    "description": "Description for confirmation rules section",
+    "message": "Zobrazit potvrzovací dialog před odhlášením, pokud cílová adresa URL nebo odesílatel odpovídá vzoru. Zde zadaná varovná zpráva se zobrazí v tomto dialogu a připomene vám, proč jste chtěli být u této kategorie opatrní."
+  },
+  "confirmRulesEmpty": {
+    "description": "Text shown when no confirmation rules are configured",
+    "message": "Žádná pravidla. Potvrzovací dialogy jsou zakázány."
+  },
+  "confirmRulesHelp": {
+    "description": "Help text below the confirmation rules list",
+    "message": "Vzory se porovnávají s adresou URL pro odhlášení a/nebo adresou odesílatele."
+  },
+  "confirmRulesPatternCol": {
+    "description": "Column header for the regex pattern column in the rules list",
+    "message": "Vzor (regulární výraz, nerozlišuje velikost písmen)"
+  },
+  "confirmRulesTitle": {
+    "description": "Title for confirmation rules section",
+    "message": "Pravidla potvrzení"
+  },
+  "confirmRulesWarningCol": {
+    "description": "Column header for the warning message column in the rules list",
+    "message": "Varovná zpráva (nepovinné)"
+  },
+  "confirmUnsubscribeMessage": {
+    "description": "Message for confirmation dialog",
+    "message": "Chystáte se odhlásit z:"
+  },
+  "confirmUnsubscribeTitle": {
+    "description": "Title for confirmation dialog",
+    "message": "Potvrdit odhlášení"
+  },
+  "confirmUnsubscribeWarning": {
+    "description": "Fallback warning in confirmation dialog when no custom message was set for the matched rule",
+    "message": "Tato adresa odpovídá jednomu z vašich pravidel potvrzení. Opravdu chcete pokračovat?"
+  },
+  "deleteAllAddrButton": {
+    "description": "Button to delete all emails from an address",
+    "message": "Vše z adresy:"
+  },
+  "deleteAllDomainButton": {
+    "description": "Button to delete all emails from a domain",
+    "message": "Vše z domény:"
+  },
+  "deleteAllNameAddrButton": {
+    "description": "Button to delete all emails from a specific sender",
+    "message": "Vše od odesílatele:"
+  },
+  "deleteButton": {
+    "description": "Label for the delete button with a dropdown indicator",
+    "message": "Odstranit ▼"
+  },
+  "deleteOneButton": {
+    "description": "Button to delete only the current email",
+    "message": "Jen tento"
+  },
+  "detailsTextEmail": {
+    "description": "Details for a Email",
+    "message": "Po kliknutí na „Odhlásit“ bude vytvořen e-mail na následující adresu:"
+  },
+  "detailsTextNone": {
+    "description": "Details for a when no method is available",
+    "message": "Nebyla nalezena žádná metoda odhlášení."
+  },
+  "detailsTextPost": {
+    "description": "Details for a Post request",
+    "message": "Po kliknutí na „Odhlásit“ bude na následující adresu URL odeslán POST požadavek:"
+  },
+  "detailsTextWeb": {
+    "description": "Details for a Web Link",
+    "message": "Po kliknutí na „Odhlásit“ se otevře okno prohlížeče a přejde na následující adresu URL:"
+  },
+  "emailBehaviorTitle": {
+    "description": "Title for email behavior section",
+    "message": "Chování odhlášení přes e-mail"
+  },
+  "extensionDescription": {
+    "description": "The description of the Thunderbird MailExtension",
+    "message": "Usnadňuje odhlašování z e-mailových konferencí."
+  },
+  "extensionName": {
+    "description": "The name of the Thunderbird MailExtension",
+    "message": "BetterUnsubscribe"
+  },
+  "noMessageSelected": {
+    "description": "Text shown when no message is displayed or selected for the popup to act on",
+    "message": "Není vybrána žádná zpráva. Vyberte e-mail v seznamu nebo nějaký otevřete pro odhlášení."
+  },
+  "optionsTitle": {
+    "description": "Title of the options page",
+    "message": "Možnosti BetterUnsubscribe"
+  },
+  "resetButton": {
+    "description": "Label for reset button",
+    "message": "Obnovit výchozí nastavení"
+  },
+  "saveButton": {
+    "description": "Label for save button",
+    "message": "Uložit"
+  },
+  "settingsReset": {
+    "description": "Message shown when settings are reset",
+    "message": "Nastavení bylo obnoveno na výchozí hodnoty"
+  },
+  "settingsSaved": {
+    "description": "Message shown when settings are saved",
+    "message": "Nastavení bylo úspěšně uloženo!"
+  },
+  "statusTextDeleteError": {
+    "description": "Status text when email deletion fails",
+    "message": "Nepodařilo se odstranit e-mail(y)."
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Status text for successful email deletion",
+    "message": "E-mail(y) byl(y) úspěšně odstraněn(y)."
+  },
+  "statusTextDeleting": {
+    "description": "Status text while email(s) are being deleted",
+    "message": "Odstraňování e-mailu(ů)…"
+  },
+  "statusTextDone": {
+    "description": "Status text for done state",
+    "message": "Hotovo"
+  },
+  "statusTextError": {
+    "description": "Status text for error state",
+    "message": "Chyba"
+  },
+  "statusTextWorking": {
+    "description": "Status text for working state",
+    "message": "Pracuji…"
+  },
+  "unsubscribeButton": {
+    "description": "Label for the unsubscribe button",
+    "message": "Odhlásit"
+  },
+  "unsubscribeQuestion": {
+    "description": "Text asking the user if they want to unsubscribe",
+    "message": "Chcete se odhlásit z tohoto seznamu adresátů?"
+  },
+  "unsubscribeTitle": {
+    "description": "Title of the unsubscribe page",
+    "message": "Odhlášení"
+  }
+}

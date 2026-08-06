@@ -1,0 +1,162 @@
+{
+  "addRuleButton": {
+    "description": "Button to add a new confirmation rule",
+    "message": "+ Додати правило"
+  },
+  "autoSendEmailHelp": {
+    "description": "Help text for auto-send email option",
+    "message": "Якщо вимкнено (за замовчуванням), перед надсиланням відкриється вікно для перевірки листа. Якщо ввімкнено, лист про відписку буде надіслано автоматично без перевірки."
+  },
+  "autoSendEmailLabel": {
+    "description": "Label for auto-send email checkbox",
+    "message": "Автоматично надсилати листи про відписку"
+  },
+  "cancelButton": {
+    "description": "Label for the cancel button",
+    "message": "Скасувати"
+  },
+  "confirmRulesDescription": {
+    "description": "Description for confirmation rules section",
+    "message": "Показувати діалог підтвердження перед відпискою, якщо цільова URL-адреса або відправник відповідають шаблону. Введене тут попереджувальне повідомлення з'явиться в цьому діалозі, нагадуючи, чому ви хотіли бути обережними з цією категорією."
+  },
+  "confirmRulesEmpty": {
+    "description": "Text shown when no confirmation rules are configured",
+    "message": "Немає правил. Діалоги підтвердження вимкнені."
+  },
+  "confirmRulesHelp": {
+    "description": "Help text below the confirmation rules list",
+    "message": "Шаблони порівнюються з URL-адресою відписки та/або адресою відправника."
+  },
+  "confirmRulesPatternCol": {
+    "description": "Column header for the regex pattern column in the rules list",
+    "message": "Шаблон (регулярний вираз, без урахування регістру)"
+  },
+  "confirmRulesTitle": {
+    "description": "Title for confirmation rules section",
+    "message": "Правила підтвердження"
+  },
+  "confirmRulesWarningCol": {
+    "description": "Column header for the warning message column in the rules list",
+    "message": "Попереджувальне повідомлення (необов'язково)"
+  },
+  "confirmUnsubscribeMessage": {
+    "description": "Message for confirmation dialog",
+    "message": "Ви збираєтеся відписатися від:"
+  },
+  "confirmUnsubscribeTitle": {
+    "description": "Title for confirmation dialog",
+    "message": "Підтвердити відписку"
+  },
+  "confirmUnsubscribeWarning": {
+    "description": "Fallback warning in confirmation dialog when no custom message was set for the matched rule",
+    "message": "Ця адреса відповідає одному з ваших правил підтвердження. Ви впевнені, що хочете продовжити?"
+  },
+  "deleteAllAddrButton": {
+    "description": "Button to delete all emails from an address",
+    "message": "Усе з адреси:"
+  },
+  "deleteAllDomainButton": {
+    "description": "Button to delete all emails from a domain",
+    "message": "Усе з домену:"
+  },
+  "deleteAllNameAddrButton": {
+    "description": "Button to delete all emails from a specific sender",
+    "message": "Усе від відправника:"
+  },
+  "deleteButton": {
+    "description": "Label for the delete button with a dropdown indicator",
+    "message": "Видалити ▼"
+  },
+  "deleteOneButton": {
+    "description": "Button to delete only the current email",
+    "message": "Тільки це"
+  },
+  "detailsTextEmail": {
+    "description": "Details for a Email",
+    "message": "Після натискання «Відписатися» буде створено лист на таку адресу:"
+  },
+  "detailsTextNone": {
+    "description": "Details for a when no method is available",
+    "message": "Спосіб відписки не знайдено."
+  },
+  "detailsTextPost": {
+    "description": "Details for a Post request",
+    "message": "Після натискання «Відписатися» POST-запит буде надіслано на таку URL-адресу:"
+  },
+  "detailsTextWeb": {
+    "description": "Details for a Web Link",
+    "message": "Після натискання «Відписатися» відкриється вікно браузера з такою URL-адресою:"
+  },
+  "emailBehaviorTitle": {
+    "description": "Title for email behavior section",
+    "message": "Поведінка відписки електронною поштою"
+  },
+  "extensionDescription": {
+    "description": "The description of the Thunderbird MailExtension",
+    "message": "Спрощує відписку від розсилок."
+  },
+  "extensionName": {
+    "description": "The name of the Thunderbird MailExtension",
+    "message": "BetterUnsubscribe"
+  },
+  "noMessageSelected": {
+    "description": "Text shown when no message is displayed or selected for the popup to act on",
+    "message": "Повідомлення не вибрано. Виберіть лист у списку або відкрийте його, щоб відписатися."
+  },
+  "optionsTitle": {
+    "description": "Title of the options page",
+    "message": "Параметри BetterUnsubscribe"
+  },
+  "resetButton": {
+    "description": "Label for reset button",
+    "message": "Скинути до типових значень"
+  },
+  "saveButton": {
+    "description": "Label for save button",
+    "message": "Зберегти"
+  },
+  "settingsReset": {
+    "description": "Message shown when settings are reset",
+    "message": "Налаштування скинуто до типових значень"
+  },
+  "settingsSaved": {
+    "description": "Message shown when settings are saved",
+    "message": "Налаштування успішно збережено!"
+  },
+  "statusTextDeleteError": {
+    "description": "Status text when email deletion fails",
+    "message": "Не вдалося видалити лист(и)."
+  },
+  "statusTextDeleteSuccess": {
+    "description": "Status text for successful email deletion",
+    "message": "Лист(и) успішно видалено."
+  },
+  "statusTextDeleting": {
+    "description": "Status text while email(s) are being deleted",
+    "message": "Видалення листа(ів)…"
+  },
+  "statusTextDone": {
+    "description": "Status text for done state",
+    "message": "Готово"
+  },
+  "statusTextError": {
+    "description": "Status text for error state",
+    "message": "Помилка"
+  },
+  "statusTextWorking": {
+    "description": "Status text for working state",
+    "message": "Виконується…"
+  },
+  "unsubscribeButton": {
+    "description": "Label for the unsubscribe button",
+    "message": "Відписатися"
+  },
+  "unsubscribeQuestion": {
+    "description": "Text asking the user if they want to unsubscribe",
+    "message": "Бажаєте відписатися від цієї розсилки?"
+  },
+  "unsubscribeTitle": {
+    "description": "Title of the unsubscribe page",
+    "message": "Відписка"
+  }
+}
