@@ -271,6 +271,58 @@ const messenger = {
   },
 
   /**
+   * Menus API
+   * Manages context menu items (e.g. the message-list right-click entry)
+   * @see https://webextension-api.thunderbird.net/en/latest/menus.html
+   */
+  menus: {
+    /**
+     * Create a new context menu item
+     * @returns {number|string} The id of the newly created item
+     */
+    create: jest.fn(),
+
+    /**
+     * Event fired when a context menu item is clicked
+     * Includes custom triggerListener for simulating events in tests
+     */
+    onClicked: {
+      /**
+       * Register a listener for context menu click events
+       * @param {Function} callback - Function to call when a menu item is clicked
+       */
+      addListener: jest.fn((callback) => {
+        messenger.menus.onClicked.triggerListener = callback;
+      }),
+
+      /**
+       * Remove a previously registered listener
+       * @param {Function} callback - Function to remove
+       */
+      removeListener: jest.fn(),
+
+      /**
+       * Test helper: Trigger a menu click event manually
+       * Usage: messenger.menus.onClicked.triggerListener(info, tab)
+       */
+      triggerListener: null,
+    },
+  },
+
+  /**
+   * i18n API
+   * Provides localized strings from _locales/*\/messages.json
+   * @see https://webextension-api.thunderbird.net/en/latest/i18n.html
+   */
+  i18n: {
+    /**
+     * Get a localized message by key
+     * @returns {string}
+     */
+    getMessage: jest.fn((key) => key),
+  },
+
+  /**
    * Runtime API
    * Handles extension messaging and lifecycle events
    * @see https://webextension-api.thunderbird.net/en/latest/runtime.html
@@ -535,6 +587,9 @@ messenger.resetMocks = function () {
   }
   if (this.runtime.onMessage) {
     this.runtime.onMessage.triggerListener = null;
+  }
+  if (this.menus.onClicked) {
+    this.menus.onClicked.triggerListener = null;
   }
 };
 

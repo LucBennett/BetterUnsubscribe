@@ -1,10 +1,27 @@
-/**
- * Default settings for BetterUnsubscribe
- */
-const DEFAULT_SETTINGS = {
-  autoSendEmail: false, // Don't automatically send emails by default
-  confirmRules: [], // No confirmation rules by default
-};
+/* global createLogger, resolveCurrentMessage
+   provided by common.js
+
+   global extractHttpsLink, extractMailtoLink, retrieveIdentity,
+   findEmbeddedUnsubLinkHTML, findEmbeddedUnsubLinkRegex
+   provided by unsubExtraction.js
+
+   global UnsubMethod, UnsubPost, UnsubMail, UnsubWeb
+   provided by unsubMethods.js
+
+   common.js, unsubExtraction.js, and unsubMethods.js
+   loaded earlier in manifest.json's background scripts */
+
+// In a Node.js environment, pull in this file's dependencies so they resolve
+// the same way they do in the browser, where all background scripts listed
+// in manifest.json's "background.scripts" share one global scope.
+if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
+  Object.assign(globalThis, require('./common.js'));
+  Object.assign(globalThis, require('./unsubExtraction.js'));
+  Object.assign(globalThis, require('./unsubMethods.js'));
+}
+
+const { log: console_log, error: console_error } =
+  createLogger('background.js');
 
 /**
  * Map to store functions for different unsubscribe actions associated with message IDs
@@ -12,22 +29,54 @@ const DEFAULT_SETTINGS = {
 const funcCache = new Map();
 
 /**
- * Logs messages to the console with a specific prefix.
- * Useful for tracking debug information related to BetterUnsubscribe in background scripts.
- * @param {...*} arguments - The arguments to be logged.
+ * Id of the message-list context menu item that opens the unsubscribe popup.
+ * @type {string}
  */
-function console_log() {
-  console.log('[BetterUnsubscribe][background.js]', ...arguments);
-}
+const UNSUBSCRIBE_MENU_ITEM_ID = 'betterunsubscribe-unsubscribe';
 
 /**
- * Logs errors to the console with a specific prefix.
- * Helps identify error messages specific to BetterUnsubscribe's background script.
- * @param {...*} arguments - The arguments to be logged as errors.
+ * Registers a right-click context menu item, both on messages in the
+ * message list and inside the message content itself (the reading pane),
+ * offering another entry point into the unsubscribe popup.
  */
-function console_error() {
-  console.error('[BetterUnsubscribe][background.js]', ...arguments);
-}
+messenger.menus.create({
+  id: UNSUBSCRIBE_MENU_ITEM_ID,
+  title: messenger.i18n.getMessage('unsubscribeTitle'),
+  contexts: ['message_list', 'page', 'frame'],
+});
+
+/**
+ * Context menu click listener.
+ *
+ * Opens the unsubscribe popup in its own standalone window. The resolved
+ * message id is passed via a URL param so `popup.js` doesn't need a mail
+ * tab to look up "the current message" (a fresh window has none).
+ *
+ * @param {messenger.menus.OnClickData} info - Details about the click event.
+ * @param {messenger.tabs.Tab} tab - The tab the click happened in.
+ * @returns {Promise<void>}
+ */
+messenger.menus.onClicked.addListener(async (info, tab) => {
+  if (info.menuItemId !== UNSUBSCRIBE_MENU_ITEM_ID) {
+    return;
+  }
+
+  const message = await resolveCurrentMessage(tab, info);
+  const popupUrl = message
+    ? `popup.html?messageId=${message.id}`
+    : 'popup.html';
+
+  try {
+    await messenger.windows.create({
+      url: popupUrl,
+      type: 'popup',
+      width: 490,
+      height: 375,
+    });
+  } catch (error) {
+    console_error('Error opening popup window from context menu', error);
+  }
+});
 
 /**
  * Tab activation listener.
@@ -195,596 +244,6 @@ async function searchUnsub(selectedMessageId) {
   }
 
   return null; // No unsubscribe information found
-}
-
-/**
- * Extracts an HTTPS link from the unsubscribe header.
- * @param {string} header - The unsubscribe header containing the URL.
- * @returns {URL|null} - The extracted HTTPS link if found, otherwise null.
- */
-function extractHttpsLink(header) {
-  const httpsLinkMatch = header.match(/<(https?:\/\/[^>]+)>/);
-  return httpsLinkMatch ? new URL(httpsLinkMatch[1]) : null;
-}
-
-/**
- * Extracts a mailto link from the unsubscribe header.
- * @param {string} header - The unsubscribe header containing the mailto link.
- * @returns {URL|null} - The extracted mailto link if found, otherwise null.
- */
-function extractMailtoLink(header) {
-  const emailMatch = header.match(/<(mailto:[^>]+)>/i);
-  if (emailMatch) {
-    return new URL(emailMatch[1].replace(/^mailto:\/*/, 'mailto:'));
-  }
-  return null;
-}
-
-/**
- * Retrieves the MailIdentity associated with the given email's receiver.
- * @param {messenger.messages.MessageHeader} messageHeader - The message header to search for identities.
- * @returns {Promise<MailIdentity|null>} - The found MailIdentity, or null if no identity is found.
- */
-async function retrieveIdentity(messageHeader) {
-  let identity = await getIdentityReceiver(messageHeader);
-
-  if (identity === null) {
-    identity = await getIdentityForMessage(messageHeader);
-    if (identity === null) {
-      const identities = await messenger.identities.list();
-      if (identities.length !== 0) {
-        identity = identities[0];
-      }
-    }
-  }
-
-  if (!identity) {
-    console_log('No identity found for', messageHeader);
-  }
-
-  return identity || null; // Return null if no identity is found
-}
-
-/**
- * Source pattern for matching "unsubscribe" in common variants.
- *
- * Used to detect unsubscribe text both in visible message content and in link URLs.
- * Kept as a string so we can compile multiple RegExp instances with different flags.
- *
- * Pattern notes:
- * - `\\b` word boundaries reduce false positives inside longer words.
- * - `\\W?` allows a single separator (e.g., "un-subscribe", "un subscribe").
- * - Matches "unsubscribe", "unsubscribing", and "unsubscription".
- *
- * @type {string}
- */
-const unsubscribeRegexString = '\\bun\\W?(?:subscri(?:be|bing|ption))\\b';
-
-/**
- * Global, case-insensitive matcher for locating *all* occurrences of unsubscribe text.
- * Used with `String.prototype.matchAll()` to compute proximity to URLs.
- *
- * @type {RegExp}
- */
-const unsubscribeRegex = new RegExp(unsubscribeRegexString, 'gi');
-
-/**
- * Case-insensitive *test* matcher for identifying nodes/links that mention unsubscribe.
- * Intentionally non-global to avoid statefulness issues when calling `.test()` repeatedly.
- *
- * @type {RegExp}
- */
-const unsubscribeRegexTest = new RegExp(unsubscribeRegexString, 'i');
-
-/**
- * Source pattern for matching HTTP(S) URLs in message text.
- *
- * This is intentionally conservative:
- * - avoids whitespace and common HTML delimiters
- * - caps length to avoid pathological matches
- *
- * @type {string}
- */
-const urlRegexString = 'https?:\\/\\/[^\\s"\'<>]{1,1000}';
-
-/**
- * Global, case-insensitive matcher for extracting *all* URLs from message text.
- * Used with `String.prototype.matchAll()` when computing the closest URL to "unsubscribe".
- *
- * @type {RegExp}
- */
-const urlRegex = new RegExp(urlRegexString, 'gi');
-
-/**
- * Case-insensitive *test* matcher for quickly checking whether a message contains any URL.
- * Intentionally non-global to avoid statefulness issues when calling `.test()` repeatedly.
- *
- * @type {RegExp}
- */
-const urlRegexTest = new RegExp(urlRegexString, 'i');
-
-const TEXT_NODE = (typeof Node !== 'undefined' && Node.TEXT_NODE) || 3;
-const ELEMENT_NODE = (typeof Node !== 'undefined' && Node.ELEMENT_NODE) || 1;
-
-/**
- * Recursively collects text nodes and anchor elements whose content matches a regex.
- *
- * @param {Node} element - Root element/node to search under.
- * @param {RegExp} regex - Pattern to test against text node content and anchor hrefs.
- * @param {Node[]} [results=[]] - Accumulator for matches (used for recursion).
- * @returns {Node[]} Array of matching text nodes and anchor elements.
- */
-function findNodesMatchingRegex(element, regex, results = []) {
-  for (const node of element.childNodes) {
-    if (node.nodeType === TEXT_NODE && regex.test(node.textContent)) {
-      results.push(node);
-    } else if (node.nodeType === ELEMENT_NODE) {
-      // Check if it's an anchor with matching href
-      if (node.tagName === 'A' && node.href && regex.test(node.href)) {
-        results.push(node);
-      }
-      findNodesMatchingRegex(node, regex, results);
-    }
-  }
-
-  return results;
-}
-
-/**
- * Builds a DOM-order index for all nodes under a given root.
- *
- * This is used to compute "closeness" between a text node containing "unsubscribe"
- * and nearby anchors when multiple candidate links exist.
- *
- * @param {Node} root - Root node to traverse.
- * @returns {WeakMap<Node, number>} A WeakMap from node -> traversal index.
- */
-function createNodeIndexMap(root) {
-  let i = 0;
-  const map = new WeakMap();
-
-  // Manual tree traversal instead of createTreeWalker
-  function traverse(node) {
-    map.set(node, i++);
-    for (const child of node.childNodes) {
-      traverse(child);
-    }
-  }
-
-  traverse(root);
-  return map;
-}
-
-/**
- * Walks up the DOM tree looking for an ancestor that contains one or more anchor tags.
- *
- * @param {Element|null} element - Starting element (typically the parent of a matching text node).
- * @param {number} [maxDepth=5] - Maximum number of parent hops before giving up.
- * @returns {{ancestor: Element, links: NodeListOf<Element>}|null}
- *          Object containing the ancestor and its links, or null if none found.
- */
-function searchAncestorForLinks(element, maxDepth = 5) {
-  if (maxDepth < 0 || !element) {
-    return null;
-  }
-  const links = element.querySelectorAll('a[href]');
-  if (links.length > 0) {
-    return { ancestor: element, links: links };
-  }
-
-  return searchAncestorForLinks(element.parentElement, maxDepth - 1);
-}
-
-/** Max dom traversal distance allowed between text match and anchor */
-const MAX_DOM_DISTANCE = 10;
-
-/**
- * Finds embedded unsubscribe links within the message body using HTML parsing and proximity-based ancestor search.
- *
- * Strategy:
- * - Parse HTML bodies
- * - locate anchor tags that match {@link unsubscribeRegexTest}.
- * - locate text nodes that match {@link unsubscribeRegexTest}.
- *   - For each matching text node, walk up the DOM a few levels looking for nearby <a> tags.
- *   - If multiple links exist in the ancestor, choose the one closest (in DOM order) to the text node.
- * @param {messenger.messages.MessagePart} messagePart - The message part to search for embedded links.
- * @returns {URL|null} - The embedded link if found, otherwise null.
- */
-function findEmbeddedUnsubLinkHTML(messagePart) {
-  if (messagePart && messagePart.contentType === 'text/html') {
-    const parser = new DOMParser();
-    const document = parser.parseFromString(messagePart.body, 'text/html');
-
-    const order = createNodeIndexMap(document.body);
-    const results = findNodesMatchingRegex(document.body, unsubscribeRegexTest);
-
-    for (const result of results) {
-      // If it's already an anchor element with matching href, return it directly
-      if (result.nodeType === ELEMENT_NODE && result.tagName === 'A') {
-        return new URL(result.href);
-      }
-
-      // Otherwise, it's a text node - search for nearby links
-      const obj = searchAncestorForLinks(result.parentElement);
-      if (obj) {
-        const t = order.get(result);
-        let best = null;
-        let bestDist = Infinity;
-
-        for (const a of obj.links) {
-          const d = Math.abs(order.get(a) - t);
-          if (d < bestDist) {
-            bestDist = d;
-            best = a;
-          }
-        }
-        console_log('Best Distance', bestDist);
-
-        if (bestDist > MAX_DOM_DISTANCE) {
-          continue; // Skip this result, it's too far away
-        }
-
-        return new URL(best.href);
-      }
-    }
-  }
-
-  if (messagePart && messagePart.parts) {
-    for (const part of messagePart.parts) {
-      const embeddedLink = findEmbeddedUnsubLinkHTML(part);
-      if (embeddedLink) {
-        return embeddedLink;
-      }
-    }
-  }
-
-  return null; // No embedded link found
-}
-
-/** Max character distance allowed between text match and url */
-const MAX_CHARACTER_DISTANCE = 300;
-
-/**
- * Finds the URL closest to any occurrence of "unsubscribe" text in the message.
- * @param {messenger.messages.MessagePart} messagePart - The message part to search.
- * @returns {URL|null} - The closest unsubscribe link if found, otherwise null.
- */
-function findEmbeddedUnsubLinkRegex(messagePart) {
-  const body = extractBody(messagePart);
-  if (!body) return null;
-
-  // Find all occurrences of "unsubscribe" (case-insensitive)
-  const unsubscribeMatches = [...body.matchAll(unsubscribeRegex)];
-  const urlMatches = [...body.matchAll(urlRegex)];
-
-  if (unsubscribeMatches.length === 0 || urlMatches.length === 0) {
-    return null;
-  }
-
-  let closestUrl = null;
-  let minDistance = Infinity;
-
-  // For each unsubscribe occurrence, find the closest URL
-  for (const unsubMatch of unsubscribeMatches) {
-    const unsubPos = unsubMatch.index;
-    const unsubEnd = unsubPos + unsubMatch[0].length;
-
-    for (const urlMatch of urlMatches) {
-      const urlPos = urlMatch.index;
-      const urlEnd = urlPos + urlMatch[0].length;
-
-      // Calculate distance (from either end of the URL to the unsubscribe text)
-      let distance;
-      if (urlPos > unsubPos) {
-        distance = urlPos - unsubEnd;
-      } else {
-        distance = unsubPos - urlEnd;
-        // Note: distance can be negative if 'unsubscribe' is in url
-      }
-
-      if (distance < minDistance && distance <= MAX_CHARACTER_DISTANCE) {
-        minDistance = distance;
-        closestUrl = urlMatch[0];
-      }
-    }
-  }
-
-  return closestUrl ? new URL(closestUrl) : null;
-}
-
-/**
- * Recursively extracts and concatenates all body text from message parts.
- * @param {messenger.messages.MessagePart} messagePart - The message part.
- * @returns {string|null} - Combined body text.
- */
-function extractBody(messagePart) {
-  let bodyText = '';
-
-  if (messagePart && messagePart.body) {
-    bodyText += messagePart.body;
-  }
-
-  if (messagePart && messagePart.parts) {
-    for (const part of messagePart.parts) {
-      const partBody = extractBody(part);
-      if (partBody) {
-        bodyText += ' ' + partBody;
-      }
-    }
-  }
-
-  return bodyText || null;
-}
-
-/**
- * Retrieves the MailIdentity associated with the given email headers receiver.
- * This function checks the BCC, CC, and recipient lists to find a matching identity.
- * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
- * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
- */
-async function getIdentityReceiver(messageHeader) {
-  const allReceivers = new Set([
-    ...messageHeader.bccList,
-    ...messageHeader.ccList,
-    ...messageHeader.recipients,
-  ]);
-
-  const identities = await messenger.identities.list();
-
-  for (const identity of identities) {
-    if (allReceivers.has(identity.email)) {
-      return identity;
-    }
-  }
-
-  return null; // Return null if no matching identity is found
-}
-
-/**
- * Retrieves the MailIdentity associated with the given message's folder.
- * This function iterates over accounts to match identities based on the folder's account ID.
- * @param {messenger.messages.MessageHeader} messageHeader - The MessageHeader associated with the message.
- * @returns {Promise<MailIdentity|null>} - The MailIdentity if found, otherwise null.
- */
-async function getIdentityForMessage(messageHeader) {
-  // Early return if no folder is present
-  if (!messageHeader.folder) {
-    return null;
-  }
-
-  const folder = messageHeader.folder;
-  const accounts = await messenger.accounts.list();
-
-  // Find the account that matches the folder's accountId
-  const matchingAccount = accounts.find(
-    (account) => account.id === folder.accountId
-  );
-
-  // Return the first identity of the matching account, or null if no match
-  return matchingAccount?.identities?.[0] ?? null;
-}
-
-/**
- * Base class for different unsubscribe methods.
- * This class is extended by specific unsubscribe action implementations.
- */
-class UnsubMethod {
-  /**
-   * Method to be implemented by subclasses to execute the unsubscribe action.
-   * @throws {Error} - If the method is not implemented by a subclass.
-   */
-  async call() {
-    throw new Error('Method call() must be implemented by subclasses');
-  }
-
-  /**
-   * Method to get details of the unsubscribe method (e.g., type, address).
-   * Must be implemented by subclasses.
-   * @throws {Error} - If the method is not implemented by a subclass.
-   */
-  getMethodDetails() {
-    throw new Error(
-      'Method getMethodDetails() must be implemented by subclasses'
-    );
-  }
-}
-
-/**
- * Class for unsubscribing via a POST request.
- * This class handles the logic for making POST requests to specified URLs for unsubscription.
- */
-class UnsubPost extends UnsubMethod {
-  /**
-   * Constructor for UnsubPost.
-   * @param {URL} weblink - The web link to send the POST request to.
-   */
-  constructor(weblink) {
-    super();
-    this.weblink = weblink;
-  }
-
-  /**
-   * Executes the unsubscribe action via an HTTP POST request.
-   *
-   * Implements the RFC 8058 "One-Click Unsubscribe" mechanism:
-   * sends a POST request to the provided URL with a form body of
-   * `List-Unsubscribe=One-Click`.
-   *
-   * If the request completes with a non-2xx status code or the fetch
-   * operation fails, this method throws an {@link Error} describing
-   * the reason.
-   *
-   * @async
-   * @throws {Error} If the network request fails or the server responds
-   *         with a non-OK status code.
-   * @returns {Promise<void>} Resolves when the unsubscribe request
-   *          succeeds (HTTP 2xx response).
-   */
-  async call() {
-    const fetchOptions = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: 'List-Unsubscribe=One-Click',
-    };
-
-    console_log('Fetch Options', fetchOptions);
-
-    const response = await fetch(this.weblink, fetchOptions);
-    if (!response.ok) {
-      throw new Error(`Response not ok. Status: ${response.status}`);
-    }
-    console_log('Response', response);
-  }
-
-  /**
-   * Returns details of the unsubscribe method.
-   * @returns {any} - Method details, including type and address.
-   */
-  getMethodDetails() {
-    return { method: 'Post', address: this.weblink.href };
-  }
-}
-
-/**
- * Class for unsubscribing via an email.
- * This class handles composing and sending an unsubscribe email.
- */
-class UnsubMail extends UnsubMethod {
-  /**
-   * Constructor for UnsubMail.
-   * @param {MailIdentity} identity - The identity for the email.
-   * @param {URL} email - The email address to send the unsubscribe request to.
-   */
-  constructor(identity, email) {
-    super();
-    this.identity = identity;
-    this.email = email;
-  }
-
-  /**
-   * Executes the unsubscribe action by sending an email message.
-   *
-   * Opens a compose window using the Thunderbird Compose API,
-   * pre-filled with the standard "unsubscribe" subject and body.
-   *
-   * If the user's settings enable automatic sending, the message is
-   * sent immediately once the compose window becomes sendable.
-   * Otherwise, the compose window is left open for user review.
-   *
-   * The target address and optional subject line are extracted from
-   * the `mailto:` URL supplied in the `List-Unsubscribe` header.
-   *
-   * If message composition or sending fails, this method throws an
-   * {@link Error} describing the failure.
-   *
-   * @async
-   * @throws {Error} If the compose window cannot be created or the
-   *         message send operation fails.
-   * @returns {Promise<void>} Resolves once the unsubscribe email
-   *          has been successfully sent.
-   */
-  async call() {
-    let details = {
-      to: this.email.pathname,
-      subject: this.email.searchParams.has('subject')
-        ? this.email.searchParams.get('subject')
-        : 'unsubscribe',
-      body: this.email.searchParams.has('body')
-        ? this.email.searchParams.get('body')
-        : 'Please unsubscribe me from your mailing list. Thank you.',
-    };
-
-    if (this.identity) {
-      details.identityId = this.identity.id;
-    }
-
-    const composeTab = await messenger.compose.beginNew(details);
-
-    const settings = await messenger.storage.local.get(DEFAULT_SETTINGS);
-    console_log('Loaded settings:', settings);
-
-    let state;
-    if (settings.autoSendEmail === true) {
-      // Wait until Thunderbird says this compose window can actually send.
-      for (let i = 0; i < 30; i++) {
-        // 3 seconds
-        state = await messenger.compose.getComposeState(composeTab.id);
-        if (state?.canSendNow) {
-          break;
-        }
-        await new Promise((resolve) => setTimeout(resolve, 100));
-      }
-
-      if (!state?.canSendNow) {
-        throw new Error('Compose window did not become sendable.');
-      }
-
-      const sendMessageResult = await messenger.compose.sendMessage(
-        composeTab.id,
-        { mode: 'sendNow' }
-      );
-
-      if (typeof sendMessageResult.headerMessageId == 'undefined') {
-        throw new Error('Message send did not return a headerMessageId.');
-      }
-    }
-  }
-
-  /**
-   * Returns details of the unsubscribe method.
-   * @returns {any} - Method details, including type and address.
-   */
-  getMethodDetails() {
-    return { method: 'Email', address: this.email.pathname };
-  }
-}
-
-/**
- * Class for unsubscribing via a web link.
- * This class handles opening a web page for unsubscription.
- */
-class UnsubWeb extends UnsubMethod {
-  /**
-   * Constructor for UnsubWeb.
-   * @param {URL} link - The web link to visit for unsubscribing.
-   */
-  constructor(link) {
-    super();
-    this.link = link;
-  }
-
-  /**
-   * Executes the unsubscribe action by opening the sender's
-   * unsubscribe web page in a popup browser window.
-   *
-   * This follows the RFC 2369 "List-Unsubscribe" web-link mechanism.
-   * No network request is made automatically; the user completes
-   * the process manually in the opened window.
-   *
-   * Throws an {@link Error} if the window cannot be created.
-   *
-   * @async
-   * @throws {Error} If the popup window cannot be opened (for example,
-   *         due to permissions or browser restrictions).
-   * @returns {Promise<void>} Resolves once the popup window has been
-   *          successfully opened.
-   */
-  async call() {
-    await messenger.windows.create({
-      url: this.link.href,
-      type: 'popup',
-    });
-  }
-
-  /**
-   * Returns details of the unsubscribe method.
-   * @returns {any} - Method details, including type and address.
-   */
-  getMethodDetails() {
-    return { method: 'Browser', address: this.link.href };
-  }
 }
 
 /**
