@@ -1,3 +1,8 @@
+/* global createLogger --
+   provided by common.js, loaded earlier in options.html */
+
+const { log: console_log, error: console_error } = createLogger('options.js');
+
 /**
  * Default settings for BetterUnsubscribe
  */
@@ -5,22 +10,6 @@ const DEFAULT_SETTINGS = {
   autoSendEmail: false, // Don't automatically send emails by default
   confirmRules: [], // No confirmation rules by default
 };
-
-/**
- * Logs messages to the console with a custom prefix.
- * @param {...any} args - The arguments to log to the console.
- */
-function console_log(...args) {
-  console.log('[BetterUnsubscribe][options.js]', ...args);
-}
-
-/**
- * Logs error messages to the console with a custom prefix.
- * @param {...any} args - The error arguments to log to the console.
- */
-function console_error(...args) {
-  console.error('[BetterUnsubscribe][options.js]', ...args);
-}
 
 /**
  * Validates a regular expression pattern
@@ -85,7 +74,7 @@ function createRuleRow(regex = '', description = '') {
   const removeBtn = document.createElement('button');
   removeBtn.type = 'button';
   removeBtn.className = 'button-remove';
-  removeBtn.textContent = '×';
+  removeBtn.textContent = '❌';
   removeBtn.setAttribute('aria-label', 'Remove rule');
   removeBtn.addEventListener('click', () => {
     row.remove();

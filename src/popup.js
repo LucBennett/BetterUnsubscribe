@@ -1,3 +1,8 @@
+/* global createLogger, resolveCurrentMessage --
+   provided by common.js, loaded earlier in popup.html */
+
+const { log: console_log, error: console_error } = createLogger('popup.js');
+
 /**
  * Default settings for BetterUnsubscribe
  */
@@ -5,24 +10,6 @@ const DEFAULT_SETTINGS = {
   autoSendEmail: false, // Don't automatically send emails by default
   confirmRules: [], // No confirmation rules by default
 };
-
-/**
- * Logs messages to the console with a custom prefix for better identification.
- * Used for debug and informational messages related to BetterUnsubscribe's popup.js.
- * @param {...any} args - The arguments to log to the console.
- */
-function console_log(...args) {
-  console.log('[BetterUnsubscribe][popup.js]', ...args);
-}
-
-/**
- * Logs error messages to the console with a custom prefix.
- * This is useful for clear and specific error reporting during development and debugging.
- * @param {...any} args - The error arguments to log to the console.
- */
-function console_error(...args) {
-  console.error('[BetterUnsubscribe][popup.js]', ...args);
-}
 
 async function resize_dropdown() {
   const el = document.getElementById('deleteButton');
@@ -39,6 +26,7 @@ async function resize_dropdown() {
  */
 document.addEventListener('DOMContentLoaded', async () => {
   // Retrieve and cache references to various DOM elements for later use.
+  const questionHeading = document.getElementById('unsubscribeQuestionHeading');
   const nameAddress = document.getElementById('nameAddress');
   const unsubscribeButton = document.getElementById('unsubscribeButton');
   const cancelButton = document.getElementById('cancelButton');
@@ -64,12 +52,45 @@ document.addEventListener('DOMContentLoaded', async () => {
   const settings = await messenger.storage.local.get(DEFAULT_SETTINGS);
   console_log('Loaded settings:', settings);
 
-  // Retrieve the currently active tab in the current window and get displayed message details.
-  const [tab] = await messenger.tabs.query({
-    active: true,
-    currentWindow: true,
-  });
-  const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
+  // Resolve the message to act on. When opened via a `messageId` URL param
+  // (context-menu triggered, standalone window - see background.js) look
+  // that message up directly, since a fresh window has no mail tab to
+  // inspect. Otherwise resolve via the active tab (toolbar action popup),
+  // falling back from the natively displayed message to the mail tab's
+  // selection.
+  const messageIdParam = new URLSearchParams(window.location.search).get(
+    'messageId'
+  );
+
+  let message = null;
+  if (messageIdParam) {
+    try {
+      message = await messenger.messages.get(parseInt(messageIdParam, 10));
+    } catch (e) {
+      console_error('Error fetching message for messageId param', e);
+    }
+  } else {
+    const [tab] = await messenger.tabs.query({
+      active: true,
+      currentWindow: true,
+    });
+    message = await resolveCurrentMessage(tab);
+  }
+
+  if (!message) {
+    // No message is displayed or selected (e.g. the message_display_action
+    // toolbar button was clicked from a window where the reading pane's
+    // native display is unavailable). Show a friendly state instead of
+    // wiring up handlers that assume a message exists.
+    console_log('No message resolved for this popup');
+    questionHeading.hidden = true;
+    nameAddress.textContent = messenger.i18n.getMessage('noMessageSelected');
+    unsubscribeButton.hidden = true;
+    cancelButton.hidden = true;
+    deleteDiv.hidden = true;
+    return;
+  }
+
   console_log('Message', message.id);
 
   // Retrieve the message's author and parse it to extract name, sender, and domain information.

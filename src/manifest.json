@@ -17,6 +17,7 @@
     "compose",
     "compose.send",
     "storage",
+    "menus",
     "https://*/*",
     "http://*/*"
   ],
@@ -25,7 +26,12 @@
     "64": "icons/email.png"
   },
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "common.js",
+      "unsubExtraction.js",
+      "unsubMethods.js",
+      "background.js"
+    ]
   },
   "options_ui": {
     "page": "options.html",
