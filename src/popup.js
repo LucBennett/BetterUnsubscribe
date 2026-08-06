@@ -7,7 +7,7 @@
 /* global createLogger, resolveCurrentMessage --
    provided by common.js, loaded earlier in popup.html */
 
-const { log: console_log, error: console_error } = createLogger('popup.js');
+const { log: popupLog, error: popupError } = createLogger('popup.js');
 
 /**
  * Default settings for BetterUnsubscribe
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.addEventListener('resize', resize_dropdown);
 
   const settings = await messenger.storage.local.get(DEFAULT_SETTINGS);
-  console_log('Loaded settings:', settings);
+  popupLog('Loaded settings:', settings);
 
   // Resolve the message to act on. When opened via a `messageId` URL param
   // (context-menu triggered, standalone window - see background.js) look
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
       message = await messenger.messages.get(parseInt(messageIdParam, 10));
     } catch (e) {
-      console_error('Error fetching message for messageId param', e);
+      popupError('Error fetching message for messageId param', e);
     }
   } else {
     const [tab] = await messenger.tabs.query({
@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // toolbar button was clicked from a window where the reading pane's
     // native display is unavailable). Show a friendly state instead of
     // wiring up handlers that assume a message exists.
-    console_log('No message resolved for this popup');
+    popupLog('No message resolved for this popup');
     questionHeading.hidden = true;
     nameAddress.textContent = messenger.i18n.getMessage('noMessageSelected');
     unsubscribeButton.hidden = true;
@@ -101,11 +101,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  console_log('Message', message.id);
+  popupLog('Message', message.id);
 
   // Retrieve the message's author and parse it to extract name, sender, and domain information.
   const author = message.author;
-  console_log(author);
+  popupLog(author);
 
   let name = undefined;
   let sender = undefined;
@@ -130,10 +130,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             domain = email.substring(atIndex + 1);
           }
         }
-        console_log(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
+        popupLog(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
       }
     } catch (e) {
-      console_error('parseMailboxString failed, falling back to regex', e);
+      popupError('parseMailboxString failed, falling back to regex', e);
     }
   }
 
@@ -147,9 +147,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       name = match[2] || ''; // Optional name fallback if not present.
       sender = match[3];
       domain = match[4];
-      console_log(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
+      popupLog(`Name: ${name}, Sender: ${sender}, Domain: ${domain}`);
     } else {
-      console_error(`Invalid email format: ${author}`);
+      popupError(`Invalid email format: ${author}`);
     }
   }
 
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   messenger.runtime
     .sendMessage({ messageId: message.id, getMethod: true })
     .then((r) => {
-      console_log('Received', r);
+      popupLog('Received', r);
       unsubAddress = r.address || null;
 
       // Update the UI based on the received unsubscribe method (Post, Email, or Browser).
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     })
     .catch((error) => {
-      console_error('Error receiving methodInfo from background:', error);
+      popupError('Error receiving methodInfo from background:', error);
     });
 
   /**
@@ -219,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     messenger.runtime
       .sendMessage({ messageId: message.id, unsubscribe: true })
       .then((r) => {
-        console_log('Response from background:', r);
+        popupLog('Response from background:', r);
         if (r.response === 'Unsubscribed') {
           statusText.textContent = messenger.i18n.getMessage('statusTextDone');
         } else if (r.response === 'Failed') {
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       })
       .catch((error) => {
-        console_error('Error sending unsubscribe message:', error);
+        popupError('Error sending unsubscribe message:', error);
         statusText.textContent = messenger.i18n.getMessage('statusTextError');
       });
   }
@@ -291,10 +291,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         messageId: message.id,
         cancel: true,
       });
-      console_log('Response from background:', r);
+      popupLog('Response from background:', r);
       window.close();
     } catch (error) {
-      console_error('Error sending cancel message:', error);
+      popupError('Error sending cancel message:', error);
     }
   });
 
@@ -399,7 +399,7 @@ function getDeleteFunc(
 ) {
   return async () => {
     try {
-      console_log('hide dropdown');
+      popupLog('hide dropdown');
       // Force close the dropdown
       deleteDiv.classList.add('dropdown-closing');
 
@@ -452,7 +452,7 @@ function getDeleteFunc(
         );
       }
     } catch (error) {
-      console_error('Error deleting all emails from this sender:', error);
+      popupError('Error deleting all emails from this sender:', error);
       statusText.textContent = messenger.i18n.getMessage(
         'statusTextDeleteError'
       );

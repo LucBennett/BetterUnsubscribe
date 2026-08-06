@@ -15,7 +15,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   Object.assign(globalThis, require('./common.js'));
 }
 
-const { log: console_log } = createLogger('unsubExtraction.js');
+const { log: extractionLog } = createLogger('unsubExtraction.js');
 
 /**
  * Extracts an HTTPS link from the unsubscribe header.
@@ -59,7 +59,7 @@ async function retrieveIdentity(messageHeader) {
   }
 
   if (!identity) {
-    console_log('No identity found for', messageHeader);
+    extractionLog('No identity found for', messageHeader);
   }
 
   return identity || null; // Return null if no identity is found
@@ -238,7 +238,7 @@ function findEmbeddedUnsubLinkHTML(messagePart) {
             best = a;
           }
         }
-        console_log('Best Distance', bestDist);
+        extractionLog('Best Distance', bestDist);
 
         if (bestDist > MAX_DOM_DISTANCE) {
           continue; // Skip this result, it's too far away

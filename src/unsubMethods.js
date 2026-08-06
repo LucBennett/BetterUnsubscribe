@@ -15,7 +15,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   Object.assign(globalThis, require('./common.js'));
 }
 
-const { log: console_log } = createLogger('unsubMethods.js');
+const { log: methodsLog } = createLogger('unsubMethods.js');
 
 /**
  * Default settings for BetterUnsubscribe
@@ -90,13 +90,13 @@ class UnsubPost extends UnsubMethod {
       body: 'List-Unsubscribe=One-Click',
     };
 
-    console_log('Fetch Options', fetchOptions);
+    methodsLog('Fetch Options', fetchOptions);
 
     const response = await fetch(this.weblink, fetchOptions);
     if (!response.ok) {
       throw new Error(`Response not ok. Status: ${response.status}`);
     }
-    console_log('Response', response);
+    methodsLog('Response', response);
   }
 
   /**
@@ -164,7 +164,7 @@ class UnsubMail extends UnsubMethod {
     const composeTab = await messenger.compose.beginNew(details);
 
     const settings = await messenger.storage.local.get(DEFAULT_SETTINGS);
-    console_log('Loaded settings:', settings);
+    methodsLog('Loaded settings:', settings);
 
     let state;
     if (settings.autoSendEmail === true) {

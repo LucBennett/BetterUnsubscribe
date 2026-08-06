@@ -7,7 +7,7 @@
 /* global createLogger --
    provided by common.js, loaded earlier in options.html */
 
-const { log: console_log, error: console_error } = createLogger('options.js');
+const { log: optionsLog, error: optionsError } = createLogger('options.js');
 
 /**
  * Default settings for BetterUnsubscribe
@@ -121,7 +121,7 @@ function collectRules() {
 async function loadSettings() {
   try {
     const settings = await messenger.storage.local.get(DEFAULT_SETTINGS);
-    console_log('Loaded settings:', settings);
+    optionsLog('Loaded settings:', settings);
 
     document.getElementById('autoSendEmail').checked = settings.autoSendEmail;
 
@@ -134,7 +134,7 @@ async function loadSettings() {
       renderRules([]);
     }
   } catch (error) {
-    console_error('Error loading settings:', error);
+    optionsError('Error loading settings:', error);
     showStatus('Error loading settings', 'error');
   }
 }
@@ -162,7 +162,7 @@ async function saveSettings() {
 
   try {
     await messenger.storage.local.set(settings);
-    console_log('Settings saved:', settings);
+    optionsLog('Settings saved:', settings);
     showStatus(
       messenger.i18n.getMessage('settingsSaved') ||
         'Settings saved successfully!',
@@ -170,7 +170,7 @@ async function saveSettings() {
       3000
     );
   } catch (error) {
-    console_error('Error saving settings:', error);
+    optionsError('Error saving settings:', error);
     showStatus('Error saving settings', 'error', 5000);
   }
 }
@@ -181,7 +181,7 @@ async function saveSettings() {
 async function resetSettings() {
   try {
     await messenger.storage.local.set(DEFAULT_SETTINGS);
-    console_log('Settings reset to defaults');
+    optionsLog('Settings reset to defaults');
 
     document.getElementById('autoSendEmail').checked =
       DEFAULT_SETTINGS.autoSendEmail;
@@ -194,7 +194,7 @@ async function resetSettings() {
       3000
     );
   } catch (error) {
-    console_error('Error resetting settings:', error);
+    optionsError('Error resetting settings:', error);
     showStatus('Error resetting settings', 'error', 5000);
   }
 }

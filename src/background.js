@@ -28,7 +28,7 @@ if (typeof module !== 'undefined' && typeof module.exports !== 'undefined') {
   Object.assign(globalThis, require('./unsubMethods.js'));
 }
 
-const { log: console_log, error: console_error } =
+const { log: backgroundLog, error: backgroundError } =
   createLogger('background.js');
 
 /**
@@ -79,10 +79,10 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
       url: popupUrl,
       type: 'popup',
       width: 490,
-      height: 375,
+      height: 350,
     });
   } catch (error) {
-    console_error('Error opening popup window from context menu', error);
+    backgroundError('Error opening popup window from context menu', error);
   }
 });
 
@@ -113,7 +113,7 @@ messenger.menus.onClicked.addListener(async (info, tab) => {
  * @returns {Promise<void>}
  */
 messenger.tabs.onActivated.addListener(async (activeInfo) => {
-  console_log('onActivated');
+  backgroundLog('onActivated');
   const tab = await messenger.tabs.get(activeInfo.tabId);
   if (tab.type === 'messageDisplay') {
     const message = await messenger.messageDisplay.getDisplayedMessage(tab.id);
@@ -138,7 +138,7 @@ messenger.tabs.onActivated.addListener(async (activeInfo) => {
  */
 messenger.messageDisplay.onMessageDisplayed.addListener(
   async (tab, message) => {
-    console_log('onMessageDisplayed');
+    backgroundLog('onMessageDisplayed');
     await updateAction(tab, message);
   }
 );
@@ -172,7 +172,7 @@ async function updateAction(tab, message) {
       }
     }
   } catch (error) {
-    console_error(error);
+    backgroundError(error);
   }
 }
 
@@ -218,27 +218,27 @@ async function searchUnsub(selectedMessageId) {
         : null;
 
     if (httpsLink && postCommand) {
-      console_log('OneClick Link Found', httpsLink);
-      console_log('post', postCommand);
+      backgroundLog('OneClick Link Found', httpsLink);
+      backgroundLog('post', postCommand);
       return new UnsubPost(httpsLink);
     }
 
     if (email) {
-      console_log('Unsubscribe Email Found', email);
+      backgroundLog('Unsubscribe Email Found', email);
       const messageHeader = await messenger.messages.get(selectedMessageId);
       const identity = await retrieveIdentity(messageHeader);
       return new UnsubMail(identity, email);
     }
 
     if (httpsLink) {
-      console_log('Unsubscribe WebLink Found', httpsLink);
+      backgroundLog('Unsubscribe WebLink Found', httpsLink);
       return new UnsubWeb(httpsLink);
     }
   }
 
   const htmlMatch = findEmbeddedUnsubLinkHTML(fullMessage);
   if (htmlMatch) {
-    console_log(
+    backgroundLog(
       `Embedded Unsubscribe WebLink Found using HTML parsing`,
       htmlMatch
     );
@@ -247,7 +247,7 @@ async function searchUnsub(selectedMessageId) {
 
   const regexMatch = findEmbeddedUnsubLinkRegex(fullMessage);
   if (regexMatch) {
-    console_log(`Embedded Unsubscribe WebLink Found using Regex`, regexMatch);
+    backgroundLog(`Embedded Unsubscribe WebLink Found using Regex`, regexMatch);
     return new UnsubWeb(regexMatch);
   }
 
@@ -305,7 +305,7 @@ async function* getAllMessages() {
  */
 messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
   if (!messageFromPopup.messageId) {
-    console_log('No Message Id', messageFromPopup);
+    backgroundLog('No Message Id', messageFromPopup);
     return false;
   }
 
@@ -320,7 +320,7 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
   } else if (messageFromPopup.delete === true) {
     return await handleDelete(messageFromPopup);
   }
-  console_log('Unknown action', messageFromPopup);
+  backgroundLog('Unknown action', messageFromPopup);
   return false;
 });
 
@@ -330,10 +330,10 @@ messenger.runtime.onMessage.addListener(async (messageFromPopup) => {
  * @returns {object} - Unsubscribe method details.
  */
 async function handleGetMethod(messageId) {
-  console_log('Method Requested');
+  backgroundLog('Method Requested');
   const unsubMethod = await getUnsubscribeMethod(messageId);
 
-  console_log('Method', unsubMethod);
+  backgroundLog('Method', unsubMethod);
   return unsubMethod === null
     ? { method: 'None' }
     : unsubMethod.getMethodDetails();
@@ -345,7 +345,7 @@ async function handleGetMethod(messageId) {
  * @returns {Promise<object>} - Response indicating the result of the unsubscribe operation.
  */
 async function handleUnsubscribe(messageId) {
-  console_log('User chose to unsubscribe from the mailing list');
+  backgroundLog('User chose to unsubscribe from the mailing list');
   const unsubMethod = await getUnsubscribeMethod(messageId);
 
   if (unsubMethod === null) {
@@ -359,7 +359,7 @@ async function handleUnsubscribe(messageId) {
     await unsubMethod.call();
     return { response: 'Unsubscribed' };
   } catch (err) {
-    console_error(err);
+    backgroundError(err);
     return { response: 'Failed', error: err.message };
   }
 }
@@ -369,7 +369,7 @@ async function handleUnsubscribe(messageId) {
  * @returns {object} - Response indicating that the action was canceled.
  */
 async function handleCancel() {
-  console_log('User canceled the unsubscribe action.');
+  backgroundLog('User canceled the unsubscribe action.');
   return { response: 'Canceled' };
 }
 
@@ -379,12 +379,12 @@ async function handleCancel() {
  * @returns {Promise<object>} - Response indicating the result of the deletion operation.
  */
 async function handleDelete(messageFromPopup) {
-  console_log('User chose to delete emails from the mailing list');
+  backgroundLog('User chose to delete emails from the mailing list');
   try {
     const messageIds = await collectMessageIdsToDelete(messageFromPopup);
 
     if (messageIds.length) {
-      console_log('Deleting Selected Messages');
+      backgroundLog('Deleting Selected Messages');
       try {
         await messenger.messages.delete(messageIds, {
           deletePermanently: false, // [Added in TB 137]
@@ -396,10 +396,10 @@ async function handleDelete(messageFromPopup) {
       return { response: 'Deleted', count: messageIds.length };
     }
 
-    console_log('No messages found to delete.');
+    backgroundLog('No messages found to delete.');
     return { response: 'No Messages Found' };
   } catch (error) {
-    console_error('Error processing deletion request:', error);
+    backgroundError('Error processing deletion request:', error);
     return { response: 'Error', error: error.message };
   }
 }
@@ -419,7 +419,7 @@ async function collectMessageIdsToDelete(messageFromPopup) {
     const formattedSender = sender.trim().toLowerCase();
     const formattedDomain = domain.trim().toLowerCase();
 
-    console_log(
+    backgroundLog(
       'Selecting all messages associated with name:',
       `${formattedName} <${formattedSender}@${formattedDomain}>`
     );
@@ -438,7 +438,7 @@ async function collectMessageIdsToDelete(messageFromPopup) {
     const formattedSender = sender.trim().toLowerCase();
     const formattedDomain = domain.trim().toLowerCase();
 
-    console_log(
+    backgroundLog(
       'Selecting all messages from sender:',
       `${formattedSender}@${formattedDomain}`
     );
@@ -457,7 +457,7 @@ async function collectMessageIdsToDelete(messageFromPopup) {
     const formattedDomain = domain.trim().toLowerCase();
     const atDomain = '@' + formattedDomain;
 
-    console_log('Selecting all messages from domain:', formattedDomain);
+    backgroundLog('Selecting all messages from domain:', formattedDomain);
 
     const messages = getAllMessages();
 
@@ -468,7 +468,7 @@ async function collectMessageIdsToDelete(messageFromPopup) {
     }
   } else if (messageId) {
     // Handle deleting one specific message
-    console_log('Selecting a specific message with ID:', messageId);
+    backgroundLog('Selecting a specific message with ID:', messageId);
     messageIds.push(messageId);
   }
 
