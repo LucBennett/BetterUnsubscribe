@@ -99,6 +99,10 @@
     "description": "O nome da extensão do Thunderbird",
     "message": "BetterUnsubscribe"
   },
+  "noMessageSelected": {
+    "description": "Text shown when no message is displayed or selected for the popup to act on",
+    "message": "Nenhuma mensagem selecionada. Selecione um e-mail na lista, ou abra um, para cancelar a inscrição."
+  },
   "optionsTitle": {
     "description": "Título da página de opções",
     "message": "Opções do BetterUnsubscribe"

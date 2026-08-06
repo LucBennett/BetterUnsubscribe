@@ -99,6 +99,10 @@
     "description": "The name of the Thunderbird MailExtension",
     "message": "BetterUnsubscribe"
   },
+  "noMessageSelected": {
+    "description": "Text shown when no message is displayed or selected for the popup to act on",
+    "message": "メッセージが選択されていません。登録解除するには、リストでメールを選択するか、メールを開いてください。"
+  },
   "optionsTitle": {
     "description": "Title of the options page",
     "message": "BetterUnsubscribe オプション"
